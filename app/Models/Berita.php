@@ -9,13 +9,7 @@ class Berita extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-
-    protected $table = 'table';
+    protected $table = 'berita';
     
     protected $fillable = [
         'judul_berita',
