@@ -9,22 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+     public function up()
     {
         Schema::create('berita', function (Blueprint $table) {
             $table->id();
-            $table->string('judul_berita', 255);
-            $table->string('penulis', 255);
-            $table->string('thumbnail', 255);
-            $table->text('artikel');
+            $table->foreignId('id_kategori')->constrained('kategori_berita');
+            $table->string('judul', 255);
+            $table->string('slug', 255)->unique();
+            $table->string('gambar', 255)->nullable();
+            $table->text('konten');
+            $table->integer('total_like')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('berita');
     }
