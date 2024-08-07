@@ -64,3 +64,81 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+Documentation API
+
+Endpoint: /register
+Endpoint: /login
+
+
+Method: GET
+Endpoint: /berita
+Response: Array of berita
+    - judul_berita
+    - thumbnail_url
+    - author
+    - content
+    - publish_date
+    - category
+Request: -
+
+Method: POST, PUT, DELETE
+Endpoint: /berita
+
+
+Method: GET
+Endpoint: /loker
+Response: Array 
+    - nama_loker
+    - perusahaan
+    - tipe
+    - city
+    - experience
+    - date_publish
+    - date_expired
+    - requirement
+    - thumbnail_url
+Request: -
+
+Method: POST, PUT, DELETE
+Endpoint: /loker
+
+
+
+<!-- UI Untuk mendaftar -->
+Method: GET
+Endpoint: /event
+Response: Array 
+    - nama_event
+    - thumbnail_event_url
+    - tanggal_event
+    - deskripsi_event
+    - 
+Request: -
+
+Method: POST, PUT, DELETE
+Endpoint: /event
+
+
+Method: GET
+Endpoint: /profile
+Response: Array 
+    - nama_lengkap
+    - nama_panggilan
+    - photo_profile
+    - no_telp
+    - domisili
+    - jurusan
+    - angkatan
+    - stambuk
+    - tanggal_lahir
+Request: -
+
+Method: POST, PUT, DELETE
+Endpoint: /event
+
+Method: Get
+Endpoint: /angkatan
+Response: 
+    - 
