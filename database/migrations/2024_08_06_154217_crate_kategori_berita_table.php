@@ -12,8 +12,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('kategori_berita', function (Blueprint $table) {
-            $table->id('id_kategori_berita');
+            $table->unsignedTinyInteger('id_kategori_berita')->primary()->autoIncrement();
+
             $table->string('kategori', 255);
+
             $table->timestamps();
         });
     }

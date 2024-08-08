@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Loker;
+use App\Models\KategoriBerita;
 use Illuminate\Http\Request;
 
-class LokerController extends Controller
+class KategoriBeritaController extends Controller
 {
-    public function getAllDataLoker()
+    public function getAllDataKategoriBerita()
     {
-        $data = Loker::all();
+        $data = KategoriBerita::all();
 
         return response()->json($data, 200);
     }
 
-    public function getAllDataLokerById($id)
+    public function getAllDataKategoriBeritaById($id)
     {
-        $data = Loker::find($id);
+        $data = KategoriBerita::find($id);
 
         if ( is_null($data) ){
             $res = [
@@ -26,5 +26,10 @@ class LokerController extends Controller
             return response()->json($res, 404);
         }
         return response()->json($data, 200);
+    }
+
+    public function delete($id)
+    {
+        
     }
 }

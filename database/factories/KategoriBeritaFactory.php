@@ -11,9 +11,7 @@ class KategoriBeritaFactory extends Factory
     public function definition(): array
     {
         return [
-            'kategori' => $this->faker->word,
-            'created_at' => now(),
-            'updated_at' => now(),
+            'kategori' => fake()->sentence()
         ];
     }
 }

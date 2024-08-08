@@ -21,10 +21,10 @@ class BeritaFactory extends Factory
         $slug = Str::slug(Str::limit($judul, 200));
 
         return [
-            'id_kategori_berita' => KategoriBerita::factory(),  
+            'id_kategori_berita' => fake()->numberBetween(1, KategoriBerita::count()),
             'judul' => Str::limit($judul, 255),
             'slug' => $slug,
-            'gambar' => $this->faker->imageUrl(),  
+            'gambar' => fake()->image(640, 480, 'berita'),
             'konten' => $this->faker->paragraphs(3, true), 
             'total_like' => $this->faker->numberBetween(0, 1000)
         ];

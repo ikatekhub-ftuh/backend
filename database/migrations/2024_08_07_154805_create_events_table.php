@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_event');
 
             $table->string('judul', 255);
             $table->string('slug', 255)->unique();
@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('penyelenggara');
             $table->date('tgl_event');
             $table->string('lokasi_event', 255);
-            $table->decimal('kouta', 3, 0);
-            $table->decimal('peserta', 3, 0);
+            $table->tinyText('kuota');
+            $table->tinyText('peserta');
 
             $table->timestamps();
         });

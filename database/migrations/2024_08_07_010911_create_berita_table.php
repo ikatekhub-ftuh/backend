@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('berita', function (Blueprint $table) {
             // $table->id();
             $table->id('id_berita');
-            $table->unsignedBigInteger('id_kategori_berita');
+            $table->unsignedTinyInteger('id_kategori_berita');
             $table->foreign('id_kategori_berita')->references('id_kategori_berita')->on('kategori_berita');
             $table->string('judul', 255);
-            $table->string('slug', 255)->unique();
-            $table->string('gambar', 255)->nullable();
+            $table->string('slug', 255);
+            $table->string('gambar', 100);
             $table->mediumText('konten');
 
             $table->integer('total_like')->default(0);

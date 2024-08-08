@@ -28,7 +28,14 @@ class BeritaController extends Controller
         return response()->json($data, 200);
     }
 
-    // public function addDataBerita(Request $request, Berita $)
+    public function deleteDataBerita($id)
+    {
+        $berita = Berita::find($id);
 
-    
+        $berita->delete();
+
+        return response()->json([
+            'message' => 'Berhasil menghapus karyawan.'
+        ], 200);
+    }
 }

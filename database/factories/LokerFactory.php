@@ -5,10 +5,11 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
+
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Event>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Loker>
  */
-class EventFactory extends Factory
+class LokerFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -25,11 +26,12 @@ class EventFactory extends Factory
             'slug' => $slug, 
             'gambar' => $slug.'.jpg',
             'konten' => fake()->paragraphs(3, true),
-            'penyelenggara' => fake()->sentence(2),
-            'tgl_event' => fake()->date(),
-            'lokasi_event' => fake()->city(),
-            'kouta' => fake()->numberBetween(1, 999),
-            'peserta' => fake()->numberBetween(1, 999)
+            'tgl_selesai' => fake()->date(),
+            'lokasi' => fake()->city(),
+            'pengalaman_kerja' => fake()->numberBetween(1, 99),
+            'perusahaan' => fake()->sentence(),
+            'posisi' => fake()->sentence(),
+            'role' => fake()->sentence()
         ];
     }
 }

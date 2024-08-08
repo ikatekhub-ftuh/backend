@@ -17,9 +17,10 @@ class Loker extends Model
         'gambar',
         'konten',
         'perusahaan',
-        'durasi',
-        'lokasi_kerja',
+        'tgl_selesai',
+        'lokasi',
         'pengalaman_kerja',
         'posisi',
+        'role',
     ];
 }
