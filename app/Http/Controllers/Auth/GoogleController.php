@@ -1,43 +1,45 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+// <!-- <!-- <?php -->
 
-use App\Http\Controllers\Controller;
-use Socialite;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+// namespace App\Http\Controllers\Auth;
 
-class GoogleController extends Controller
-{
-    public function redirectToGoogle()
-    {
-        return Socialite::driver('google')->stateless()->redirect();
-    }
+// use App\Http\Controllers\Controller;
+// use Socialite;
+// use App\Models\User;
+// use Illuminate\Support\Facades\Auth;
+// use Illuminate\Support\Facades\Hash;
 
-    public function handleGoogleCallback()
-    {
-        try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
-            $user       = User::where('email', $googleUser->getEmail())->first();
+// class GoogleController extends Controller
+// {
+//     public function redirectToGoogle()
+//     {
+//         return Socialite::driver('google')->stateless()->redirect();
+//     }
 
-            $data = [
-                'name'      => $googleUser->getName(),
-                'email'     => $googleUser->getEmail(),
-                'password'  => Hash::make(uniqid()),
-            ];
+//     public function handleGoogleCallback()
+//     {
+//         try {
+//             $googleUser = Socialite::driver('google')->stateless()->user();
+//             $user       = User::where('email', $googleUser->getEmail())->first();
+
+//             $data = [
+//                 'name'      => $googleUser->getName(),
+//                 'email'     => $googleUser->getEmail(),
+//                 'password'  => Hash::make(uniqid()),
+//             ];
 
             
-            if (!$user) {
-                $user       = User::create($data);
-            }
+//             if (!$user) {
+//                 $user       = User::create($data);
+//             }
             
-            Auth::login($user, true);
+//             Auth::login($user, true);
 
-            return response()->json(['token' => $user->createToken('authToken')->accessToken]);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'Unable to authenticate'], 401);
-        }
-    }
-}
-
+//             return response()->json(['token' => $user->createToken('authToken')->accessToken]);
+//         } catch (Exception $e) {
+//             return response()->json(['error' => 'Unable to authenticate'], 401);
+//         }
+//     }
+// }
+//  -->

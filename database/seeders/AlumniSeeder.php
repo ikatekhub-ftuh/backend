@@ -13,21 +13,38 @@ class AlumniSeeder extends Seeder
      */
     public function run(): void
     {
-        $jurusan = ['informatika', 'teknik mesin'];
+        $jurusan = ['Teknik Informatika', 'Teknik Mesin'];
         $kelamin = ['l', 'p'];
-        $golonganDarah = ['a', 'o', 'b', 'ab'];
+        $golonganDarah = [
+                'A+', 
+                'A-', 
+                'B+', 
+                'B-', 
+                'O+', 
+                'O-', 
+                'AB+', 
+                'AB-'
+            ];
+        $agama = [
+            'Islam', 
+            'Kristen Protestan', 
+            'Kristen Katolik', 
+            'Hindu', 
+            'Buddha', 
+            'Konghucu'
+        ];
 
         for ($i = 0; $i < 50; $i++) {
             DB::table('alumni')->insert([
-                'nama' => 'Nama ' . Str::random(5),
+                'nim'       => 'STB-' . Str::random(8),
+                'nama'      => 'Nama ' . Str::random(5),
                 'tgl_lahir' => now()->subYears(rand(18, 50))->format('Y-m-d'),
-                'stambuk' => 'STB-' . Str::random(8),
-                'jurusan' => $jurusan[array_rand($jurusan)],
-                'angkatan' => rand(1980, 2024),
-                'kelamin' => $kelamin[array_rand($kelamin)],
-                'golongan_darah' => $golonganDarah[array_rand($golonganDarah)],
-                'created_at' => now(),
-                'updated_at' => now(),
+                'jurusan'   => $jurusan[array_rand($jurusan)],
+                'angkatan'  => rand(1980, 2024),
+                'kelamin'   => $kelamin[array_rand($kelamin)],
+                'agama'     => $kelamin[array_rand($kelamin)],
+                'golongan_darah'    => $golonganDarah[array_rand($golonganDarah)],
+                'validated' => false,
             ]);
         }
     }
