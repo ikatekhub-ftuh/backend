@@ -9,18 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-     public function up()
+    public function up()
     {
         Schema::create('berita', function (Blueprint $table) {
-            // $table->id();
             $table->id('id_berita');
             $table->unsignedTinyInteger('id_kategori_berita');
             $table->foreign('id_kategori_berita')->references('id_kategori_berita')->on('kategori_berita');
-            $table->string('judul', 255);
+            $table->string('judul');
+            $table->string('penulis');
             $table->string('slug', 255);
             $table->string('gambar', 100);
             $table->mediumText('konten');
-
             $table->integer('total_like')->default(0);
             $table->timestamps();
         });

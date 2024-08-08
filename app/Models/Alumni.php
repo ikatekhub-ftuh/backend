@@ -9,6 +9,10 @@ class Alumni extends Model
 {
     use HasFactory;
 
+    protected $primaryKey = 'id_alumni';
+    protected $keyType = 'int';
+    public $incrementing = true;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -18,13 +22,16 @@ class Alumni extends Model
     protected $table = 'alumni';
     
     protected $fillable = [
+        'id_user',
+        'nim',
         'nama',
         'tgl_lahir',
-        'stambuk',
         'jurusan',
         'angkatan',
         'kelamin',
+        'agama',
         'golongan_darah',
+        'validated'
     ];
 }
 

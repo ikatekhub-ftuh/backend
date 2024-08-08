@@ -24,7 +24,8 @@ class BeritaFactory extends Factory
             'id_kategori_berita'    => fake()->numberBetween(1, KategoriBerita::count()),
             'judul'                 => Str::limit($judul, 255),
             'slug'                  => $slug,
-            'gambar'                => fake()->image(640, 480, 'berita'),
+            'penulis'               => fake()->name(),
+            'gambar'                => 'berita/img.jpg',
             'konten'                => fake()->paragraphs(3, true), 
             'total_like'            => fake()->numberBetween(0, 1000)
         ];

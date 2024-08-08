@@ -8,6 +8,7 @@ use App\Models\Loker;
 use App\Models\Berita;
 use App\Models\Like;
 use App\Models\KategoriBerita;
+use App\Models\Alumni;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -17,14 +18,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-         User::factory()->create([
-            'fullname' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-        Berita::factory(20)->create();
-        // KategoriBerita::factory(2)->create();
+        //  User::factory()->create([
+        //     'fullname' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+        // User::factory(5)->create();
+        // KategoriBerita::factory(4)->create();
+        // Berita::factory(20)->create(); 
         // Like::factory(50)->create();
-        // Loker::factory(20)->create();
+        // Loker::factory(22)->create();
         // Event::factory(20)->create();
+        Alumni::factory(20)->create();
     }
 }

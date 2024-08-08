@@ -13,8 +13,8 @@ class LikeFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_berita' => Berita::factory(),
-            'id_user' => User::factory(), 
+            'id_berita' => fake()->numberBetween(1, Berita::count()),
+            'id_user' => fake()->numberBetween(1, User::count()), 
         ];
     }
 }

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('kategori_berita', function (Blueprint $table) {
             $table->unsignedTinyInteger('id_kategori_berita')->primary()->autoIncrement();
-
             $table->string('kategori', 255);
             $table->string('slug', 255);
 

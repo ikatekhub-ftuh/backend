@@ -7,24 +7,64 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    public function getAllDataEvent()
+    public function get(Request $request)
     {
-        $data = Event::all();
+        $query = Event::query();
 
-        return response()->json($data, 200);
+        $limit = $request->has('limit') ? $request->limit : 10;
+
+        $request->has('id') ? $query->where('id_event', $request->id) : null;
+        $request->has('page') ? $query->offset($limit * ($request->page - 1)) : null;
+
+        $query->limit($limit);
+        $result = $query->get();
+
+        return response()->json([
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $result
+        ], 200);
     }
 
-    public function getAllDataEventById($id)
+    public function delete(Request $request)
     {
-        $data = Event::find($id);
+        $event = Event::where('id_event', $request->id)->first();
+        $event->delete();
+        return response()->json([
+            'message' => 'Berhasil menghapus Event.'
+        ], 200);
+    }
 
-        if ( is_null($data) ){
-            $res = [
-                'success' => false,
-                'message' => "Product Not Found",
-            ];
-            return response()->json($res, 404);
-        }
-        return response()->json($data, 200);
+    public function post(Request $request){
+        // $v = Validator::make($request->all(), [
+        //     'id_kategori_berita' => 'required',
+        //     'judul' => 'required',
+        //     'gambar' => 'required',
+        //     'konten' => 'required',
+        //     'penulis' => 'required',
+        // ]);
+        
+        // if ($v->fails()) {
+        //     return response()->json([
+        //         'message' => 'error',
+        //         'errors' => $v->errors()
+        //     ], 400);
+        // }
+
+        // $validatedData = $v->validated();
+
+        // // store image in storage, inside public folder, in news_thumbnail folder
+        // $gambarUrl = $request->file('gambar')->store('berita/thumbnail', 'public');
+        // $validatedData['gambar'] = $gambarUrl;
+
+        // $slug = strtolower(Str::slug($request->judul));
+        // $validatedData['slug'] = $slug;
+
+        // $event = Berita::create($validatedData);
+
+        // return response()->json([
+        //     'message' => 'end of function',
+        //     'data' => $event,
+        // ]);
     }
 }

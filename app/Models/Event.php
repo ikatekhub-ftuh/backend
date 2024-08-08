@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,6 +10,10 @@ class Event extends Model
 
     protected $table = 'events';
 
+    protected $primaryKey = 'id_event';
+    protected $keyType = 'int';
+    public $incrementing = true;
+
     protected $fillable = [
         'judul',
         'slug',
@@ -19,7 +22,7 @@ class Event extends Model
         'penyelenggara',
         'tgl_event',
         'lokasi_event',
-        'kouta',
+        'kuota',
         'peserta'
     ];
 }

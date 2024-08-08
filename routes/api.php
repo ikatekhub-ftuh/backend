@@ -18,24 +18,32 @@ use Illuminate\Support\Facades\Route;
 // 	Route::apiResource('event', EventController::class);
 // });
 
-/* Berita
-    - GET : id, limit, offset, category
-    - POST : title, thumbnail, content, category
-    - DELETE : id
+
+/**Berita
+ * - GET: id?, limit?, offset?, category?
+ * - POST: judul, konten, id_kategori_berita, penulis, file:gambar
+ * - DELETE: id
 */
 Route::get('berita', [BeritaController::class, 'get']);
 Route::delete('berita', [BeritaController::class, 'delete']);
 Route::post('berita', [BeritaController::class, 'post']);
 
+/**Kategori Berita
+ * - GET: id
+ */
+Route::get('berita/kategori', [BeritaController::class, 'category_get']);
 
-Route::get('kategori-berita', [KategoriBeritaController::class, 'getAllDataKategoriBerita']);
-Route::get('kategori-berita/{id}', [KategoriBeritaController::class, 'getAllDataKategoriBeritaById']);
+/**Berita
+ * - GET: id?, limit?, offset?
+ * - POST: judul, konten, perusahaan, file:gambar
+ * - DELETE: id
+*/
+Route::get('event', [EventController::class, 'get']);
+Route::delete('event', [EventController::class, 'delete']);
+Route::post('event', [EventController::class, 'post']);
 
 Route::get('loker',        [LokerController::class, 'getAllDataLoker']);
 Route::get('loker/{id}',   [LokerController::class, 'getAllDataLokerById']);
-
-Route::get('event',        [EventController::class, 'getAllDataEvent']);
-Route::get('event/{id}',   [EventController::class, 'getAllDataEventById']);
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();

@@ -11,14 +11,13 @@ class Berita extends Model
     protected $table = 'berita';
 
     protected $primaryKey = 'id_berita';
-
     protected $keyType = 'int';
-
     public $incrementing = true;
 
     protected $fillable = [
         'id_kategori_berita',
         'judul',
+        'penulis',
         'slug',
         'gambar',
         'konten',

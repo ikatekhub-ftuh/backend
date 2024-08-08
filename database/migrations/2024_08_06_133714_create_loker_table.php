@@ -9,20 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('loker', function (Blueprint $table) {
             $table->id('id_loker');
-
             $table->string('judul')->unique();
             $table->string('slug');
             $table->string('gambar');
             $table->mediumText('konten');
-
             $table->string('perusahaan');
             $table->date('tgl_selesai'); // tanggal loker tampil 
             $table->string('lokasi'); // kota
-            $table->tinyText('pengalaman_kerja', 5);
+            $table->tinyText('pengalaman_kerja');
             $table->string('posisi');
             $table->string('role');
 

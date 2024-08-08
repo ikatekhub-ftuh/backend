@@ -28,7 +28,7 @@ class EventFactory extends Factory
             'penyelenggara' => fake()->sentence(2),
             'tgl_event'     => fake()->date(),
             'lokasi_event'  => fake()->city(),
-            'kouta'         => fake()->numberBetween(1, 999),
+            'kuota'         => fake()->numberBetween(1, 999),
             'peserta'       => fake()->numberBetween(1, 999)
         ];
     }
