@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Loker;
 use App\Models\Berita;
@@ -16,6 +17,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+         User::factory()->create([
+            'fullname' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
         Berita::factory(20)->create();
         // KategoriBerita::factory(2)->create();
         // Like::factory(50)->create();
