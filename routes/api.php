@@ -37,8 +37,8 @@ Route::get('event/{id}',   [EventController::class, 'getAllDataEventById']);
 // })->middleware('auth:sanctum');
 
 
-Route::get('api/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
-Route::get('api/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+// Route::get('api/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
+// Route::get('api/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 Route::post('auth/login',       [AuthController::class, 'login']);
 Route::post('auth/register',    [AuthController::class, 'register']);
