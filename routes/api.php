@@ -16,9 +16,14 @@ use Illuminate\Support\Facades\Route;
 // 	Route::apiResource('event', EventController::class);
 // });
 
-//* available param: id, offset, limit 
+/* Berita
+    - GET : id, limit, offset, category
+    - POST : title, thumbnail, content, category
+    - DELETE : id
+*/
 Route::get('berita', [BeritaController::class, 'get']);
 Route::delete('berita', [BeritaController::class, 'delete']);
+Route::post('berita', [BeritaController::class, 'post']);
 
 
 Route::get('kategori-berita', [KategoriBeritaController::class, 'getAllDataKategoriBerita']);

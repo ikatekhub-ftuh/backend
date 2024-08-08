@@ -35,10 +35,20 @@ class BeritaController extends Controller
     }
 
     public function post(Request $request){
-        // 'id_kategori_berita',
-        // 'judul',
-        // 'slug',
-        // 'gambar',
-        // 'konten',
+        
+        $v = $request->validate([
+            'category' => 'required',
+            'title' => 'required',
+            'thumbnail' => 'required',
+            'content' => 'required',
+        ]);
+
+        $slug = strtolower(str_replace(' ', '-', $v['title']));
+
+        return response()->json([
+            'message' => 'end of function',
+            'data' => $v,
+            'slug' => $slug
+        ]);
     }
 }
