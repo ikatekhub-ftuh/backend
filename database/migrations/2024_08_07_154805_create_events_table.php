@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('loker', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
 
             $table->string('judul', 255);
@@ -19,13 +19,11 @@ return new class extends Migration
             $table->string('gambar', 255)->nullable();
             $table->mediumText('konten');
 
-            $table->string('perusahaan');
-            $table->date('tgl_mulai'); 
-            $table->date('tgl_selesai'); // tanggal loker tampil 
-            $table->string('lokasi', 255); // kota
-            $table->decimal('pengalaman_kerja', 2, 0);
-            $table->string('posisi');
-            $table->string('role');
+            $table->string('penyelenggara');
+            $table->date('tgl_event');
+            $table->string('lokasi_event', 255);
+            $table->decimal('kouta', 3, 0);
+            $table->decimal('peserta', 3, 0);
 
             $table->timestamps();
         });
@@ -36,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('loker');
+        Schema::dropIfExists('events');
     }
 };

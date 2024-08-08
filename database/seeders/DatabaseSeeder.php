@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Berita;
 use App\Models\Like;
 use App\Models\KategoriBerita;
@@ -15,8 +14,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        KategoriBerita::factory(5)->create();
         Berita::factory(20)->create();
+        KategoriBerita::factory(2)->create();
         Like::factory(50)->create();
     }
 }

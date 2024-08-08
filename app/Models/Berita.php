@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,22 +10,18 @@ class Berita extends Model
 
     protected $table = 'berita';
 
+    protected $primaryKey = 'id_berita';
+
+    protected $keyType = 'int';
+
+    public $incrementing = true;
+
     protected $fillable = [
-        'id_kategori',
+        'id_kategori_berita',
         'judul',
         'slug',
         'gambar',
         'konten',
-        'total_like'
+        'total_like',
     ];
-
-    public function kategori()
-    {
-        return $this->belongsTo(KategoriBerita::class, 'id_kategori');
-    }
-
-    public function likes()
-    {
-        return $this->hasMany(Like::class, 'id_berita');
-    }
 }

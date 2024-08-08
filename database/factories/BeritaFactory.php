@@ -4,7 +4,6 @@ namespace Database\Factories;
 use App\Models\Berita;
 use App\Models\KategoriBerita;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Faker\Factory as FakerFactory;
 use Illuminate\Support\Str;
 
 class BeritaFactory extends Factory
@@ -18,19 +17,16 @@ class BeritaFactory extends Factory
      */
     public function definition(): array
     {
-        $kataKunci = ['Pemuda', 'Demo', 'Korupsi', 'Banjir', 'Jakarta', 'Indonesia', 'Presiden', 'Makassar', 'Alumni', 'Mahasiswa', 'yang', 'tidak', 'di', 'menjadi'];
-        $judul  = fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci);
-        $konten = fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci)  . ' ' . fake()->randomElement($kataKunci) . ' ' . fake()->randomElement($kataKunci) ;
-
-        $slug = Str::slug($judul);
+        $judul  = $this->faker->sentence(10);
+        $slug = Str::slug(Str::limit($judul, 200));
 
         return [
-            'id_kategori' => KategoriBerita::factory(),
-            'judul' => $judul,
+            'id_kategori_berita' => KategoriBerita::factory(),  
+            'judul' => Str::limit($judul, 255),
             'slug' => $slug,
-            'gambar' => $slug . '.jpg',
-            'konten' => $konten,
-            'total_like' => fake()->numberBetween(0, 1000),
+            'gambar' => $this->faker->imageUrl(),  
+            'konten' => $this->faker->paragraphs(3, true), 
+            'total_like' => $this->faker->numberBetween(0, 1000)
         ];
     }
 }

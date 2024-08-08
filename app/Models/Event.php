@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Loker extends Model
+class Event extends Model
 {
     use HasFactory;
 
-    protected $table = 'loker';
+    protected $table = 'events';
 
     protected $fillable = [
         'judul',
         'slug',
         'gambar',
         'konten',
-        'perusahaan',
-        'durasi',
-        'lokasi_kerja',
-        'pengalaman_kerja',
-        'posisi',
+        'penyelenggara',
+        'tgl_event',
+        'lokasi_event',
+        'kouta',
+        'peserta'
     ];
 }

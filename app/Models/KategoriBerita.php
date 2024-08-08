@@ -10,14 +10,15 @@ class KategoriBerita extends Model
     use HasFactory;
 
     protected $table = 'kategori_berita';
+    
+    // Menentukan primary key kustom
+    protected $primaryKey = 'id_kategori_berita';
 
-    protected $fillable = [
-        'kategori',
-        'slug'
-    ];
+    // Menentukan tipe primary key
+    protected $keyType = 'int';
 
-    public function berita()
-    {
-        return $this->hasMany(Berita::class, 'id_kategori');
-    }
+    // Primary key bukan auto-increment
+    public $incrementing = true;
+
+    protected $fillable = ['kategori'];
 }

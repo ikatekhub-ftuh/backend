@@ -12,12 +12,15 @@ return new class extends Migration
      public function up()
     {
         Schema::create('berita', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('id_kategori')->constrained('kategori_berita');
+            // $table->id();
+            $table->id('id_berita');
+            $table->unsignedBigInteger('id_kategori_berita');
+            $table->foreign('id_kategori_berita')->references('id_kategori_berita')->on('kategori_berita');
             $table->string('judul', 255);
             $table->string('slug', 255)->unique();
             $table->string('gambar', 255)->nullable();
-            $table->text('konten');
+            $table->mediumText('konten');
+
             $table->integer('total_like')->default(0);
             $table->timestamps();
         });

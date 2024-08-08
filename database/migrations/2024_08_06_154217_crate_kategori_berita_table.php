@@ -12,9 +12,8 @@ return new class extends Migration
     public function up()
     {
         Schema::create('kategori_berita', function (Blueprint $table) {
-            $table->id();
+            $table->id('id_kategori_berita');
             $table->string('kategori', 255);
-            $table->string('slug', 255)->unique();
             $table->timestamps();
         });
     }
