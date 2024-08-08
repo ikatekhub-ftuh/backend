@@ -14,15 +14,21 @@ class BeritaController extends Controller
     {
         $query = Berita::query();
 
-        $limit = $request->has('limit') ? $request->limit : 10;
+        // jika request memiliki id, maka hanya mengembalikan satu data
+        if ($request->has('id')) {
+            $query->where('id_berita', $request->id);
+            $result = $query->first();
+            return response()->json([
+                'message' => 'success',
+                'request' => $request->all(),
+                'data' => $result
+            ], 200);
+        }
 
-        $request->has('id') ? $query->where('id_berita', $request->id) : null;
-        $request->has('page') ? $query->offset($limit * ($request->page - 1)) : null;
+        // jika tidak memiliki id, maka mengembalikan banyak data
         $request->has('category') ? $query->where('id_kategori_berita', $request->category) : null;
-        
-        $query->limit($limit);
-        $result = $query->get();
-
+        $limit = $request->has('limit') ? $request->limit : 10;
+        $result = $query->paginate($limit);
         return response()->json([
             'message' => 'success',
             'request' => $request->all(),
@@ -33,14 +39,25 @@ class BeritaController extends Controller
     public function delete(Request $request)
     {
         $berita = Berita::where('id_berita', $request->id)->first();
+
+        if (!$berita) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Data not found'
+            ], 404);
+        }
+
         $berita->delete();
         return response()->json([
-            'message' => 'Berhasil menghapus Berita.'
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $berita
         ], 200);
     }
 
-    public function post(Request $request){
-        
+    public function post(Request $request)
+    {
+
         $v = Validator::make($request->all(), [
             'id_kategori_berita' => 'required',
             'judul' => 'required',
@@ -48,7 +65,7 @@ class BeritaController extends Controller
             'konten' => 'required',
             'penulis' => 'required',
         ]);
-        
+
         if ($v->fails()) {
             return response()->json([
                 'message' => 'error',
@@ -58,7 +75,7 @@ class BeritaController extends Controller
 
         $validatedData = $v->validated();
 
-        $gambarUrl = $request->file('gambar')->store('berita_images', 'public');
+        $gambarUrl = $request->file('gambar')->store('gambar/berita', 'public');
         $validatedData['gambar'] = $gambarUrl;
 
         $slug = strtolower(Str::slug($request->judul));
@@ -68,13 +85,13 @@ class BeritaController extends Controller
 
         return response()->json([
             'message' => 'end of function',
-            'data' => $berita,
             'request' => $request->all(),
-            'result' => $validatedData
+            'data' => $berita,
         ]);
     }
 
-    public function category_get(Request $request){
+    public function category_get(Request $request)
+    {
         $query = KategoriBerita::query();
         $request->id ? $query->where('id_kategori_berita', $request->id) : null;
         $result = $query->get();
@@ -85,5 +102,4 @@ class BeritaController extends Controller
             'data' => $result
         ], 200);
     }
-    
 }
