@@ -1,27 +1,26 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Berita extends Model
+class Loker extends Model
 {
     use HasFactory;
 
-    protected $table = 'berita';
-
-    protected $primaryKey = 'id_berita';
-
-    protected $keyType = 'int';
-
-    public $incrementing = true;
+    protected $table = 'loker';
 
     protected $fillable = [
-        'id_kategori_berita',
         'judul',
         'slug',
         'gambar',
         'konten',
-        'total_like',
+        'perusahaan',
+        'tgl_selesai',
+        'lokasi',
+        'pengalaman_kerja',
+        'posisi',
+        'role',
     ];
 }

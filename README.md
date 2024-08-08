@@ -72,7 +72,7 @@ Endpoint: /login
 
 Method: GET
 Endpoint: /berita
-Response: Array of berita - judul_berita - thumbnail_url - author - content - publish_date - category
+Response: Array of berita - id_kategori - judul - slug - gambar - konten - created_at - updated_at
 Request: -
 
 Method: POST, PUT, DELETE
