@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('alumni', function (Blueprint $table) {
             $table->id();
+            $table->string('nim', 50);
+            $table->enum('kelamin', ['l', 'p']);
             $table->string('nama', 100);
+			$table->string('no_telp', 20)->unique()->nullable();
             $table->date('tgl_lahir');
-            $table->string('stambuk', 50);
             $table->enum('jurusan', ['informatika', 'teknik mesin']);
             $table->integer('angkatan')->length(4);
-            $table->enum('kelamin', ['l', 'p']);
             $table->enum('golongan_darah', ['a', 'o', 'b', 'ab']);
             $table->timestamps();
         });

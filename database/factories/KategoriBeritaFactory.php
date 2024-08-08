@@ -10,8 +10,11 @@ class KategoriBeritaFactory extends Factory
 
     public function definition(): array
     {
+        $kategori = fake()->sentence();
+        $slug = Str::slug($kategori);
         return [
-            'kategori' => fake()->sentence()
+            'kategori' => $kategori,
+            'slug' => $slug,
         ];
     }
 }

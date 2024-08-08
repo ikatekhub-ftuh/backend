@@ -16,11 +16,13 @@ use Illuminate\Support\Facades\Route;
 // 	Route::apiResource('event', EventController::class);
 // });
 
-Route::get('berita',        [BeritaController::class, 'getAllDataBerita']);
-Route::get('berita/{id}',   [BeritaController::class, 'getAllDataBeritaById']);
+//* available param: id, offset, limit 
+Route::get('berita', [BeritaController::class, 'get']);
+Route::delete('berita', [BeritaController::class, 'delete']);
 
-Route::get('kategori-berita',        [KategoriBeritaController::class, 'getAllDataKategoriBerita']);
-Route::get('kategori-berita/{id}',   [KategoriBeritaController::class, 'getAllDataKategoriBeritaById']);
+
+Route::get('kategori-berita', [KategoriBeritaController::class, 'getAllDataKategoriBerita']);
+Route::get('kategori-berita/{id}', [KategoriBeritaController::class, 'getAllDataKategoriBeritaById']);
 
 Route::get('loker',        [LokerController::class, 'getAllDataLoker']);
 Route::get('loker/{id}',   [LokerController::class, 'getAllDataLokerById']);
