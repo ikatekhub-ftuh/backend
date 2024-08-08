@@ -22,16 +22,16 @@ class LokerFactory extends Factory
         $slug = Str::slug(Str::limit($judul, 200));
 
         return [
-            'judul' => $judul,
-            'slug' => $slug, 
-            'gambar' => $slug.'.jpg',
-            'konten' => fake()->paragraphs(3, true),
-            'tgl_selesai' => fake()->date(),
-            'lokasi' => fake()->city(),
-            'pengalaman_kerja' => fake()->numberBetween(1, 99),
-            'perusahaan' => fake()->sentence(),
-            'posisi' => fake()->sentence(),
-            'role' => fake()->sentence()
+            'judul'             => $judul,
+            'slug'              => $slug, 
+            'gambar'            => $slug.'.jpg',
+            'konten'            => fake()->paragraphs(3, true),
+            'tgl_selesai'       => fake()->date(),
+            'lokasi'            => fake()->city(),
+            'pengalaman_kerja'  => fake()->numberBetween(1, 99),
+            'perusahaan'        => fake()->sentence(),
+            'posisi'            => fake()->sentence(),
+            'role'              => fake()->sentence()
         ];
     }
 }
