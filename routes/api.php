@@ -15,7 +15,9 @@ use Illuminate\Support\Facades\Route;
 // TODO bikin ulang dokumentasi
 // TODO implement guestcheck middleware
 // TODO on berita, return whether user has liked or not
-//* start from alumni
+// * check berita search
+// * check alumni search
+// * frontend: maybe add file compression to webp
 
 /**Auth
  * Endpoint : /auth/login (POST)
