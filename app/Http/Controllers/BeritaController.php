@@ -35,7 +35,7 @@ class BeritaController extends Controller
         }
 
         // jika tidak memiliki id, maka mengembalikan banyak data
-        $request->has('category') ? $query->where('id_kategori_berita', $request->category) : null;
+        $request->has('id_kategori_berita') ? $query->where('id_kategori_berita', $request->id_kategori_berita) : null;
         $limit = $request->has('limit') ? $request->limit : 10;
         $result = $query->paginate($limit);
         return response()->json([

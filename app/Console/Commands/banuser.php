@@ -12,7 +12,7 @@ class banuser extends Command
      *
      * @var string
      */
-    protected $signature = 'app:banuser {email}';
+    protected $signature = 'app:banuser {email} {--remove}';
 
     /**
      * The console command description.
@@ -27,11 +27,12 @@ class banuser extends Command
     public function handle()
     {
         $email = $this->argument('email');
+        $ban = $this->option('remove') ? false : true;
         $user = User::where('email', $email . '@gmail.com')->first();
         if ($user) {
-            $user->is_banned = true;
+            $user->is_banned = $ban;
             $user->save();
-            $this->info($email . 'is now banned');
+            $this->info($email . ' is now ' . ($ban ? 'banned' : 'unbanned'));
             return;
         } 
 

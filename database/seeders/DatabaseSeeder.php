@@ -19,17 +19,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //  User::factory()->create([
-        //     'fullname' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-        // User::factory(5)->create();
-        // KategoriBerita::factory(4)->create();
-        // Perusahaan::factory(4)->create();
-        // Berita::factory(20)->create(); 
-        Like::factory(50)->create();
-        // Loker::factory(22)->create();
-        // Event::factory(20)->create();
-        // Alumni::factory(20)->create();
+        ini_set('memory_limit', '1G');
+
+        // User::factory(3000)->create();
+        // KategoriBerita::factory(12)->create();
+        // Berita::factory(500)->create(); 
+        // Perusahaan::factory(20)->create();
+        // Loker::factory(30)->create();
+        // Event::factory(5)->create();
+
+        // sometimes error, paksami saja
+        // Like::factory(400)->create();
+
+        // kalau mau run banyak data, uncomment ini, comment yang lain
+        Alumni::factory(24000)->create();
     }
 }

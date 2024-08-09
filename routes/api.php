@@ -40,21 +40,22 @@ Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('berita', [BeritaController::class, 'get']);
-
     Route::get('user', [UserController::class, 'get']);
     Route::post('auth/logout', [AuthController::class, 'logout']);
-    
-    Route::get('berita/kategori', [BeritaController::class, 'category_get']);
-
-    Route::get('event', [EventController::class, 'get']);
-
-    Route::get('loker', [LokerController::class, 'get']);
-    Route::get('loker/company', [LokerController::class, 'get_perusahaan']);
-    
-    Route::get('alumni', [AlumniController::class, 'get']);
     Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId']);
-    
+
+    Route::middleware(['noGuest'])->group(function () {
+        
+        Route::get('berita/kategori', [BeritaController::class, 'category_get']);
+        Route::get('event', [EventController::class, 'get']);
+        Route::get('loker', [LokerController::class, 'get']);
+        Route::get('loker/company', [LokerController::class, 'get_perusahaan']);
+        Route::get('alumni', [AlumniController::class, 'get']);
+        
+    });
+
     Route::middleware(['isAdmin'])->group(function () {
+
         Route::post('loker', [LokerController::class, 'post']);
         Route::delete('loker', [LokerController::class, 'delete']);
         Route::post('loker/company', [LokerController::class, 'post_perusahaan']);
@@ -71,6 +72,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         //! why use url parameter instead of request body?
         Route::delete('alumni/{id_alumni}', [AlumniController::class, 'delete']);
         Route::post('alumni', [AlumniController::class, 'post']);
+        
     });    
 
 });    

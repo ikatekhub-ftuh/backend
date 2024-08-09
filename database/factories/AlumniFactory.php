@@ -21,15 +21,19 @@ class AlumniFactory extends Factory
     public function definition(): array
     {
         return [
-            'nim'           => fake()->regexify('[A-Z]{5}[0-4]{3}'),
+            'nim'           => fake()->unique()->regexify('[A-Z]{5}[0-8]{5}'),
             'nama'          => fake()->name(),
             'tgl_lahir'     => fake()->date(),
             'jurusan'       => 'Teknik '.fake()->randomElement([
                 'Perkapalan',
                 'Informatika',
                 'Mesin',
+                'Elektro',
+                'Sipil',
+                'Industri',
+                'Lingkungan',
             ]),
-            'no_telp'       => fake()->randomElement([null, fake()->unique()->phoneNumber()]),
+            'no_telp'       => fake()->unique()->numerify('62##########'),
             'angkatan'      => fake()->numberBetween(1970, 2023),
             'kelamin'       => fake()->randomElement(['l', 'p']),
             'agama'         => fake()->randomElement([
@@ -50,7 +54,7 @@ class AlumniFactory extends Factory
                 'AB+', 
                 'AB-'
             ]),
-            'validated' => 0
+            'validated' => true
         ];
     }
 }

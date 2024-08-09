@@ -13,16 +13,14 @@ public function up(): void
     {
         Schema::create('alumni', function (Blueprint $table) {
             $table->id('id_alumni');
-            $table->unsignedBigInteger('id_user')->nullable();
+            $table->unsignedBigInteger('id_user')->nullable()->unique();
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('set null');
-            $table->string('nim', 50);
+            $table->string('nim', 50)->unique();
             $table->string('nama', 100);
             $table->date('tgl_lahir');
             $table->string('jurusan');
-            // !TODO, update plissss ganti jadi string, tambah COLUMN nomor telpon dan HIDE
-            // OKE (ryan)
-            $table->string('no_telp', 20)->nullable();
-            $table->integer('angkatan')->length(4);
+            $table->string('no_telp', 20)->nullable()->unique();
+            $table->string('angkatan', 4);
             $table->enum('kelamin', ['l', 'p']);
             $table->enum('agama', [
                 'Islam', 
@@ -42,7 +40,7 @@ public function up(): void
                 'AB+', 
                 'AB-'
             ]);
-            $table->boolean('validated');
+            $table->boolean('validated')->default(false);
             $table->timestamps();
         });
     }

@@ -19,10 +19,11 @@ class PerusahaanFactory extends Factory
      */
     public function definition(): array
     {
-        $nama = fake()->sentence();
+        $nama = fake()->words(3, true) . (fake()->boolean() ? ' PT' : ' LTD');
         return [
             'nama_perusahaan'   => $nama,
-            'logo'              => $nama .'.jpg',
+            // 'logo'              => $nama .'.jpg',
+            'logo' => "/gambar/dummy/images/test.png",
         ];
     }
 }

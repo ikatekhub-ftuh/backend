@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\bancheck;
 use App\Http\Middleware\loggermiddleware;
+use App\Http\Middleware\noGuest;
 use App\Http\Middleware\returnjsonmiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'isAdmin' => \App\Http\Middleware\isAdmin::class,
             'isNotBanned' => bancheck::class,
+            'noGuest' => noGuest::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

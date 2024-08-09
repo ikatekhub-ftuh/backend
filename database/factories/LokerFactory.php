@@ -22,7 +22,7 @@ class LokerFactory extends Factory
      */
     public function definition(): array
     {
-        $judul  = $this->faker->sentence(2);
+        $judul = fake()->words(3, true);;
         $slug = Str::slug(Str::limit($judul, 200));
 
         return [

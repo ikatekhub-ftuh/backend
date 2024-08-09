@@ -17,7 +17,7 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
-        $judul  = $this->faker->sentence(5);
+        $judul  = fake()->words(3, true);
         $slug = Str::slug(Str::limit($judul, 200));
 
         return [
