@@ -15,7 +15,7 @@ class KategoriBerita extends Model
 
     protected $table = 'kategori_berita';
 
-    protected $fillable = ['kategori'];
+    protected $fillable = ['kategori', 'slug'];
 
     // hidden
     protected $hidden = ['created_at', 'updated_at'];

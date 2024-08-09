@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class isBanned
+class bancheck
 {
     /**
      * Handle an incoming request.
@@ -19,7 +19,7 @@ class isBanned
             return response()->json([
                 'message' => 'error',
                 'errors' => 'You are banned',
-            ], 403);
+            ], 401);
         }
         
         return $next($request);

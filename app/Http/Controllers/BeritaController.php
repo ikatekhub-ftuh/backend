@@ -10,11 +10,11 @@ use Illuminate\Support\Str;
 
 class BeritaController extends Controller
 {
-    // ! TODO: add request user id or from auth, and return if berita is liked by user
+    
     public function get(Request $request)
     {
         $query = Berita::query();
-
+        
         // jika request memiliki id, maka hanya mengembalikan satu data
         if ($request->has('id_berita')) {
             $query->where('id_berita', $request->id_berita);
@@ -93,10 +93,10 @@ class BeritaController extends Controller
         $berita = Berita::create($validatedData);
 
         return response()->json([
-            'message' => 'end of function',
+            'message' => 'success',
             'request' => $request->all(),
             'data' => $berita,
-        ]);
+        ], 200);
     }
 
     public function category_get(Request $request)
@@ -112,4 +112,41 @@ class BeritaController extends Controller
         ], 200);
     }
 
+    public function category_post(Request $request){
+        $v = $request->validate([
+            'kategori' => 'required',
+        ]);
+
+        $v['slug'] = strtolower(Str::slug($v['kategori']));
+        $kategori = KategoriBerita::create($v);
+
+        return response()->json([
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $kategori,
+        ], 200);
+    }
+
+    public function category_delete(Request $request)
+    {
+        $v = Validator::make($request->all(), [
+            'id_kategori_berita' => 'required',
+        ]);
+        
+        $kategori = KategoriBerita::where('id_kategori_berita', $request->id_kategori_berita)->first();
+
+        if (!$kategori) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Data not found'
+            ], 404);
+        }
+
+        $kategori->delete();
+        return response()->json([
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $kategori
+        ], 200);
+    }
 }

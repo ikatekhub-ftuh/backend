@@ -19,7 +19,6 @@ class isAdmin
             return response()->json([
                 'message' => 'error',
                 'errors' => 'Unauthorized',
-                'from' => 'isAdmin'
             ], 401);
         }
         return $next($request);
