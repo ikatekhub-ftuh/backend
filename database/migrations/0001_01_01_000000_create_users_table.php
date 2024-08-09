@@ -17,7 +17,10 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('avatar')->nullable();
             $table->timestamp('last_active')->nullable();
+            $table->boolean('is_admin')->default(false);
             $table->boolean('is_banned')->default(false);
+            $table->string('ban_reason')->nullable();
+            $table->timestamp('banned_at')->nullable();
             $table->rememberToken()->nullable();
             $table->timestamps();
         });

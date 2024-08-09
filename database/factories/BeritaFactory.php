@@ -17,16 +17,16 @@ class BeritaFactory extends Factory
      */
     public function definition(): array
     {
-        $judul  = $this->faker->sentence(10);
+        $judul = $this->faker->sentence();
         $slug = Str::slug(Str::limit($judul, 200));
 
         return [
             'id_kategori_berita'    => fake()->numberBetween(1, KategoriBerita::count()),
-            'judul'                 => Str::limit($judul, 255),
+            'judul'                 => $judul,
             'slug'                  => $slug,
             'penulis'               => fake()->name(),
             'gambar'                => 'berita/img.jpg',
-            'konten'                => fake()->paragraphs(3, true), 
+            'konten'                => fake()->paragraphs(1, true), 
             'total_like'            => fake()->numberBetween(0, 1000)
         ];
     }
