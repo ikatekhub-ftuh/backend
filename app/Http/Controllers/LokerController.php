@@ -7,24 +7,31 @@ use Illuminate\Http\Request;
 
 class LokerController extends Controller
 {
-    public function getAllDataLoker()
+    public function get(Request $request)
     {
-        $data = Loker::all();
+        $query = Loker::query();
 
-        return response()->json($data, 200);
+        // $limit = $request->has('limit') ? $request->limit : 10;
+
+        $request->has('id') ? $query->where('id_loker', $request->id) : null;
+        // $request->has('page') ? $query->offset($limit * ($request->page - 1)) : null;
+
+        // $query->limit($limit);
+        $result = $query->get();
+
+        return response()->json([
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $result
+        ], 200);
     }
 
-    public function getAllDataLokerById($id)
+    public function delete(Request $request)
     {
-        $data = Loker::find($id);
-
-        if ( is_null($data) ){
-            $res = [
-                'success' => false,
-                'message' => "Product Not Found",
-            ];
-            return response()->json($res, 404);
-        }
-        return response()->json($data, 200);
+        $loker = Loker::where('id_loker', $request->id)->first();
+        $loker->delete();
+        return response()->json([
+            'message' => 'Berhasil menghapus Loker.'
+        ], 200);
     }
 }

@@ -35,7 +35,7 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function post(Request $request){
+    // public function post(Request $request){
         // $v = Validator::make($request->all(), [
         //     'id_kategori_berita' => 'required',
         //     'judul' => 'required',
@@ -66,5 +66,5 @@ class EventController extends Controller
         //     'message' => 'end of function',
         //     'data' => $event,
         // ]);
-    }
+    // }
 }

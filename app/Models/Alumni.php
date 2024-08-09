@@ -9,17 +9,12 @@ class Alumni extends Model
 {
     use HasFactory;
 
+    protected $table = 'alumni';
+
     protected $primaryKey = 'id_alumni';
     protected $keyType = 'int';
     public $incrementing = true;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-
-    protected $table = 'alumni';
     
     protected $fillable = [
         'id_user',

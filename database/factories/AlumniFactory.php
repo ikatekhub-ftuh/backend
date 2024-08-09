@@ -26,7 +26,7 @@ class AlumniFactory extends Factory
             'nama'          => fake()->name(),
             'tgl_lahir'     => fake()->date(),
             'jurusan'       => 'Teknik '.fake()->sentence(1),
-            'angkatan'      => fake()->numberBetween(1, 2023),
+            'angkatan'      => fake()->numberBetween(1970, 2023),
             'kelamin'       => fake()->randomElement(['l', 'p']),
             'agama'         => fake()->randomElement([
                 'Islam', 

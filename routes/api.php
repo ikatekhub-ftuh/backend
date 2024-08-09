@@ -18,6 +18,14 @@ use Illuminate\Support\Facades\Route;
 // 	Route::apiResource('event', EventController::class);
 // });
 
+/**Almuni
+ * - GET: id?
+ * - POST: nim, nama, tgl_lahir, jurusan, angkatan, kelamin, agama, golongan darah
+ * - DELETE: id
+*/
+Route::get('alumni', [AlumniController::class, 'get']);
+Route::delete('alumni', [AlumniController::class, 'delete']);
+Route::post('alumni', [AlumniController::class, 'post']);
 
 /**Berita
  * - GET: id?, limit?, offset?, category?
@@ -33,7 +41,7 @@ Route::post('berita', [BeritaController::class, 'post']);
  */
 Route::get('berita/kategori', [BeritaController::class, 'category_get']);
 
-/**Berita
+/**Event
  * - GET: id?, limit?, offset?
  * - POST: judul, konten, perusahaan, file:gambar
  * - DELETE: id
@@ -42,24 +50,23 @@ Route::get('event', [EventController::class, 'get']);
 Route::delete('event', [EventController::class, 'delete']);
 Route::post('event', [EventController::class, 'post']);
 
-Route::get('loker',        [LokerController::class, 'getAllDataLoker']);
-Route::get('loker/{id}',   [LokerController::class, 'getAllDataLokerById']);
+// Route::get('loker',        [LokerController::class, 'getAllDataLoker']);
+// Route::get('loker/{id}',   [LokerController::class, 'getAllDataLokerById']);
+
+
 
 // Route::get('/user', function (Request $request) {
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
 
-// Route::get('api/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
-// Route::get('api/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-
 Route::post('auth/login',       [AuthController::class, 'login']);
 Route::post('auth/register',    [AuthController::class, 'register']);
 Route::post('auth/google',      [AuthController::class, 'handleGoogleLogin']);
 
-Route::get('alumni',            [AlumniController::class, 'getAllDataAlumni']);
-Route::get('alumni/{id}',       [AlumniController::class, 'getDataAlumniById']);
-Route::post('alumni',           [AlumniController::class, 'addDataAlumni']);
-Route::put('alumni/{id}',       [AlumniController::class, 'updateDataAlumniById']);
-Route::delete('alumni/{id}',    [AlumniController::class, 'deleteDataAlumniById']);
+// Route::get('alumni',            [AlumniController::class, 'getAllDataAlumni']);
+// Route::get('alumni/{id}',       [AlumniController::class, 'getDataAlumniById']);
+// Route::post('alumni',           [AlumniController::class, 'addDataAlumni']);
+// Route::put('alumni/{id}',       [AlumniController::class, 'updateDataAlumniById']);
+// Route::delete('alumni/{id}',    [AlumniController::class, 'deleteDataAlumniById']);
 
