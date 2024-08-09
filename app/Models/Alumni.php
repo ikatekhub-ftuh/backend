@@ -18,16 +18,27 @@ class Alumni extends Model
     
     protected $fillable = [
         'id_user',
-        'nim',
         'nama',
+        'nim',
         'tgl_lahir',
+        'no_telp',
         'jurusan',
         'angkatan',
         'kelamin',
         'agama',
-        'golongan_darah',
         'validated'
     ];
+
+    // hide name
+
+    protected $hidden = [
+        'golongan_darah'
+    ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }
 
 

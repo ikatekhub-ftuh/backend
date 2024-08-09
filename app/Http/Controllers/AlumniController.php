@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alumni;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class AlumniController extends Controller
 {
@@ -11,87 +14,113 @@ class AlumniController extends Controller
     {
         $query = Alumni::query();
 
-        // $limit = $request->has('limit') ? $request->limit : 10;
+        if ($request->has('id_alumni')){
+            $query->where('id_alumni', $request->id_alumni);
+            $result = $query->first();
 
-        $request->has('id') ? $query->where('id_alumni', $request->id) : null;
-        // $request->has('page') ? $query->offset($limit * ($request->page - 1)) : null;
+            if (!$result) {
+                return response()->json([
+                    'message' => 'error',
+                    'errors' => 'Data not found'
+                ], 404);
+            }
+            
+            return response()->json([
+                'message' => 'success',
+                'request' => $request->all(),
+                'data' => $result
+            ], 200);
+        }
         
-        // $query->limit($limit);
+        if ($request->has('angkatan') && $request->has('jurusan')){
+            $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
+            $result = $query->get();
+            return response()->json([
+                'message' => 'success',
+                'request' => $request->all(),
+                'data' => $result
+            ], 200);}
+        
+        if ($request->has('angkatan')){
+            $query->where('angkatan', $request->angkatan);
+            $result = $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan')->get();
+            return response()->json([
+                'message' => 'success',
+                'request' => $request->all(),
+                'data' => $result
+            ], 200);
+        }
+        
         $result = $query->get();
 
+        $userId = Auth::id();
+        $angkatan = User::with('alumni')->find($userId)->alumni->angkatan;
+        $countAngkatan = Alumni::where('angkatan', $angkatan)->count();
+        
         return response()->json([
             'message' => 'success',
-            'request' => $request->all(),
-            'data' => $result
+            'data' => [
+                'angkatan' => $angkatan,
+                'count'    => $countAngkatan,
+            ]
+            // 'alumni_user' => $user,
         ], 200);
     }
 
-    // public function delete(Request $request)
-    // {
-    //     $alumni = Alumni::where('id_alumni', $request->id)->first();
-    //     $alumni->delete();
-    //     return response()->json([
-    //         'message' => 'Berhasil menghapus Alumni.'
-    //     ], 200);
-    // }
+    public function delete($id_alumni)
+    {
+        $alumni = Alumni::find($id_alumni);
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function getAllDataAlumni()
-    // {
-    //     $data = Alumni::all();
-    //     return response()->json($data, 200);
-    // }
+        if ( !$alumni ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alumni tidak ditemukan.'
+            ], 404);
+        }
 
-    /**
-     * Display the specified data by id
-     * 
-     * @param int $id
-     * @return \Illuminate\Http\Response 
-     * 
-     */
-    // public function getDataAlumniById($id)
-    // {
-    //     $data = Alumni::find($id);
+        $alumni->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menghapus data alumni.'
+        ], 200);
+    }
 
-    //     if ( is_null($data) ) {
-    //         $res = [
-    //             'success'=> false,
-    //             'message'=> "Product not found",
-    //         ];
-    //         return response()->json($res, 404);
-    //     }
+    public function claimDataALumniByUserId(Request $request) {
+        // Validasi inputan
+        $validator = Validator::make($request->all(), [
+            'id_alumni' => 'required|string',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+            ], 400);
+        }
 
-    //     return response()->json($data, 200);
-    // }
-    
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    // public function addDataAlumni(Request $request, Alumni $alumni) {      
-
-    //     return response()->json([], 'Add alumni succesfully.');
-    // }
-    
-    /**
-     * Remove the specified data by id.
-     * 
-     * @param int $id
-     * @return \Illuminate\Http\Response
-     * 
-     */
-    // public function deleteDataAlumniById($id) {
-    //     $alumni = Alumni::findOrFail($id);
-
-    //     $alumni->delete();
+        $alumni = Alumni::find($request->id_alumni);
+        if( !$alumni ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alumni tidak ditemukan',
+            ], 400);
+        }
         
-    //     return response()->json('Successfully deleted', 200);
-    // }
+        $user = Auth::user();
+        if ( $alumni->id_user != null && !$user->is_admin ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alumni sudah diklaim pengguna lain',
+            ], 401);
+        }
+
+        $alumni->update([
+            'id_user'=> $user->id_user,
+        ]);
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Data alumni berhasil diklaim.',
+            'data'      => $alumni,
+        ], 200);
+    }
 }

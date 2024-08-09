@@ -15,14 +15,6 @@ class Like extends Model
     protected $keyType = 'int';
     public $incrementing = true;
 
-    // if working without this, delete
-    // Menentukan primary key kustom
-    // protected $primaryKey = 'id_like';
-    // // Menentukan tipe primary key
-    // protected $keyType = 'int';
-    // // Primary key bukan auto-increment
-    // public $incrementing = true;
-
     protected $fillable = [
         'id_berita',
         'id_user'

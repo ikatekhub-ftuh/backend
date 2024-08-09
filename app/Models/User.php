@@ -30,9 +30,8 @@ class User extends Authenticatable
         'email',
         'password',
         'last_active',
-        'is_banned',
     ];
-
+    
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -41,6 +40,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'is_banned',
+        'is_admin'
     ];
 
     /**
@@ -54,5 +55,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
+    }
+
+    public function alumni()
+    {
+        return $this->hasOne(Alumni::class, 'id_user', 'id_user');
     }
 }

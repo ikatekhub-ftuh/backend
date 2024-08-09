@@ -11,21 +11,23 @@ class Loker extends Model
     protected $table = 'loker';
 
     protected $primaryKey = 'id_loker';
-
     protected $keyType = 'int';
-
     public $incrementing = true;
 
     protected $fillable = [
+        'id_perusahaan',
         'judul',
         'slug',
-        'gambar',
         'konten',
-        'perusahaan',
+        'id_perusahaan',
         'tgl_selesai',
         'lokasi',
         'pengalaman_kerja',
-        'posisi',
         'role',
     ];
+
+    public function perusahaan()
+    {
+        return $this->belongsTo(Perusahaan::class, 'id_perusahaan', 'id_perusahaan');
+    }
 }

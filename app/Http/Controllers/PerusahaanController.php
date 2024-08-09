@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use Illuminate\Support\Str;
+use App\Models\Perusahaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class EventController extends Controller
+class PerusahaanController extends Controller
 {
-    public function get(Request $request)
-    {
-        $query = Event::query();
+    public function get(Request $request){
+        $query = Perusahaan::query();
 
-        if ($request->has('id_event')) {
-            $query->find($request->id_event);
+        if ($request->has('id')) {
+            $query->where('id_perusahaan', $request->id);
             $result = $query->first();
 
             if (!$result) {
@@ -32,7 +30,6 @@ class EventController extends Controller
         }
 
         $result = $query->get();
-        // ! tambahkan kuota terpenuhi
 
         return response()->json([
             'message' => 'success',
@@ -43,61 +40,47 @@ class EventController extends Controller
 
     public function delete(Request $request)
     {
-        $event = Event::find($request->id_event);
+        $perusahaan = Perusahaan::where('id_perusahaan', $request->id)->first();
 
-        if (!$event) {
+        if (!$perusahaan) {
             return response()->json([
                 'message' => 'error',
                 'errors' => 'Data not found'
             ], 404);
         }
 
-        $event->delete();
+        $perusahaan->delete();
         return response()->json([
             'message' => 'success',
             'request' => $request->all(),
-            'data' => $event
+            'data' => $perusahaan
         ], 200);
     }
-
     public function post(Request $request)
     {
-        // return response()->json([
-        //     'message' => 'end of function',
-        //     'request' => $request->gambar,
-        // ]);
-        
         $v = Validator::make($request->all(), [
-            'judul'         => 'required',
-            'gambar'        => 'required',
-            'penyelenggara' => 'required',
-            'konten'        => 'required',
-            'tgl_event'     => 'required',
-            'lokasi_event'  => 'required',
-            'kuota'         => 'required',
+            'nama_perusahaan' => 'required|string',
+            'logo' => 'required|file|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($v->fails()) {
             return response()->json([
                 'message' => 'error',
                 'errors' => $v->errors()
-            ], 422);
+            ], 400);
         }
 
         $validatedData = $v->validated();
 
-        $gambarUrl = $request->file('gambar')->store('gambar/event', 'public');
-        $validatedData['gambar'] = $gambarUrl;
+        $logoUrl = $request->file('logo')->store('logo/perusahaan', 'public');
+        $validatedData['logo'] = $logoUrl;
 
-        $slug = strtolower(Str::slug($request->judul));
-        $validatedData['slug'] = $slug;
-
-        $event = Event::create($validatedData);
+        $perusahaan = Perusahaan::create($validatedData);
 
         return response()->json([
-            'message' => 'end of function',
+            'message' => 'success',
             'request' => $request->all(),
-            'data' => $event,   
-        ]);
+            'data' => $perusahaan
+        ], 200);
     }
 }

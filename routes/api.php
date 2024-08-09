@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\LokerController;
@@ -9,6 +10,10 @@ use App\Http\Controllers\Auth\GoogleController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+//! tambahkan validasi user input di controller (untuk post dan put)
+// TODO bikin ulang dokumentasi
+//* start from alumni
 
 /**
  * Berita Routes
@@ -26,11 +31,11 @@ use Illuminate\Support\Facades\Route;
  *
  * POST /berita
  * - Parameters:
- *   - judul: Title of the berita.
- *   - konten: Content of the berita.
- *   - id_kategori_berita: Category ID of the berita.
- *   - penulis: Author of the berita.
- *   - file: Image file.
+ *   - judul
+ *   - konten
+ *   - id_kategori_berita
+ *   - penulis
+ *   - gambar:file
  *
  * DELETE /berita
  * - Parameters:
@@ -51,51 +56,89 @@ Route::post('berita', [BeritaController::class, 'post']);
  *
  * GET /berita/kategori
  * - Parameters:
- *   - id?: If present, will return one item.
+ *   - id?: If present, will return one item, if not return all.
  *
  * To be Added:
  * - POST /berita/kategori
  * - DELETE /berita/kategori
  * - PUT /berita/kategori
  */
-//  test middleware: 
-// app/Http/Middleware/logcatmiddleware.php
-// registered in bootstrap/app.php
-// logged in storage/logs/laravel.log
-Route::middleware(['logcat:thisisparam,param2'])->group(function () {
-    Route::get('berita/kategori', [BeritaController::class, 'category_get']);
-});
+Route::get('berita/kategori', [BeritaController::class, 'category_get']);
 
-/**Event
- * - GET: id?, limit?, offset?
- * - POST: judul, konten, perusahaan, file:gambar
- * - DELETE: id
-*/
+/**Event Routes
+ * 
+ * GET /event
+ * - Parameters:
+ *   - id?: If present, will return event with the id. else return all event.
+ * - Note:
+ * 
+ * POST /event
+ * - Parameters:
+ *   - judul
+ *   - gambar
+ *   - penyelenggara
+ *   - konten
+ *   - tgl_event
+ *   - lokasi_event
+ *   - kuota
+ * 
+ * To be Added:
+ *   - PUT /event
+ */
 Route::get('event', [EventController::class, 'get']);
 Route::delete('event', [EventController::class, 'delete']);
 Route::post('event', [EventController::class, 'post']);
-Route::get('loker', [LokerController::class, 'getAllDataLoker']);
-Route::get('loker/{id}', [LokerController::class, 'getAllDataLokerById']);
+
+/**Loker
+ * - GET: 
+ * - POST: judul, gambar, lokasi, tgl_selesai:date, pengalaman_kerja:0-99, role, konten, perusahaan, gambar:filename, 
+ * - DELETE: id
+ */
+Route::get('loker', [LokerController::class, 'get']);
+Route::delete('loker', [LokerController::class, 'delete']);
+Route::post('loker', [LokerController::class, 'post']);
+
+Route::get('loker/company', [LokerController::class, 'get_perusahaan']);
+Route::post('loker/company', [LokerController::class, 'post_perusahaan']);
+// Route::get('loker', [LokerController::class, 'getAllDataLoker']);
+// Route::get('loker/{id}', [LokerController::class, 'getAllDataLokerById']);
 
 /**Almuni
  * - GET: id?
  * - POST: nim, nama, tgl_lahir, jurusan, angkatan, kelamin, agama, golongan darah
  * - DELETE: id
-*/
+ */
+// middleware group
+Route::middleware(['auth:sanctum', 'isBanned'])->group(function () {
+    Route::post('auth/logout', [AuthController::class, 'logout']);
+
+    Route::middleware(['isAdmin'])->group(function () {
+    });
+});
+
 Route::get('alumni', [AlumniController::class, 'get']);
-Route::delete('alumni', [AlumniController::class, 'delete']);
+Route::delete('alumni/{id_alumni}', [AlumniController::class, 'delete']);
 Route::post('alumni', [AlumniController::class, 'post']);
+Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId'])->middleware('auth:sanctum');
 
-
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
-
-
-// Route::get('api/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
-// Route::get('api/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-
+/**Auth
+ * Endpoint : /auth/login (POST)
+ * Request  : email, password, confirm_password (body)
+ * Response : token
+ * 
+ * Endpoint : /auth/login (POST)
+ * Request  : email, password (body)
+ * Response : token
+ * 
+ * Endpoint : /auth/google (POST)
+ * Request  : idtoken (body), ket: token_id dari google auth
+ * Response : token
+ * 
+ */
+Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('auth/register', [AuthController::class, 'register']);
-Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
+
+Route::get('user', [UserController::class, 'get']);
+// Route::get('user', [UserController::class, 'get']);
 

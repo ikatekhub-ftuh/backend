@@ -21,11 +21,15 @@ class AlumniFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_user'       => fake()->numberBetween(1, User::count()),
-            'nim'           => fake()->randomDigit(),
+            'nim'           => fake()->regexify('[A-Z]{5}[0-4]{3}'),
             'nama'          => fake()->name(),
             'tgl_lahir'     => fake()->date(),
-            'jurusan'       => 'Teknik '.fake()->sentence(1),
+            'jurusan'       => 'Teknik '.fake()->randomElement([
+                'Perkapalan',
+                'Informatika',
+                'Mesin',
+            ]),
+            'no_telp'       => fake()->randomElement([null, fake()->unique()->phoneNumber()]),
             'angkatan'      => fake()->numberBetween(1970, 2023),
             'kelamin'       => fake()->randomElement(['l', 'p']),
             'agama'         => fake()->randomElement([

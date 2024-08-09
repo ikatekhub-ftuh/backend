@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('berita', function (Blueprint $table) {
             $table->id('id_berita');
             $table->unsignedTinyInteger('id_kategori_berita');
-            $table->foreign('id_kategori_berita')->references('id_kategori_berita')->on('kategori_berita');
+            $table->foreign('id_kategori_berita')->references('id_kategori_berita')->on('kategori_berita')->onDelete('cascade');
             $table->string('judul');
             $table->string('penulis');
             $table->string('slug', 255);

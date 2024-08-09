@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Middleware\logcatmiddleware;
+use App\Http\Middleware\loggermiddleware;
+use App\Http\Middleware\returnjsonmiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,8 +14,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->group('api', [
+            'logcat' => loggermiddleware::class,
+            'returnjson' => returnjsonmiddleware::class,
+        ]);
+        
         $middleware->alias([
-            'logcat' => logcatmiddleware::class,
+            'isAdmin' => \App\Http\Middleware\isAdmin::class,
+            'isBanned' => \App\Http\Middleware\isBanned::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

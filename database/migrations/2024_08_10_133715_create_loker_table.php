@@ -13,15 +13,13 @@ return new class extends Migration
     {
         Schema::create('loker', function (Blueprint $table) {
             $table->id('id_loker');
-            $table->string('judul')->unique();
+            $table->string('judul');
+            $table->foreignId('id_perusahaan')->references('id_perusahaan')->on('perusahaan')->onDelete('cascade');
             $table->string('slug');
-            $table->string('gambar');
             $table->mediumText('konten');
-            $table->string('perusahaan');
             $table->date('tgl_selesai'); // tanggal loker tampil 
             $table->string('lokasi'); // kota
             $table->tinyText('pengalaman_kerja');
-            $table->string('posisi');
             $table->string('role');
 
             $table->timestamps();

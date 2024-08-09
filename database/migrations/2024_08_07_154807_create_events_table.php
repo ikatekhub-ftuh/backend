@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date('tgl_event');
             $table->string('lokasi_event', 255);
             $table->tinyText('kuota');
-            $table->tinyText('peserta');
+            $table->tinyText('peserta')->default(0);
 
             $table->timestamps();
         });
