@@ -6,9 +6,7 @@ use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\LokerController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\Auth\GoogleController;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //! tambahkan validasi user input di controller (untuk post dan put)
@@ -37,7 +35,6 @@ Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']);
 
-
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     /**
      * Endpoint : /berita (GET)
@@ -45,7 +42,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
      * Response : message, request, data
      */
     Route::get('berita', [BeritaController::class, 'get']);
-
+    Route::post('user/update-avatar', [UserController::class, 'updateAvatar']);
     //! tentukan mau pakai id atau slug
     Route::get('berita/{id_berita}', [BeritaController::class, 'getById']);
     Route::get('berita/slug/{slug}', [BeritaController::class, 'getBySlug']);
@@ -63,6 +60,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     });
 
     Route::middleware(['isAdmin'])->group(function () {
+      Route::post('user/banned', [UserController::class, 'bannedUser']);
+      Route::post('user/unbanned', [UserController::class, 'unBannedUser']);
         Route::post('loker', [LokerController::class, 'post']);
         Route::delete('loker', [LokerController::class, 'delete']);
         Route::post('loker/company', [LokerController::class, 'post_perusahaan']);

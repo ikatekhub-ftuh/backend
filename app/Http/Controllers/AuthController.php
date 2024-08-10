@@ -3,13 +3,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use Error;
 use Exception;
 use Google_Client;
+use Google\Service\Oauth2;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -120,32 +118,34 @@ class AuthController extends Controller
     public function handleGoogleLogin(Request $request)
     {
         try {
-            $idToken = $request->idtoken;
-    
+            $access_token_client = $request->access_token_client;
+            
             $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
+            $client->setAccessToken($access_token_client);
+            $oauth2 = new Oauth2($client);
+            $userInfo = $oauth2->userinfo->get();
             
-            $payload = $client->verifyIdToken($idToken);
-            
-            if ($payload) {
-                $googleId = $payload['sub'];
-                $user = User::where('google_id', $googleId)->first();
+            if ($userInfo) {
+                $user = User::where('email', $userInfo->email)->first();
     
                 if (!$user) {
                     $user = User::create([
-                        'name' => $payload['name'],
-                        'email' => $payload['email'],
-                        'google_id' => $googleId,
+                        'email' => $userInfo->email,
+                        'avatar' => $userInfo->picture,
                     ]);
                 }
     
                 $token = $user->createToken('authToken')->plainTextToken;
-                return response()->json(['token' => $token]);
+                return response()->json([
+                    'success'   => true,
+                    'message'   => 'Auth successful.',
+                    'data'      => $user,
+                    'token'     => $token,
+                ], 201);
             } else {
-                return response()->json(['error' => $payload], 401);
+                return response()->json(['error' => ""], 401);
             }
         } catch (Exception $err) {
-            // \Log::error('Google login error: '.$err->getMessage());
-
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while processing your request.',

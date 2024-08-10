@@ -6,6 +6,7 @@ use App\Http\Controllers\AlumniController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 // Route::get('berita', [BeritaController::class, 'getAll']);
 
@@ -22,3 +23,16 @@ use Illuminate\Support\Facades\Route;
 // Route::post('api/alumni',           [AlumniController::class, 'addDataAlumni']);
 // Route::put('api/alumni/{id}',       [AlumniController::class, 'aupdateDataAlumniById']);
 // Route::delete('api/alumni/{id}',    [AlumniController::class, 'deleteDataAlumniById']);
+
+
+Route::get('/auth/redirect', function () {
+    // return response()->json(['id' => 'id']);
+    return Socialite::driver('google')->redirect();
+});
+ 
+Route::get('/auth/callback', function () {
+    $user = Socialite::driver('google')->user();
+    dd($user);
+ 
+    // $user->token
+});
