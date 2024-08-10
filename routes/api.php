@@ -6,9 +6,7 @@ use App\Http\Controllers\AlumniController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\LokerController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\Auth\GoogleController;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //! tambahkan validasi user input di controller (untuk post dan put)
@@ -140,3 +138,5 @@ Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('auth/register', [AuthController::class, 'register']);
 
 Route::post('user/update-avatar', [UserController::class, 'updateAvatar'])->middleware('auth:sanctum');
+Route::post('user/banned', [UserController::class, 'bannedUser'])->middleware(['auth:sanctum', 'isAdmin']);
+Route::post('user/unbanned', [UserController::class, 'unBannedUser'])->middleware(['auth:sanctum', 'isAdmin']);

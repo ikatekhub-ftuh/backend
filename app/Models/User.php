@@ -41,6 +41,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'is_banned',
+        'ban_reason',
+        'banned_at',
         'is_admin'
     ];
 
