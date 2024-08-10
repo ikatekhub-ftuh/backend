@@ -31,7 +31,7 @@ class makeadmin extends Command
         if ($user) {
             $user->is_admin = true;
             $user->save();
-            $this->info('User is now an admin');
+            $this->info($email . ' is now an admin');
             return;
         } 
 
