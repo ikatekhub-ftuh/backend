@@ -63,7 +63,7 @@ class EventController extends Controller
     public function post(Request $request)
     {
         // return response()->json([
-        //     'message' => 'end of function',
+        //     'message' => 'message',
         //     'request' => $request->gambar,
         // ]);
         
@@ -95,7 +95,7 @@ class EventController extends Controller
         $event = Event::create($validatedData);
 
         return response()->json([
-            'message' => 'end of function',
+            'message' => 'message',
             'request' => $request->all(),
             'data' => $event,   
         ]);

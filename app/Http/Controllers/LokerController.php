@@ -90,7 +90,7 @@ class LokerController extends Controller
         $loker = Loker::create($validatedData);
 
         return response()->json([
-            'message' => 'end of function',
+            'message' => 'message',
             'request' => $request->all(),
             'data' => $loker,
         ]);
@@ -142,11 +142,29 @@ class LokerController extends Controller
         $perusahaan = Perusahaan::create($validatedData);
 
         return response()->json([
-            'message' => 'end of function',
+            'message' => 'message',
             'request' => $request->all(),
             'data' => $perusahaan,
         ]);
     }
 
+    public function delete_perusahaan(Request $request)
+    {
+        $perusahaan = Perusahaan::where('id_perusahaan', $request->id_perusahaan)->first();
 
+        if (!$perusahaan) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Data not found'
+            ], 404);
+        }
+
+        $perusahaan->delete();
+
+        return response()->json([
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $perusahaan
+        ], 200);
+    }
 }

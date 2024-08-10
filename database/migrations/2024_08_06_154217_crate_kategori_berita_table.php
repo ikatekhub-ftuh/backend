@@ -15,7 +15,6 @@ return new class extends Migration
             $table->unsignedTinyInteger('id_kategori_berita')->primary()->autoIncrement();
             $table->string('kategori', 255);
             $table->string('slug', 255);
-
             $table->timestamps();
         });
     }

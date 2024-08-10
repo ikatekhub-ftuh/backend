@@ -17,7 +17,8 @@ class BeritaFactory extends Factory
      */
     public function definition(): array
     {
-        $judul = $this->faker->sentence();
+        // fake a good title
+        $judul = fake()->sentence(5);
         $slug = Str::slug(Str::limit($judul, 200));
 
         return [
@@ -25,8 +26,9 @@ class BeritaFactory extends Factory
             'judul'                 => $judul,
             'slug'                  => $slug,
             'penulis'               => fake()->name(),
-            'gambar'                => 'berita/img.jpg',
-            'konten'                => fake()->paragraphs(1, true), 
+            // 'gambar'                => 'berita/img.jpg',
+            'gambar' => "/gambar/dummy/images/test.png",
+            'konten'                => fake()->paragraphs(50, true), 
             'total_like'            => fake()->numberBetween(0, 1000)
         ];
     }

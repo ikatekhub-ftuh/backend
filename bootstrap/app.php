@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Middleware\bancheck;
 use App\Http\Middleware\loggermiddleware;
+use App\Http\Middleware\noGuest;
 use App\Http\Middleware\returnjsonmiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,9 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
         
         $middleware->alias([
             'isAdmin' => \App\Http\Middleware\isAdmin::class,
-            'isBanned' => \App\Http\Middleware\isBanned::class,
+            'isNotBanned' => bancheck::class,
+            'noGuest' => noGuest::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        
     })->create();

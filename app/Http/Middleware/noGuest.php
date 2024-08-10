@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class isBanned
+class noGuest
 {
     /**
      * Handle an incoming request.
@@ -15,11 +15,13 @@ class isBanned
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->is_banned) {
+        // check if user->with alumni is not null
+
+        if (!$request->user()->alumni) {
             return response()->json([
                 'message' => 'error',
-                'errors' => 'You are banned',
-            ], 403);
+                'errors' => 'Guess not allowed',
+            ], 401);
         }
         
         return $next($request);

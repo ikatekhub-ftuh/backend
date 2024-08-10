@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
+    public function get(Request $request) {
+          $user = $request->user();
+
+          return response()->json([
+              'message' => 'success',
+              'data' => $user
+          ], 200);
+      }
+
+      
     public function updateAvatar(Request $request) {
         $validator = Validator::make($request->all(), [
             'avatar' => 'required|max:4048',
