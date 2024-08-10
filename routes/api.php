@@ -139,6 +139,4 @@ Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/login', [AuthController::class, 'login']);
 Route::post('auth/register', [AuthController::class, 'register']);
 
-Route::get('user', [UserController::class, 'get']);
-// Route::get('user', [UserController::class, 'get']);
-
+Route::post('user/update-avatar', [UserController::class, 'updateAvatar'])->middleware('auth:sanctum');
