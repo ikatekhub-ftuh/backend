@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class noGuest
+class guestOnly
 {
     /**
      * Handle an incoming request.
@@ -15,13 +15,13 @@ class noGuest
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->is_admin || $request->user()->alumni) {
-            return $next($request);
+        if ($request->user()->is_admin || !$request->user()->alumni) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Only guest allowed',
+            ], 401);
         }
 
-        return response()->json([
-            'message' => 'error',
-            'errors' => 'Guess not allowed',
-        ], 401);
+        return $next($request);
     }
 }

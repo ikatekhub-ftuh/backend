@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
 
         // User::factory(3000)->create();
         // KategoriBerita::factory(12)->create();
-        Berita::factory(500)->create(); 
+        // Berita::factory(500)->create();
         // Perusahaan::factory(20)->create();
         // Loker::factory(30)->create();
         // Event::factory(5)->create();
 
         // sometimes error, paksami saja
-        // Like::factory(400)->create();
+        Like::factory(400)->create();
 
         // kalau mau run banyak data, uncomment ini, comment yang lain
         // Alumni::factory(24000)->create();

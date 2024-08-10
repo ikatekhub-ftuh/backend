@@ -10,7 +10,6 @@ use App\Http\Controllers\EventController;
 use Illuminate\Support\Facades\Route;
 
 //! tambahkan validasi user input di controller (untuk post dan put)
-// TODO bikin ulang dokumentasi
 // TODO implement guestcheck middleware
 // TODO on berita, return whether user has liked or not
 // * check berita search
@@ -52,6 +51,9 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId']);
 
+
+    Route::middleware(['guestOnly'])->group(function () {});
+
     Route::middleware(['noGuest'])->group(function () {
         Route::get('event', [EventController::class, 'get']);
         Route::get('loker', [LokerController::class, 'get']);
@@ -60,8 +62,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     });
 
     Route::middleware(['isAdmin'])->group(function () {
-      Route::post('user/banned', [UserController::class, 'bannedUser']);
-      Route::post('user/unbanned', [UserController::class, 'unBannedUser']);
+        Route::post('user/banned', [UserController::class, 'bannedUser']);
+        Route::post('user/unbanned', [UserController::class, 'unBannedUser']);
         Route::post('loker', [LokerController::class, 'post']);
         Route::delete('loker', [LokerController::class, 'delete']);
         Route::post('loker/company', [LokerController::class, 'post_perusahaan']);

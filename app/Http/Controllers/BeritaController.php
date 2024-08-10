@@ -10,17 +10,45 @@ use Illuminate\Support\Str;
 
 class BeritaController extends Controller
 {
-    
+
+    // public function get(Request $request)
+    // {
+    //     $query = Berita::with('likes');
+    //     // ilike = case insensitive (only for postgres)
+    //     $request->has('search') ? $query->where('judul', 'ilike', '%' . $request->search . '%') : null;
+    //     $request->has('id_kategori_berita') ? $query->where('id_kategori_berita', $request->id_kategori_berita) : null;
+    //     $limit = $request->has('limit') ? $request->limit : 10;
+    //     $result = $query->paginate($limit);
+    //     return response()->json([
+    //         'message' => 'success',
+    //         'data' => $result
+    //     ], 200);
+    // }
+
     public function get(Request $request)
     {
-        $query = Berita::query();
-        // jika tidak memiliki id, maka mengembalikan banyak data
-        $request->has('id_kategori_berita') ? $query->where('id_kategori_berita', $request->id_kategori_berita) : null;
-        $limit = $request->has('limit') ? $request->limit : 10;
+        $userId = $request->user()->id_user;
+
+        $query = Berita::select('berita.*')
+            ->selectRaw('EXISTS(SELECT 1 FROM likes WHERE likes.id_berita = berita.id_berita AND likes.id_user = ?) AS is_liked', [$userId]);
+
+        if ($request->has('search')) {
+            $query->where('judul', 'ilike', '%' . $request->search . '%');
+        }
+
+        if ($request->has('id_kategori_berita')) {
+            $query->where('id_kategori_berita', $request->id_kategori_berita);
+        }
+
+        $limit = $request->input('limit', 10);
+
         $result = $query->paginate($limit);
+
         return response()->json([
+            'debug' => [
+                'user_id' => $userId,
+            ],
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $result
         ], 200);
     }
@@ -128,7 +156,8 @@ class BeritaController extends Controller
         ], 200);
     }
 
-    public function category_post(Request $request){
+    public function category_post(Request $request)
+    {
         $v = $request->validate([
             'kategori' => 'required',
         ]);
@@ -148,7 +177,7 @@ class BeritaController extends Controller
         $v = Validator::make($request->all(), [
             'id_kategori_berita' => 'required',
         ]);
-        
+
         $kategori = KategoriBerita::where('id_kategori_berita', $request->id_kategori_berita)->first();
 
         if (!$kategori) {

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,4 +24,10 @@ class Berita extends Model
         'konten',
         'total_like',
     ];
+
+    // like
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'id_berita');
+    }
 }
