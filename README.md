@@ -6,24 +6,24 @@
 - 1.3 Ban User [POST /user/ban] [here](#13-ban-user-post-userban)
 - 1.4 Unban User [POST /user/unban] [here](#14-unban-user-post-userunban)
 
-### 2. [Authentication API](#2-authentication-api)
+### 2. [Authentication API](#2-authentication-api-1)
 - 2.1 Login [POST /auth/login] [here](#21-login-post-authlogin)
 - 2.2 Register [POST /auth/register] [here](#22-register-post-authregister)
 - 2.3 Logout [POST /auth/logout] [here](#23-logout-post-authlogout)
 
-### 3. [News API](#3-news-api)
+### 3. [News API](#3-news-api-1)
 - 3.1 Show All News (Search) [GET /berita] [here](#31-show-all-news-search-get-berita)
 - 3.2 Show News by ID [GET /berita/id/{id}] [here](#32-show-news-by-id-get-beritaidid)
 - 3.3 Show News by Category [GET /berita/kategori/{id}] [here](#33-show-news-by-category-get-beritakategoriid)
 - 3.4 Like News [POST /berita/like] [here](#34-like-news-post-beritalike)
 
-### 4. [Event API](#4-event-api)
+### 4. [Event API](#4-event-api-1)
 - 4.1 Show All Events [GET /event] [here](#41-show-all-events-get-event)
 - 4.2 Show Event by ID [GET /event/id/{id}] [here](#42-show-event-by-id-get-eventidid)
 - 4.3 Register to Event [POST /event/register] [here](#43-register-to-event-post-eventregister)
 - 4.4 Unregister from Event [POST /event/unregister] [here](#44-unregister-from-event-post-eventunregister)
 
-### 5. [Job Vacancy API](#5-job-vacancy-api)
+### 5. [Job Vacancy API](#5-job-vacancy-api-1)
 - 5.1 Show All Job Vacancies (Search) [GET /loker] [here](#51-show-all-job-vacancies-search-get-loker)
 - 5.2 Show Job Vacancy by ID [GET /loker/id/{id}] [here](#52-show-job-vacancy-by-id-get-lokeridid)
 
