@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('user', [UserController::class, 'get']);
     Route::post('auth/logout', [AuthController::class, 'logout']);
     Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId']);
+    Route::post('alumni', [AlumniController::class, 'post']);
 
 
     Route::middleware(['guestOnly'])->group(function () {});
@@ -75,6 +76,5 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::post('berita/kategori', [BeritaController::class, 'category_post']);
         Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
         Route::delete('alumni/{id_alumni}', [AlumniController::class, 'delete']);
-        Route::post('alumni', [AlumniController::class, 'post']);
     });
 });
