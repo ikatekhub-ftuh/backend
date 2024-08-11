@@ -82,18 +82,18 @@ class AuthController extends Controller
     
             $user = User::where('email', $request->email)->first();
     
-            if ( $user->is_banned ) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Your account has been banned.',
-                ], 403);
-            }
-    
             if ( !$user || ! Hash::check($request->password, $user->password) ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials. Please check your email and password.',
                 ], 401);
+            }
+    
+            if ( $user->is_banned ) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your account has been banned.',
+                ], 403);
             }
     
             $token = $user->createToken('authToken')->plainTextToken;
