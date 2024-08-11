@@ -1,109 +1,273 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+0. [rule] **file-consistency**
+    - images: max:2048 mimes:jpeg,png,webp,jpg
+    - password: min:8
+    - email: unique
 
-## About Laravel
+0. [rule] **return-consistency**
+    - message: string // if success is false, message is error message(s)
+    - data: object
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+0. [get] */search/{search}* : **search news and loker (getcount)**
+    params: {
+        <!-- no params -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            news: number,
+            loker: number,
+        }
+    }
 
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+0. [get] */user* : **show user profile**
+    params: {
+        <!-- no params -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
+            alumni: {
+                ... // data alumni
+            }
+        }
+    }
+1. [post] */user/update*: **update user account**
+    params: {
+        <!-- form is dynamic, kirim yang mau diubah saja -->
+        email: string,
+        old_password: string,
+        password: string,
+        password_confirmation: string,
+        avatar: file,
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
+        }
+    }
+    note:
+    - kalau mau update password: perlu old_password, password, password_confirmation
+    - selain itu nda perlu
+    - pakai post karena ada file upload (perluki multipart/form-data kekna kalau put)
+    - ubah password nda akan reset token
+2. [post] */user/ban*: **ban user**
+    params: {
+        id_user: number,
+        ban_reason: string,
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
+        }
+    }
+3. [post] */user/unban*: **unban user**
+    params: {
+        id_user: number,
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
+        }
+    }
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+0. [post] */auth/login*: **login**
+    params: {
+        email: string,
+        password: string,
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
 
-## Learning Laravel
+        }
+    }
+1. [post] */auth/register*: **register**
+    params: {
+        email: string,
+        password: string,
+        password_confirmation: string,
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
+        }
+    }
+2. [post] */auth/logout*: **logout**
+    params: {
+        <!-- no params -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data user
+        }
+    }
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+0. [get] */berita*: **show all news (search)**
+    params: {
+        search: string,
+        page: number = 1,
+        limit: number = 10, // per page
+        id_kategori_berita: number
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            current_page: number,
+            ... // isi berita
+            is_liked: boolean, // jika user sudah like berita ini
+            kategori: {
+                ... // data kategori berita
+            }
+        },
+        ... // data lain (page_url, next_page_url, prev_page_url, total, dll)
+    }
+1. [get] */berita/id/{id}*: **show news by id**
+    params: {
+        <!-- no params, di url ji -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data berita
+            is_liked: boolean, // jika user sudah like berita ini
+            kategori: {
+                ... // data kategori berita
+            }
+        },
+    }
+2. [get] */berita/kategori/{id}*: **show news by category**
+    params: {
+        <!-- no params, di url ji -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data berita
+        },
+    }
+3. [post] */berita/like*: **like news**
+    params: {
+        id_berita: number
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data berita
+            is_liked: boolean, // jika user sudah like berita ini
+        },
+    }
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+0. [get] */event*: **show all events**
+    params: {
+        <!-- no params -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data events
+        },
+    }
+1. [get] */event/id/{id}*: **show event by id**
+    params: {
+        <!-- no params, di url ji -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data event,
+            is_registered: boolean, // jika user sudah register ke event ini
+        },
+    }
+2. [post] */event/register*: **register to event**
+    params: {
+        id_event: number
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data event
+        },
+    }
+3. [post] */event/unregister*: **unregister from event**
+    params: {
+        id_event: number
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data event
+        },
+    }
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+0. [get] */loker*: **show all job vacancies (search)**
+    params: {
+        search: string, //will search in job title and company name
+        page: number = 1,
+        limit: number = 10, // per page
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            current_page: number,
+            ... // isi job vacancies
+            perusahaan: {
+                ... // data perusahaan (logo, nama, dll)
+            }
+        },
+        ... // data lain (page_url, next_page_url, prev_page_url, total, dll)
+    }
+1. [get] */loker/id/{id}*: **show job vacancy by id**
+    params: {
+        <!-- no params, di url ji -->
+    }
+    response: {
+        success: boolean,
+        message: string,
+        data: {
+            ... // data job vacancy
+            perusahaan: {
+                ... // data perusahaan (logo, nama, dll)
+            }
+        },
+    }
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+<!-- ini mau pilih yang mana? kalau pakai slug, apinya kutukar, yg id jadinya /id/{id} -->
+get /berita/{id}: show news by id,
+get /berita/slug/{slug}: like news by id,
+<!-- berita post dan put untuk admin interface ji -->
 
-### Premium Partners
 
--   **[Vehikl](https://vehikl.com/)**
--   **[Tighten Co.](https://tighten.co)**
--   **[WebReinvent](https://webreinvent.com/)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
--   **[Cyber-Duck](https://cyber-duck.co.uk)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Jump24](https://jump24.co.uk)**
--   **[Redberry](https://redberry.international/laravel/)**
--   **[Active Logic](https://activelogic.com)**
--   **[byte5](https://byte5.de)**
--   **[OP.GG](https://op.gg)**
 
-## Contributing
+<!-- anything below is for api body request, im typing here because i need github copilot -->
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
-Documentation API
-
-Endpoint: /register
-Endpoint: /login
-
-Method: GET
-Endpoint: /berita
-Response: Array of berita - id_kategori - judul - slug - gambar - konten - created_at - updated_at
-Request: -
-
-Method: POST, PUT, DELETE
-Endpoint: /berita
-
-Method: GET
-Endpoint: /loker
-Response: Array - nama_loker - perusahaan - tipe - city - experience - date_publish - date_expired - requirement - thumbnail_url
-Request: -
-
-Method: POST, PUT, DELETE
-Endpoint: /loker
-
-<!-- UI Untuk mendaftar -->
-
-Method: GET
-Endpoint: /event
-Response: Array - nama_event - thumbnail_event_url - tanggal_event - deskripsi_event -
-Request: -
-
-Method: POST, PUT, DELETE
-Endpoint: /event
-
-Method: GET
-Endpoint: /profile
-Response: Array - nama_lengkap - nama_panggilan - photo_profile - no_telp - domisili - jurusan - angkatan - stambuk - tanggal_lahir
-Request: -
-
-Method: POST, PUT, DELETE
-Endpoint: /event
-
-Method: Get
-Endpoint: /angkatan
-Response: -
+login
+{
+    "email": "admin@gmail.com",
+    "password": "admin123"
+}
