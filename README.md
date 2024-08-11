@@ -1,6 +1,6 @@
 # Table of Contents
 
-### 1. [User API](#1-user-api)
+### 1. [User API](#1-user-api-1)
 - 1.1 Show User Profile [GET /user] [here](#11-show-user-profile-get-user)
 - 1.2 Update User Account [POST /user/update] [here](#12-update-user-account-post-userupdate)
 - 1.3 Ban User [POST /user/ban] [here](#13-ban-user-post-userban)
