@@ -56,6 +56,7 @@
     - selain itu nda perlu
     - pakai post karena ada file upload (perluki multipart/form-data kekna kalau put)
     - ubah password nda akan reset token
+    
 2. [post] */user/ban*: **ban user**
     params: {
         id_user: number,
@@ -256,18 +257,3 @@
         },
     }
 
-
-<!-- ini mau pilih yang mana? kalau pakai slug, apinya kutukar, yg id jadinya /id/{id} -->
-get /berita/{id}: show news by id,
-get /berita/slug/{slug}: like news by id,
-<!-- berita post dan put untuk admin interface ji -->
-
-
-
-<!-- anything below is for api body request, im typing here because i need github copilot -->
-
-login
-{
-    "email": "admin@gmail.com",
-    "password": "admin123"
-}
