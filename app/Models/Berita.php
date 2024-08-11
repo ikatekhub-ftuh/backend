@@ -30,4 +30,10 @@ class Berita extends Model
     {
         return $this->hasMany(Like::class, 'id_berita');
     }
+
+    // kategori berita
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriBerita::class, 'id_kategori_berita');
+    }
 }

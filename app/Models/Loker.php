@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,6 @@ class Loker extends Model
     public $incrementing = true;
 
     protected $fillable = [
-        'id_perusahaan',
         'judul',
         'slug',
         'konten',

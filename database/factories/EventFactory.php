@@ -22,8 +22,8 @@ class EventFactory extends Factory
 
         return [
             'judul'         => $judul,
-            'slug'          => $slug, 
-            'gambar'        => $slug.'.jpg',
+            'slug'          => $slug,
+            'gambar'        => $slug . '.jpg',
             'konten'        => fake()->paragraphs(3, true),
             'penyelenggara' => fake()->sentence(2),
             'tgl_event'     => fake()->date(),

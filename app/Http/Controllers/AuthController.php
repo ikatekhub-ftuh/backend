@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -22,11 +23,10 @@ class AuthController extends Controller
         // Validasi inputan
         $validator = Validator::make($request->all(), [
             'email'             => 'required|string|email',
-            'password'          => 'min:6|required_with:confirm_password|same:confirm_password',
-            'confirm_password'  => 'min:6'
+            'password'          => 'min:8|required|confirmed',
         ]);
 
-        if ( $validator->fails() ) {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors(),
@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         // Validasi email exist
         $user = User::where('email', $request->email)->first();
-        if ( $user ) {
+        if ($user) {
             return response()->json([
                 "success" => false,
                 "message" => 'The email has already been taken.',
@@ -51,7 +51,7 @@ class AuthController extends Controller
         } catch (Exception $err) {
             return response()->json([
                 "success" => false,
-                "message" => 'Server error: '. $err,
+                "message" => 'Server error: ' . $err,
             ], 500);
         }
 
@@ -67,35 +67,35 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-
             $v = Validator::make($request->all(), [
-                'email'     => 'required|string|email',
+                'email'     => 'required|string|email|exists:users,email',
                 'password'  => 'required|min:6',
             ]);
-    
-            if ( $v->fails() ) {
+
+            if ($v->fails()) {
                 return response()->json([
                     'success' => false,
                     'message' => $v->errors(),
                 ], 400);
             }
-    
+
             $user = User::where('email', $request->email)->first();
-    
-            if ( $user->is_banned ) {
+
+            if ($user->is_banned) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Your account has been banned.',
+                    'message' => 'Your account is banned.',
+                    'reason' => $user->ban_reason,
                 ], 403);
             }
-    
-            if ( !$user || ! Hash::check($request->password, $user->password) ) {
+
+            if (!$user || ! Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials. Please check your email and password.',
                 ], 401);
             }
-    
+
             $token = $user->createToken('authToken')->plainTextToken;
             return response()->json([
                 'success'   => true,
@@ -119,22 +119,22 @@ class AuthController extends Controller
     {
         try {
             $access_token_client = $request->access_token_client;
-            
+
             $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
             $client->setAccessToken($access_token_client);
             $oauth2 = new Oauth2($client);
             $userInfo = $oauth2->userinfo->get();
-            
+
             if ($userInfo) {
                 $user = User::where('email', $userInfo->email)->first();
-    
+
                 if (!$user) {
                     $user = User::create([
                         'email' => $userInfo->email,
                         'avatar' => $userInfo->picture,
                     ]);
                 }
-    
+
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json([
                     'success'   => true,
@@ -150,25 +150,26 @@ class AuthController extends Controller
                 'success' => false,
                 'message' => 'An error occurred while processing your request.',
                 'error' => $err->getMessage()
-            ], 500);            
+            ], 500);
         }
     }
-    
-    public function logout(Request $request) {
+
+    public function logout(Request $request)
+    {
         try {
             $user = $request->user();
             $user->tokens()->delete();
-            
+
             return response()->json([
                 'success'   => true,
                 'message'   => 'Logout successful.',
-                'user'      => $user,
+                'data'      => $user,
             ], 200);
-        } catch(Exception $err) {
+        } catch (Exception $err) {
             return response()->json([
                 'success'   => false,
-                'message'   => 'Error logout: '.$err,
+                'message'   => 'Error logout: ' . $err,
             ], 500);
-        } 
+        }
     }
 }

@@ -29,7 +29,7 @@ class BeritaController extends Controller
     {
         $userId = $request->user()->id_user;
 
-        $query = Berita::select('berita.*')
+        $query = Berita::with('kategori')->select('berita.*')
             ->selectRaw('EXISTS(SELECT 1 FROM likes WHERE likes.id_berita = berita.id_berita AND likes.id_user = ?) AS is_liked', [$userId]);
 
         if ($request->has('search')) {
@@ -45,49 +45,49 @@ class BeritaController extends Controller
         $result = $query->paginate($limit);
 
         return response()->json([
-            'debug' => [
-                'user_id' => $userId,
-            ],
+            'success' => true,
             'message' => 'success',
             'data' => $result
         ], 200);
     }
 
-    public function getById(Request $request)
+    public function getById(Request $request, $id)
     {
-        $berita = Berita::where('id_berita', $request->id_berita)->first();
+        $berita = Berita::with("kategori")->find($id);
+        $berita->is_liked = $berita->likes()->where('id_user', $request->user()->id_user)->exists();
+
 
         if (!$berita) {
             return response()->json([
-                'message' => 'error',
-                'errors' => 'Data not found'
+                'success' => false,
+                'message' => 'data not found',
             ], 404);
         }
 
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $berita
         ], 200);
     }
 
-    public function getBySlug(Request $request)
-    {
-        $berita = Berita::where('slug', $request->slug)->first();
+    // public function getBySlug(Request $request)
+    // {
+    //     $berita = Berita::where('slug', $request->slug)->first();
 
-        if (!$berita) {
-            return response()->json([
-                'message' => 'error',
-                'errors' => 'Data not found'
-            ], 404);
-        }
+    //     if (!$berita) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'error',
+    //         ], 404);
+    //     }
 
-        return response()->json([
-            'message' => 'success',
-            'request' => $request->all(),
-            'data' => $berita
-        ], 200);
-    }
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'success',
+    //         'data' => $berita
+    //     ], 200);
+    // }
 
     public function delete(Request $request)
     {
@@ -95,6 +95,7 @@ class BeritaController extends Controller
 
         if (!$berita) {
             return response()->json([
+                'success' => false,
                 'message' => 'error',
                 'errors' => 'Data not found'
             ], 404);
@@ -102,8 +103,8 @@ class BeritaController extends Controller
 
         $berita->delete();
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $berita
         ], 200);
     }
@@ -121,6 +122,7 @@ class BeritaController extends Controller
 
         if ($v->fails()) {
             return response()->json([
+                'success' => false,
                 'message' => 'error',
                 'errors' => $v->errors()
             ], 422);
@@ -137,8 +139,8 @@ class BeritaController extends Controller
         $berita = Berita::create($validatedData);
 
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $berita,
         ], 200);
     }
@@ -150,8 +152,8 @@ class BeritaController extends Controller
         $result = $query->get();
 
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $result
         ], 200);
     }
@@ -166,8 +168,8 @@ class BeritaController extends Controller
         $kategori = KategoriBerita::create($v);
 
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $kategori,
         ], 200);
     }
@@ -182,16 +184,50 @@ class BeritaController extends Controller
 
         if (!$kategori) {
             return response()->json([
+                'success' => false,
                 'message' => 'error',
-                'errors' => 'Data not found'
             ], 404);
         }
 
         $kategori->delete();
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $kategori
+        ], 200);
+    }
+
+    public function togglelike(Request $request)
+    {
+        $berita = Berita::find($request->id_berita);
+
+        if (!$berita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => 'Data not found'
+            ], 404);
+        }
+
+        $user = $request->user();
+        $like = $berita->likes()->where('id_user', $user->id_user)->first();
+
+        if ($like) {
+            // Unlike
+            $like->delete();
+            $isLiked = false;
+        } else {
+            // Like
+            $berita->likes()->create(['id_user' => $user->id_user]);
+            $isLiked = true;
+        }
+
+        $berita->is_liked = $isLiked;
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $berita
         ], 200);
     }
 }

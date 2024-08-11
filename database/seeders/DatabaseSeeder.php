@@ -10,6 +10,7 @@ use App\Models\Perusahaan;
 use App\Models\Like;
 use App\Models\KategoriBerita;
 use App\Models\Alumni;
+use App\Models\peserta_event;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -27,9 +28,10 @@ class DatabaseSeeder extends Seeder
         // Perusahaan::factory(20)->create();
         // Loker::factory(30)->create();
         // Event::factory(5)->create();
+        peserta_event::factory(20)->create();
 
         // sometimes error, paksami saja
-        Like::factory(400)->create();
+        // Like::factory(400)->create();
 
         // kalau mau run banyak data, uncomment ini, comment yang lain
         // Alumni::factory(24000)->create();

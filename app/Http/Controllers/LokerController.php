@@ -12,34 +12,40 @@ class LokerController extends Controller
 {
     public function get(Request $request)
     {
-        $query = Loker::query();
+        $query = Loker::with('perusahaan');
 
-        if ($request->has('id_loker')) {
-            $query->where('id_loker', $request->id_loker);
-            $result = $query->first();
-
-            if (!$result) {
-                return response()->json([
-                    'message' => 'error',
-                    'errors' => 'Data not found'
-                ], 404);
-            }
-            
-            return response()->json([
-                'message' => 'success',
-                'request' => $request->all(),
-                'data' => $result
-            ], 200);
+        if ($request->has('search')) {
+            // search both judul and perusahaan (nama_perusahaan)
+            $search = $request->search;
+            $query->where('judul', 'ilike', "%{$search}%")
+                // it works, don't touch it
+                ->orWhereRelation('perusahaan', 'nama_perusahaan', 'ilike', "%{$search}%");
         }
 
         $limit = $request->has('limit') ? $request->limit : 10;
-        $request->has('page') ? $query->offset($limit * ($request->page - 1)) : null;
         $result = $query->paginate($limit);
 
         return response()->json([
             'message' => 'success',
             'request' => $request->all(),
             'data' => $result
+        ], 200);
+    }
+
+    public function getById($id)
+    {
+        $loker = Loker::with('perusahaan')->find($id);
+
+        if (!$loker) {
+            return response()->json([
+                'message' => 'error',
+                'errors' => 'Data not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'success',
+            'data' => $loker
         ], 200);
     }
 
@@ -99,18 +105,7 @@ class LokerController extends Controller
     public function get_perusahaan(Request $request)
     {
         $query = Perusahaan::query();
-        
-        if ($request->has('id_perusahaan')) {
-            $query->where('id_perusahaan', $request->id_perusahaan);
-            $result = $query->get();
-            
-            return response()->json([
-                'message' => 'success',
-                'request' => $request->all(),
-                'data' => $result
-            ], 200);
-        }
-        
+
         $result = $query->get();
         return response()->json([
             'message' => 'success',
@@ -118,8 +113,9 @@ class LokerController extends Controller
             'data' => $result
         ]);
     }
-    
-    public function post_perusahaan(Request $request){
+
+    public function post_perusahaan(Request $request)
+    {
         // gambar, nama
         $v = Validator::make($request->all(), [
             'nama_perusahaan' => 'required',

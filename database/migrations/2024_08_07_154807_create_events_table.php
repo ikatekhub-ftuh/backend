@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('penyelenggara');
             $table->date('tgl_event');
             $table->string('lokasi_event', 255);
-            $table->tinyText('kuota');
-            $table->tinyText('peserta')->default(0);
+            $table->integer('kuota');
+            $table->integer('peserta')->default(0);
 
             $table->timestamps();
         });
