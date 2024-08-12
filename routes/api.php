@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']); //done
-Route::post('alumni/upload', [AlumniController::class, 'uploadData']); //done
 
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('search/{search}', [searchController::class, 'search']); //done
@@ -51,6 +50,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('event', [EventController::class, 'get']); //done
     Route::post('event/register', [EventController::class, 'register']); //done
     Route::post('event/unregister', [EventController::class, 'unregister']); //done
+
+    Route::post('alumni', [AlumniController::class, 'post']);
 
     Route::middleware(['guestOnly'])->group(function () {
         Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId']);
@@ -82,5 +83,6 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         // Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
         // Route::delete('alumni/id/{id_alumni}', [AlumniController::class, 'delete']);
         // Route::post('alumni', [AlumniController::class, 'post']);
+        Route::post('alumni/upload', [AlumniController::class, 'uploadData']); //done
     });
 });
