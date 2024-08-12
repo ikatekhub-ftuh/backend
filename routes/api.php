@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
  * Response : token
  *
  */
+
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']); //done
@@ -80,6 +81,5 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         // Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
         // Route::delete('alumni/id/{id_alumni}', [AlumniController::class, 'delete']);
         // Route::post('alumni', [AlumniController::class, 'post']);
-
     });
 });

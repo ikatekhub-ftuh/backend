@@ -215,10 +215,12 @@ class BeritaController extends Controller
         if ($like) {
             // Unlike
             $like->delete();
+            // $berita->total_like--;
             $isLiked = false;
         } else {
             // Like
             $berita->likes()->create(['id_user' => $user->id_user]);
+            $berita->total_like++;
             $isLiked = true;
         }
 
