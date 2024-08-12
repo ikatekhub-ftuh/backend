@@ -51,7 +51,7 @@ class AuthController extends Controller
         } catch (Exception $err) {
             return response()->json([
                 "success" => false,
-                "message" => 'Server error: ' . $err,
+                "message" => 'Server error: ' . $err->getMessage(),
             ], 500);
         }
 
@@ -59,6 +59,7 @@ class AuthController extends Controller
         return response()->json([
             'success'   => true,
             'message'   => 'Register successful.',
+            'data'     => $user,
             'token'     => $token,
         ], 201);
     }
@@ -100,9 +101,7 @@ class AuthController extends Controller
             return response()->json([
                 'success'   => true,
                 'message'   => 'Login successful.',
-                'data'      => [
-                    'email' => $user->email,
-                ],
+                'data'      => $user,
                 'token'     => $token,
             ], 201);
         } catch (Exception $err) {
