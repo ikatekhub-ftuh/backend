@@ -82,7 +82,7 @@ class AlumniController extends Controller
         if ( $validator->fails() ) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors(),
+                'message' => implode('\n', $validator->errors()->all()),
             ], 400);
         }
 
@@ -111,36 +111,63 @@ class AlumniController extends Controller
         ], 201);
     }
 
-    public function postManyDataAlumni(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'data.*.nama' => 'required|string',
-            'data.*.nim' => 'required|string',
-            'data.*.tgl_lahir' => 'required|date',
-            'data.*.jurusan' => 'required',
-            'data.*.angkatan' => 'required|min:4|max:4',
-            'data.*.kelamin' => 'required|string|max:2',
-            'data.*.agama' => 'required',
-            'data.*.golongan_darah' => '',
-            'data.*.no_telp' => 'max:20',
-        ]);
-        if ( $validator->fails() ) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors(),
-            ], 400);
+    // public function postManyDataAlumni(Request $request) {
+    //     $validator = Validator::make($request->all(), [
+    //         'data.*.nama' => 'required|string',
+    //         'data.*.nim' => 'required|string',
+    //         'data.*.tgl_lahir' => 'required|date',
+    //         'data.*.jurusan' => 'required',
+    //         'data.*.angkatan' => 'required|min:4|max:4',
+    //         'data.*.kelamin' => 'required|string|max:2',
+    //         'data.*.agama' => 'required',
+    //         'data.*.golongan_darah' => '',
+    //         'data.*.no_telp' => 'max:20',
+    //     ]);
+    //     if ( $validator->fails() ) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $validator->errors(),
+    //         ], 400);
+    //     }
+
+    //     $user = Auth::user();
+    //     $validatedData = $validator->validated();
+    //     $validatedData['validated'] = true;
+
+    //     $alumni = Alumni::createMany($validatedData);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Berhasil menambahkan data alumni',
+    //         'data' => $alumni
+    //     ], 201);
+    // }
+    
+    public function uploadData(Request $request) {
+        $file = $request->file('file_alumni');
+        $fileContents = file($file->getPathname());
+        
+        // array untuk menampung isi file berupa nama, jurusan
+        $dataFile = [];
+        foreach ($fileContents as $line) {
+            $data = str_getcsv($line);
+
+            // Pastikan data memiliki dua elemen: nama dan jurusan
+            if (count($data) === 2) {
+                $dataFile[] = [
+                    'nama' => $data[0],
+                    'jurusan' => $data[1],
+                ];
+            }
         }
-
-        $user = Auth::user();
-        $validatedData = $validator->validated();
-        $validatedData['validated'] = true;
-
-        $alumni = Alumni::createMany($validatedData);
 
         return response()->json([
             'success' => true,
             'message' => 'Berhasil menambahkan data alumni',
-            'data' => $alumni
+            'fileContents' => $fileContents,
+            'fileContents' => $dataFile,
         ], 201);
+
     }
 
     public function delete($id_alumni)

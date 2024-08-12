@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']); //done
+Route::post('alumni/upload', [AuthController::class, 'uploadData']); //done
 
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('search/{search}', [searchController::class, 'search']); //done

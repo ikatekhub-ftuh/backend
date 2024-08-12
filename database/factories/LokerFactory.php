@@ -35,7 +35,7 @@ class LokerFactory extends Factory
             'tgl_selesai'       => fake()->date(),
             'lokasi'            => fake()->city(),
             'pengalaman_kerja'  => fake()->numberBetween(1, 99),
-            'role'              => fake()->sentence()
+            'role'              => fake()->randomElement(['Paruh Waktu', 'Purna Waktu', 'Freelance'])
         ];
     }
 }
