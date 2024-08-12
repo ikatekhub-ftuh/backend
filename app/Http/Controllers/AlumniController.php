@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alumni;
+use App\Models\Jurusan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -69,15 +70,15 @@ class AlumniController extends Controller
 
     public function post(Request $request) {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required|string',
-            'nim' => 'required|string',
-            'tgl_lahir' => 'required|date',
-            'jurusan' => 'required',
-            'angkatan' => 'required|min:4|max:4',
-            'kelamin' => 'required|string|max:2',
-            'agama' => 'required',
-            'golongan_darah' => '',
-            'no_telp' => 'max:20',
+            'nama'              => 'required|string',
+            'nim'               => 'required|string',
+            'tgl_lahir'         => 'required|date',
+            'jurusan'           => 'required',
+            'angkatan'          => 'required|min:4|max:4',
+            'kelamin'           => 'required|string|max:2',
+            'agama'             => 'required',
+            'golongan_darah'    => '',
+            'no_telp'           => 'max:20',
         ]);
         if ( $validator->fails() ) {
             return response()->json([
@@ -149,14 +150,45 @@ class AlumniController extends Controller
         
         // array untuk menampung isi file berupa nama, jurusan
         $dataFile = [];
+        $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
+                    ->where('validated', true)
+                    ->groupBy('angkatan', 'jurusan')
+                    ->get()
+                    ->keyBy(function ($item) {
+                        return $item['jurusan'] . '-' . $item['angkatan'];
+                    });
+
+        $jurusan = Jurusan::select('nama_jurusan', 'kode_jurusan')->get();
+
         foreach ($fileContents as $line) {
             $data = str_getcsv($line);
-
+            
+            
             // Pastikan data memiliki dua elemen: nama dan jurusan
-            if (count($data) === 2) {
+            if (count($data) === 8) {
+                $key = $data[1] . '-' . $data[6]; // Membuat kunci unik berdasarkan jurusan dan angkatan
+        
+                // Periksa apakah kunci ini sudah ada dalam data alumni
+                if (isset($alumni[$key])) {
+                    $alumni[$key]->total += 1; // Tambahkan 1 jika sudah ada
+                } else {
+                    $alumni[$key] = (object)['total' => 1]; // Mulai dari 1 jika belum ada
+                }
+
+                $no_anggota = $jurusan->where('nama_jurusan', $data[1])->first()->kode_jurusan 
+                                . substr($data[6], -2)
+                                . str_pad($alumni[$key]->total, 3, '0', STR_PAD_LEFT);
+
+                // $no_anggota = $data[1];
                 $dataFile[] = [
                     'nama' => $data[0],
-                    'jurusan' => $data[1],
+                    'jurusan' => $data[1], //tgllahir, kelamin, agama, no telp, angkatan, jurusan
+                    'tanggal_lahir' => $data[2],
+                    'kelamin' => $data[3],
+                    'agama' => $data[4],
+                    'no_telpon' => $data[5],
+                    'angkatan' => $data[6],
+                    'no_anggota' => $no_anggota,
                 ];
             }
         }
@@ -164,8 +196,10 @@ class AlumniController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Berhasil menambahkan data alumni',
-            'fileContents' => $fileContents,
-            'fileContents' => $dataFile,
+            'data' => $dataFile,
+            'alumni' => $alumni,
+            // 'fileContents' => $fileContents,
+            // 'jurusan' => $jurusan,
         ], 201);
 
     }
@@ -198,7 +232,7 @@ class AlumniController extends Controller
         if ( $validator->fails() ) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors(),
+                'message' => implode('\n',$validator->errors()->all()),
             ], 400);
         }
         
@@ -243,7 +277,7 @@ class AlumniController extends Controller
         if ( $validator->fails() ) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors(),
+                'message' => implode("\n", $validator->errors()->all()),
             ], 400);
         }
 

@@ -11,7 +11,7 @@ class JenjangPendidikan extends Model
 {
     use HasFactory;
 
-    protected $table = 'JenjangPendidikan';
+    protected $table = 'jenjang_pendidikan';
 
     protected $primaryKey   = 'id_jenjang_pendidikan';
     protected $keyType      = 'int';
@@ -21,4 +21,9 @@ class JenjangPendidikan extends Model
         'id_alumni',
         'jenjang'
     ];
+
+    public function alumni()
+    {
+        return $this->belongsTo(Alumni::class, 'id_alumni', 'id_alumni');
+    }
 }

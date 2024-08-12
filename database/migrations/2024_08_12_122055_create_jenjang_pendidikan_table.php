@@ -18,7 +18,8 @@ return new class extends Migration
             $table->foreign('id_alumni')->references('id_alumni')->on('alumni')->onDelete('set null');
 
             $table->string('jenjang'); //s1, s2
-            $table->string('nim'); // D01419024
+            $table->string('nim'); // D14 19 024 
+
             $table->timestamps();
         });
     }

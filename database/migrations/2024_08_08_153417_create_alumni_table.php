@@ -16,9 +16,10 @@ public function up(): void
             $table->unsignedBigInteger('id_user')->nullable()->unique();
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('set null');
             $table->string('nim', 50)->unique();
+            $table->string('no_anggota', 50)->unique();
             $table->string('nama', 100);
             $table->date('tgl_lahir');
-            $table->string('jurusan');
+            $table->tinyText('jurusan');
             $table->string('no_telp', 20)->nullable()->unique();
             $table->string('angkatan', 4);
             $table->enum('kelamin', ['l', 'p']);
