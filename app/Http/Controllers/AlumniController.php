@@ -235,7 +235,7 @@ class AlumniController extends Controller
             ], 400);
         }
         
-        if(!Alumni::find($user->id_user)) {
+        if(Alumni::find($user->id_user)) {
             return response()->json([
                 'success' => false,
                 'message' => 'User sudah memiliki data alumni',
