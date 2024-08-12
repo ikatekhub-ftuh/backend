@@ -67,8 +67,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
 
     Route::middleware(['isAdmin'])->group(function () {
         Route::get('loker/perusahaan', [LokerController::class, 'get_perusahaan']); //done
-        Route::post('user/ban', [UserController::class, 'banUser']); //done
-        Route::post('user/unban', [UserController::class, 'unbanUser']); //done
+        Route::post('user/banned', [UserController::class, 'banUser']); //done
+        Route::post('user/unbanned', [UserController::class, 'unBanUser']); //done
 
         // kebutuhan admin nanti
         // Route::post('loker', [LokerController::class, 'post']);

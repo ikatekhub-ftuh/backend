@@ -113,7 +113,7 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_user' => 'required|exists:users,id_user',
-            'ban_reason' => 'required',
+            'banned_reason' => 'required',
         ]);
 
         if ($validator->fails()) {
@@ -124,6 +124,13 @@ class UserController extends Controller
         }
 
         $user = User::find($request->id_user);
+        if($user->is_admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak bisa banned admin',
+            ], 422);
+
+        }
         $user->is_banned = true;
         $user->ban_reason = $request->banned_reason;
         $user->banned_at = now();
