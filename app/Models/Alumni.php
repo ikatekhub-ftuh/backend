@@ -25,14 +25,14 @@ class Alumni extends Model
         'jurusan',
         'angkatan',
         'kelamin',
+        'golongan_darah',
         'agama',
         'validated'
     ];
-
+    
     // hide name
-
+    
     protected $hidden = [
-        'golongan_darah'
     ];
 
     public function user()

@@ -80,5 +80,6 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         // Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
         // Route::delete('alumni/id/{id_alumni}', [AlumniController::class, 'delete']);
         // Route::post('alumni', [AlumniController::class, 'post']);
+
     });
 });

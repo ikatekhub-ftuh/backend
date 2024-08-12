@@ -67,6 +67,82 @@ class AlumniController extends Controller
         ], 200);
     }
 
+    public function post(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required|string',
+            'nim' => 'required|string',
+            'tgl_lahir' => 'required|date',
+            'jurusan' => 'required',
+            'angkatan' => 'required|min:4|max:4',
+            'kelamin' => 'required|string|max:2',
+            'agama' => 'required',
+            'golongan_darah' => '',
+            'no_telp' => 'max:20',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = Auth::user();
+        
+        $validatedData = $validator->validated();
+        $validatedData['validated'] = false;
+        if( $user->is_admin ) {
+            $validatedData['validated'] = true;
+        } else {
+            if(!Alumni::find($user->id_user)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User sudah memiliki data alumni',
+                ], 400);
+            }
+            $validatedData['id_user'] = $user->id_user;
+        }
+
+        $alumni = Alumni::create($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data alumni',
+            'data' => $alumni
+        ], 201);
+    }
+
+    public function postManyDataAlumni(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'data.*.nama' => 'required|string',
+            'data.*.nim' => 'required|string',
+            'data.*.tgl_lahir' => 'required|date',
+            'data.*.jurusan' => 'required',
+            'data.*.angkatan' => 'required|min:4|max:4',
+            'data.*.kelamin' => 'required|string|max:2',
+            'data.*.agama' => 'required',
+            'data.*.golongan_darah' => '',
+            'data.*.no_telp' => 'max:20',
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+            ], 400);
+        }
+
+        $user = Auth::user();
+        $validatedData = $validator->validated();
+        $validatedData['validated'] = true;
+
+        $alumni = Alumni::createMany($validatedData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil menambahkan data alumni',
+            'data' => $alumni
+        ], 201);
+    }
+
     public function delete($id_alumni)
     {
         $alumni = Alumni::find($id_alumni);
@@ -87,8 +163,55 @@ class AlumniController extends Controller
 
     public function claimDataALumniByUserId(Request $request) {
         // Validasi inputan
+        $user = Auth::user();
         $validator = Validator::make($request->all(), [
-            'id_alumni' => 'required|string',
+            'id_alumni' => 'required',
+            'id_user' => $user->is_admin ? 'required' : '', 
+        ]);
+        if ( $validator->fails() ) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors(),
+            ], 400);
+        }
+        
+        if(!Alumni::find($user->id_user)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User sudah memiliki data alumni',
+            ], 400);
+        }
+
+        $alumni = Alumni::find($request->id_alumni);
+        if( !$alumni ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alumni tidak ditemukan',
+            ], 400);
+        }
+        
+        if ( $alumni->id_user != null && !$user->is_admin ) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data alumni sudah diklaim pengguna lain',
+            ], 401);
+        }
+
+        $alumni->update([
+            'id_user'=> $user->is_admin ? $request->id_user : $user->id_user,
+        ]);
+
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Data alumni berhasil diklaim.',
+            'data'      => $alumni,
+        ], 200);
+    }
+
+    public function validateDataAlumni(Request $request) {
+        // Validasi inputan
+        $validator = Validator::make($request->all(), [
+            'id_alumni' => 'required|numeric',
         ]);
         if ( $validator->fails() ) {
             return response()->json([
@@ -104,23 +227,14 @@ class AlumniController extends Controller
                 'message' => 'Data alumni tidak ditemukan',
             ], 400);
         }
-        
-        $user = Auth::user();
-        if ( $alumni->id_user != null && !$user->is_admin ) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Data alumni sudah diklaim pengguna lain',
-            ], 401);
-        }
-
         $alumni->update([
-            'id_user'=> $user->id_user,
+            'validated'=> true,
         ]);
 
         return response()->json([
             'success'   => true,
-            'message'   => 'Data alumni berhasil diklaim.',
+            'message'   => 'Data alumni berhasil divalidasi.',
             'data'      => $alumni,
-        ], 200);
+        ], 200);        
     }
 }

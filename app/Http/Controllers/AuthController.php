@@ -88,8 +88,8 @@ class AuthController extends Controller
                     'reason' => $user->ban_reason,
                 ], 403);
             }
-
-            if (!$user || ! Hash::check($request->password, $user->password)) {
+    
+            if ( !$user || ! Hash::check($request->password, $user->password) ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials. Please check your email and password.',

@@ -39,7 +39,7 @@ public function up(): void
                 'O-', 
                 'AB+', 
                 'AB-'
-            ]);
+            ])->nullable();
             $table->boolean('validated')->default(false);
             $table->timestamps();
         });
