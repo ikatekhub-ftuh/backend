@@ -17,11 +17,12 @@ class bancheck
     {
         if ($request->user()->is_banned) {
             return response()->json([
-                'message' => 'error',
-                'errors' => 'You are banned',
+                'success' => false,
+                'message' => 'You are banned',
+                'reason' => $request->user()->ban_reason,
             ], 401);
         }
-        
+
         return $next($request);
     }
 }

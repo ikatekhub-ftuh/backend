@@ -1,109 +1,387 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Table of Contents
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### 1. [User API](#1-user-api-1)
+- 1.1 Show User Profile [GET /user] [here](#11-show-user-profile-get-user)
+- 1.2 Update User Account [POST /user/update] [here](#12-update-user-account-post-userupdate)
+- 1.3 Ban User [POST /user/ban] [here](#13-ban-user-post-userban)
+- 1.4 Unban User [POST /user/unban] [here](#14-unban-user-post-userunban)
 
-## About Laravel
+### 2. [Authentication API](#2-authentication-api-1)
+- 2.1 Login [POST /auth/login] [here](#21-login-post-authlogin)
+- 2.2 Register [POST /auth/register] [here](#22-register-post-authregister)
+- 2.3 Logout [POST /auth/logout] [here](#23-logout-post-authlogout)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 3. [News API](#3-news-api-1)
+- 3.1 Show All News (Search) [GET /berita] [here](#31-show-all-news-search-get-berita)
+- 3.2 Show News by ID [GET /berita/id/{id}] [here](#32-show-news-by-id-get-beritaidid)
+- 3.3 Show News by Category [GET /berita/kategori/{id}] [here](#33-show-news-by-category-get-beritakategoriid)
+- 3.4 Like News [POST /berita/like] [here](#34-like-news-post-beritalike)
 
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 4. [Event API](#4-event-api-1)
+- 4.1 Show All Events [GET /event] [here](#41-show-all-events-get-event)
+- 4.2 Show Event by ID [GET /event/id/{id}] [here](#42-show-event-by-id-get-eventidid)
+- 4.3 Register to Event [POST /event/register] [here](#43-register-to-event-post-eventregister)
+- 4.4 Unregister from Event [POST /event/unregister] [here](#44-unregister-from-event-post-eventunregister)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 5. [Job Vacancy API](#5-job-vacancy-api-1)
+- 5.1 Show All Job Vacancies (Search) [GET /loker] [here](#51-show-all-job-vacancies-search-get-loker)
+- 5.2 Show Job Vacancy by ID [GET /loker/id/{id}] [here](#52-show-job-vacancy-by-id-get-lokeridid)
 
-## Learning Laravel
+<br>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+# 1. User API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1.1 Show User Profile [GET /user]
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Description:** This API endpoint is used to retrieve the user profile.
 
-## Laravel Sponsors
+**Parameters:**
+- None
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+        "alumni": {
+            // data alumni
+        }
+    }
+}
+```
 
-### Premium Partners
+### 1.2 Update User Account [POST /user/update]
 
--   **[Vehikl](https://vehikl.com/)**
--   **[Tighten Co.](https://tighten.co)**
--   **[WebReinvent](https://webreinvent.com/)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
--   **[Cyber-Duck](https://cyber-duck.co.uk)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Jump24](https://jump24.co.uk)**
--   **[Redberry](https://redberry.international/laravel/)**
--   **[Active Logic](https://activelogic.com)**
--   **[byte5](https://byte5.de)**
--   **[OP.GG](https://op.gg)**
+**Description:** This API endpoint is used to update the user account.
 
-## Contributing
+**Parameters:**
+- `email`: `string`
+- `old_password`: `string`
+- `password`: `string`
+- `password_confirmation`: `string`
+- `avatar`: `file`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+    }
+}
+```
 
-## Code of Conduct
+**Note:**
+- To update the password, the following parameters are required: `old_password`, `password`, `password_confirmation`.
+- Use POST method because there is a file upload (`multipart/form-data` is needed, like in PUT).
+- Changing the password will not reset the token.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 1.3 Ban User [POST /user/ban]
 
-## Security Vulnerabilities
+**Description:** This API endpoint is used to ban a user.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Parameters:**
+- `id_user`: `number`
+- `ban_reason`: `string`
 
-## License
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+    }
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 1.4 Unban User [POST /user/unban]
 
-Documentation API
+**Description:** This API endpoint is used to unban a user.
 
-Endpoint: /register
-Endpoint: /login
+**Parameters:**
+- `id_user`: `number`
 
-Method: GET
-Endpoint: /berita
-Response: Array of berita - id_kategori - judul - slug - gambar - konten - created_at - updated_at
-Request: -
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+    }
+}
+```
 
-Method: POST, PUT, DELETE
-Endpoint: /berita
+# 2. Authentication API
 
-Method: GET
-Endpoint: /loker
-Response: Array - nama_loker - perusahaan - tipe - city - experience - date_publish - date_expired - requirement - thumbnail_url
-Request: -
+### 2.1 Login [POST /auth/login]
 
-Method: POST, PUT, DELETE
-Endpoint: /loker
+**Description:** This API endpoint is used for user login.
 
-<!-- UI Untuk mendaftar -->
+**Parameters:**
+- `email`: `string`
+- `password`: `string`
 
-Method: GET
-Endpoint: /event
-Response: Array - nama_event - thumbnail_event_url - tanggal_event - deskripsi_event -
-Request: -
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+    }
+}
+```
 
-Method: POST, PUT, DELETE
-Endpoint: /event
+### 2.2 Register [POST /auth/register]
 
-Method: GET
-Endpoint: /profile
-Response: Array - nama_lengkap - nama_panggilan - photo_profile - no_telp - domisili - jurusan - angkatan - stambuk - tanggal_lahir
-Request: -
+**Description:** This API endpoint is used for user registration.
 
-Method: POST, PUT, DELETE
-Endpoint: /event
+**Parameters:**
+- `email`: `string`
+- `password`: `string`
+- `password_confirmation`: `string`
 
-Method: Get
-Endpoint: /angkatan
-Response: -
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+    }
+}
+```
+
+### 2.3 Logout [POST /auth/logout]
+
+**Description:** This API endpoint is used for user logout.
+
+**Parameters:**
+- None
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // data user
+    }
+}
+```
+
+# 3. News API
+
+### 3.1 Show All News (Search) [GET /berita]
+
+**Description:** This API endpoint is used to retrieve all news with search functionality.
+
+**Parameters:**
+- `search`: `string`
+- `page`: `number` (default: 1)
+- `limit`: `number` (default: 10)
+- `id_kategori_berita`: `number`
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        "current_page": number,
+        // news data
+        "is_liked": boolean,
+        "kategori": {
+            // category data
+        }
+    },
+    // other data (page_url, next_page_url, prev_page_url, total, etc.)
+}
+```
+
+### 3.2 Show News by ID [GET /berita/id/{id}]
+
+**Description:** This API endpoint is used to retrieve a specific news by its ID.
+
+**Parameters:**
+- None (ID is specified in the URL)
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // news data
+        "is_liked": boolean,
+        "kategori": {
+            // category data
+        }
+    }
+}
+```
+
+### 3.3 Show News by Category [GET /berita/kategori/{id}]
+
+**Description:** This API endpoint is used to retrieve news by a specific category.
+
+**Parameters:**
+- None (Category ID is specified in the URL)
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // news data
+    }
+}
+```
+
+### 3.4 Like News [POST /berita/like]
+
+**Description:** This API endpoint is used to like a news.
+
+**Parameters:**
+- `id_berita`: `number`
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // news data
+        "is_liked": boolean
+    }
+}
+```
+
+# 4. Event API
+
+### 4.1 Show All Events [GET /event]
+
+**Description:** This API endpoint is used to retrieve all events.
+
+**Parameters:**
+- None
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // events data
+    }
+}
+```
+
+### 4.2 Show Event by ID [GET /event/id/{id}]
+
+**Description:** This API endpoint is used to retrieve a specific event by its ID.
+
+**Parameters:**
+- None (ID is specified in the URL)
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // event data
+        "is_registered": boolean
+    }
+}
+```
+
+### 4.3 Register to Event [POST /event/register]
+
+**Description:** This API endpoint is used to register for an event.
+
+**Parameters:**
+- `id_event`: `number`
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // event data
+    }
+}
+```
+
+### 4.4 Unregister from Event [POST /event/unregister]
+
+**Description:** This API endpoint is used to unregister from an event.
+
+**Parameters:**
+- `id_event`: `number`
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // event data
+    }
+}
+```
+
+# 5. Job Vacancy API
+
+### 5.1 Show All Job Vacancies (Search) [GET /loker]
+
+**Description:** This API endpoint is used to retrieve all job vacancies with search functionality.
+
+**Parameters:**
+- `search`: `string` (will search in job title and company name)
+- `page`: `number` (default: 1)
+- `limit`: `number` (default: 10)
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        "current_page": number,
+        // job vacancies data
+        "perusahaan": {
+            // company data (logo, name, etc.)
+        }
+    },
+    // other data (page_url, next_page_url, prev_page_url, total, etc.)
+}
+```
+
+### 5.2 Show Job Vacancy by ID [GET /loker/id/{id}]
+
+**Description:** This API endpoint is used to retrieve a specific job vacancy by its ID.
+
+**Parameters:**
+- None (ID is specified in the URL)
+
+**Response:**
+```json
+{
+    "success": boolean,
+    "message": string,
+    "data": {
+        // job vacancy data
+        "perusahaan": {
+            // company data (logo, name, etc.)
+        }
+    }
+}
+```
