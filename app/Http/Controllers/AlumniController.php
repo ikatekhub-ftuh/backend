@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AlumniHelper;
 use App\Models\Alumni;
 use App\Models\Jurusan;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
@@ -94,7 +96,7 @@ class AlumniController extends Controller
         if( $user->is_admin ) {
             $validatedData['validated'] = true;
         } else {
-            if(!Alumni::find($user->id_user)) {
+            if(Alumni::find($user->id_user)) {
                 return response()->json([
                     'success' => false,
                     'message' => 'User sudah memiliki data alumni',
@@ -111,46 +113,16 @@ class AlumniController extends Controller
             'data' => $alumni
         ], 201);
     }
-
-    // public function postManyDataAlumni(Request $request) {
-    //     $validator = Validator::make($request->all(), [
-    //         'data.*.nama' => 'required|string',
-    //         'data.*.nim' => 'required|string',
-    //         'data.*.tgl_lahir' => 'required|date',
-    //         'data.*.jurusan' => 'required',
-    //         'data.*.angkatan' => 'required|min:4|max:4',
-    //         'data.*.kelamin' => 'required|string|max:2',
-    //         'data.*.agama' => 'required',
-    //         'data.*.golongan_darah' => '',
-    //         'data.*.no_telp' => 'max:20',
-    //     ]);
-    //     if ( $validator->fails() ) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => $validator->errors(),
-    //         ], 400);
-    //     }
-
-    //     $user = Auth::user();
-    //     $validatedData = $validator->validated();
-    //     $validatedData['validated'] = true;
-
-    //     $alumni = Alumni::createMany($validatedData);
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'Berhasil menambahkan data alumni',
-    //         'data' => $alumni
-    //     ], 201);
-    // }
     
     public function uploadData(Request $request) {
         $file = $request->file('file_alumni');
         $fileContents = file($file->getPathname());
+        array_shift($fileContents);
         
-        // array untuk menampung isi file berupa nama, jurusan
+        $timeNow = Carbon::now();
+        
         $dataFile = [];
-        $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
+        $alumniCounts = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
                     ->where('validated', true)
                     ->groupBy('angkatan', 'jurusan')
                     ->get()
@@ -160,48 +132,75 @@ class AlumniController extends Controller
 
         $jurusan = Jurusan::select('nama_jurusan', 'kode_jurusan')->get();
 
+        $i = 0;
         foreach ($fileContents as $line) {
-            $data = str_getcsv($line);
-            
-            
-            // Pastikan data memiliki dua elemen: nama dan jurusan
-            if (count($data) === 8) {
-                $key = $data[1] . '-' . $data[6]; // Membuat kunci unik berdasarkan jurusan dan angkatan
-        
-                // Periksa apakah kunci ini sudah ada dalam data alumni
-                if (isset($alumni[$key])) {
-                    $alumni[$key]->total += 1; // Tambahkan 1 jika sudah ada
-                } else {
-                    $alumni[$key] = (object)['total' => 1]; // Mulai dari 1 jika belum ada
-                }
+            $data = str_getcsv($line, ";");
+                
+                $no_anggota = AlumniHelper::generateNoAnggota($request->jurusan, $data[6], $alumniCounts, $jurusan);
 
-                $no_anggota = $jurusan->where('nama_jurusan', $data[1])->first()->kode_jurusan 
-                                . substr($data[6], -2)
-                                . str_pad($alumni[$key]->total, 3, '0', STR_PAD_LEFT);
-
-                // $no_anggota = $data[1];
                 $dataFile[] = [
-                    'nama' => $data[0],
-                    'jurusan' => $data[1], //tgllahir, kelamin, agama, no telp, angkatan, jurusan
-                    'tanggal_lahir' => $data[2],
-                    'kelamin' => $data[3],
+                    'nim' => $data[0],
+                    'nama' => $data[1],
+                    'kelamin' => strtolower($data[2]),
+                    'tgl_lahir' => Date("d-m-Y", strtotime($data[3])),
                     'agama' => $data[4],
-                    'no_telpon' => $data[5],
+                    'no_telp' => AlumniHelper::getNomorTelepon($data[5]),
                     'angkatan' => $data[6],
+                    'jurusan' => $request->jurusan ?? 'TEKNIK INFORMATIKA',
                     'no_anggota' => $no_anggota,
+                    'validated' => true,
+                    'created_at' => $timeNow,
+                    'updated_at' => $timeNow,
                 ];
-            }
+            $i++;
+            if($i == 1000) break;
         }
+        $validator = Validator::make($dataFile, [
+            '*.nama' => 'required|string',
+            '*.nim' => 'required|string|unique:alumni,nim|unique:App\Models\Alumni,nim',
+            '*.tgl_lahir' => 'required|date',
+            '*.jurusan' => 'required|string',
+            '*.angkatan' => 'required|string|max:4',
+            '*.kelamin' => 'required|string|in:l,p',
+            '*.agama' => 'required|string|in:Islam,Kristen Protestan,Kristen Katolik,Hindu,Buddha,Konghucu',
+            '*.golongan_darah' => 'nullable|string|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+            '*.no_telp' => 'nullable|string|max:20',
+        ]);
+        
+        if ($validator->fails()) {
+            // Mendapatkan pesan error
+            $errors = $validator->errors()->toArray();
+
+            // Menggabungkan data yang tidak valid dengan error
+            $invalidData = [];
+            foreach ($dataFile as $index => $data) {
+                $invalidData[] = [
+                    'coba' => $data,
+                ];
+                if (isset($errors[$index])) {
+                    $invalidData[] = [
+                        'data' => $data,
+                        'errors' => $errors[$index],
+                    ];
+                }
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Beberapa data tidak valid',
+                'invalid_data' => $invalidData,  // Data yang tidak valid beserta pesan error
+                'errors' => $errors
+            ], 400);
+        }
+
+
+        Alumni::insert($dataFile);
 
         return response()->json([
             'success' => true,
             'message' => 'Berhasil menambahkan data alumni',
             'data' => $dataFile,
-            'alumni' => $alumni,
-            // 'fileContents' => $fileContents,
-            // 'jurusan' => $jurusan,
         ], 201);
-
     }
 
     public function delete($id_alumni)
