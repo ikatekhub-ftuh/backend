@@ -163,13 +163,22 @@ class AlumniController extends Controller
 
     public function claimDataALumniByUserId(Request $request) {
         // Validasi inputan
+        $user = Auth::user();
         $validator = Validator::make($request->all(), [
-            'id_alumni' => 'required|string',
+            'id_alumni' => 'required',
+            'id_user' => $user->is_admin ? 'required' : '', 
         ]);
         if ( $validator->fails() ) {
             return response()->json([
                 'success' => false,
                 'message' => $validator->errors(),
+            ], 400);
+        }
+        
+        if(!Alumni::find($user->id_user)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User sudah memiliki data alumni',
             ], 400);
         }
 
@@ -181,7 +190,6 @@ class AlumniController extends Controller
             ], 400);
         }
         
-        $user = Auth::user();
         if ( $alumni->id_user != null && !$user->is_admin ) {
             return response()->json([
                 'success' => false,
@@ -190,7 +198,7 @@ class AlumniController extends Controller
         }
 
         $alumni->update([
-            'id_user'=> $user->id_user,
+            'id_user'=> $user->is_admin ? $request->id_user : $user->id_user,
         ]);
 
         return response()->json([
