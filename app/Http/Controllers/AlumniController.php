@@ -17,6 +17,38 @@ class AlumniController extends Controller
     {
         $query = Alumni::query();
 
+        if($request->has('search')) {
+            $query->where('nama', 'ilike', '%'.$request->search.'%');
+            
+            if($request->has('angkatan') && $request->has('jurusan')) {
+                $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
+                $result = $query->get();
+                return response()->json([
+                    'message' => 'success',
+                    'request' => $request->all(),
+                    'data' => $result
+                ], 200);
+            }
+
+            if($request->has('angkatan')) {
+                $result = $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan')->get();
+                return response()->json([
+                    'message' => 'success',
+                    'angkatan' => true,
+                    'request' => $request->all(),
+                    'data' => $result
+                ], 200);
+            }
+            $query->select('angkatan')->selectRaw('count(*) as total')->groupBy('angkatan');
+            $result = $query->get();
+            
+            return response()->json([
+                'message' => 'success',
+                'request' => $request->all(),
+                'data' => $result
+            ], 200);
+        }
+
         if ($request->has('id_alumni')){
             $query->where('id_alumni', $request->id_alumni);
             $result = $query->first();
@@ -42,7 +74,8 @@ class AlumniController extends Controller
                 'message' => 'success',
                 'request' => $request->all(),
                 'data' => $result
-            ], 200);}
+            ], 200);
+        }
         
         if ($request->has('angkatan')){
             $query->where('angkatan', $request->angkatan);
@@ -122,21 +155,21 @@ class AlumniController extends Controller
         $timeNow = Carbon::now();
         
         $dataFile = [];
-        $alumniCounts = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
-                    ->where('validated', true)
-                    ->groupBy('angkatan', 'jurusan')
-                    ->get()
-                    ->keyBy(function ($item) {
-                        return $item['jurusan'] . '-' . $item['angkatan'];
-                    });
+        // $alumniCounts = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
+        //             ->where('validated', true)
+        //             ->groupBy('angkatan', 'jurusan')
+        //             ->get()
+        //             ->keyBy(function ($item) {
+        //                 return $item['jurusan'] . '-' . $item['angkatan'];
+        //             });
 
-        $jurusan = Jurusan::select('nama_jurusan', 'kode_jurusan')->get();
+        // $jurusan = Jurusan::select('nama_jurusan', 'kode_jurusan')->get();
 
         $i = 0;
         foreach ($fileContents as $line) {
             $data = str_getcsv($line, ";");
                 
-                $no_anggota = AlumniHelper::generateNoAnggota($request->jurusan, $data[6], $alumniCounts, $jurusan);
+                // $no_anggota = AlumniHelper::generateNoAnggota($request->jurusan, $data[6], $alumniCounts, $jurusan);
 
                 $dataFile[] = [
                     'nim' => $data[0],
@@ -147,7 +180,6 @@ class AlumniController extends Controller
                     'no_telp' => AlumniHelper::getNomorTelepon($data[5]),
                     'angkatan' => $data[6],
                     'jurusan' => $request->jurusan ?? 'TEKNIK INFORMATIKA',
-                    'no_anggota' => $no_anggota,
                     'validated' => true,
                     'created_at' => $timeNow,
                     'updated_at' => $timeNow,

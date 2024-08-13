@@ -16,7 +16,7 @@ public function up(): void
             $table->unsignedBigInteger('id_user')->nullable()->unique();
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('set null');
             $table->string('nim', 50)->unique();
-            $table->string('no_anggota', 50)->unique();
+            $table->string('no_anggota', 10)->unique()->nullable();
             $table->string('nama', 100);
             $table->date('tgl_lahir');
             $table->tinyText('jurusan');
