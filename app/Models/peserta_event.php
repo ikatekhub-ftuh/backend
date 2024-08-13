@@ -22,4 +22,9 @@ class peserta_event extends Model
     {
         return $this->belongsTo(Event::class, 'id_event', 'id_event');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
 }

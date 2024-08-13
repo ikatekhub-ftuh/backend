@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('berita', [BeritaController::class, 'get']); //done
     Route::get('berita/kategori', [BeritaController::class, 'category_get']); //done
     Route::post('berita/like', [BeritaController::class, 'togglelike']); //done
+    Route::post('berita/list-like', [BeritaController::class, 'togglelike']); //done
 
     Route::get('user', [UserController::class, 'get']); //done
     Route::post('user/update', [UserController::class, 'update']); //done
@@ -48,6 +49,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']); //done
 
     Route::get('event', [EventController::class, 'get']); //done
+    Route::get('event/list-peserta', [EventController::class, 'pesertaEvent']); //done
     Route::post('event/register', [EventController::class, 'register']); //done
     Route::post('event/unregister', [EventController::class, 'unregister']); //done
 

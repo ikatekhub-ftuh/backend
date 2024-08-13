@@ -25,9 +25,9 @@ class DatabaseSeeder extends Seeder
         ini_set('memory_limit', '1G');
 
         // User::factory(3000)->create();
-        JenjangPendidikan::factory(100)->create();
+        // JenjangPendidikan::factory(100)->create();
         // KategoriBerita::factory(12)->create();
-        // Berita::factory(500)->create();
+        Berita::factory(100)->create();
         // Perusahaan::factory(20)->create();
         // Loker::factory(30)->create();
         // Event::factory(5)->create();
