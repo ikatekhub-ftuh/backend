@@ -28,7 +28,7 @@ class BeritaFactory extends Factory
             'penulis'               => fake()->name(),
             // 'gambar'                => 'berita/img.jpg',
             'gambar' => "/gambar/dummy/images/test.png",
-            'konten'                => fake()->paragraphs(50, true), 
+            'konten'                => fake()->paragraphs(3, true), 
             'total_like'            => fake()->numberBetween(0, 1000)
         ];
     }

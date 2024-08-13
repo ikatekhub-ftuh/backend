@@ -21,8 +21,8 @@ class noGuest
 
         return response()->json([
             'message' => 'error',
-            'errors' => 'Guess not allowed',
-            'data' => $request->user()->alumni
+            'errors' => 'Guest not allowed',
+            'data' => $request->user()
         ], 401);
     }
 }

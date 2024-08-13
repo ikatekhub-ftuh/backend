@@ -185,4 +185,40 @@ class EventController extends Controller
             'data' => $event,
         ]);
     }
+
+    public function pesertaEvent(Request $request)
+    {
+        // Validasi input untuk memastikan id_event ada dan merupakan integer
+        $request->validate([
+            'id_event' => 'required|integer',
+        ]);
+
+        // Cari event berdasarkan id_event
+        $event = Event::with('peserta_event.user')->find($request->id_event);
+
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Event tidak ditemukan',
+            ], 404);
+        }
+
+        
+        // Mendapatkan semua peserta dengan data user
+        $peserta = $event->peserta_event->map(function ($pesertaEvent) {
+            return [
+                'id_user' => $pesertaEvent->user->id_user,
+                'nama' => $pesertaEvent->user->alumni->nama ?? 'peserta', // Menggunakan relasi ke tabel alumni untuk mengambil nama user
+                'waktu_daftar' => $pesertaEvent->created_at->format('Y-m-d H:i:s')
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'data' => $peserta
+        ], 200);
+    }
+
+
 }
