@@ -9,10 +9,14 @@ use Illuminate\Support\Facades\Validator;
 
 class EventController extends Controller
 {
-    public function get()
+    public function get(Request $request)
     {
         $query = Event::query();
         $result = $query->get();
+
+        $limit = $request->input('limit', 10);
+
+        $result = $query->paginate($limit);
 
         return response()->json([
             'success' => true,
