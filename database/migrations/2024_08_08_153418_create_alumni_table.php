@@ -15,10 +15,10 @@ public function up(): void
             $table->id('id_alumni');
             $table->unsignedBigInteger('id_user')->nullable()->unique();
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('set null');
-            $table->string('nim', 50)->unique();
+            $table->string('nim', 50)->unique()->nullable();
             $table->string('no_anggota', 10)->unique()->nullable();
             $table->string('nama', 100);
-            $table->date('tgl_lahir');
+            $table->date('tgl_lahir')->nullable();
             $table->tinyText('jurusan');
             $table->string('no_telp', 20)->nullable()->unique();
             $table->string('angkatan', 4);

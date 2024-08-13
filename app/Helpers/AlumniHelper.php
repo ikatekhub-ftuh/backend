@@ -2,22 +2,26 @@
 
 namespace App\Helpers;
 
+use App\Models\Alumni;
+use App\Models\Jurusan;
+
 class AlumniHelper {
-    public static function generateNoAnggota($jurusanName, $angkatan, $alumniCounts, $jurusan)
+    public static function generateNoAnggota($jurusan, $angkatan)
     {
-        $key = $jurusanName . '-' . $angkatan;
+        $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
+                        ->where('jurusan', $jurusan)
+                        ->where('angkatan', $angkatan)
+                        ->where('validated', true)
+                        ->whereNotNull('id_user')
+                        ->lockForUpdate()
+                        ->groupBy('angkatan', 'jurusan')
+                        ->first();
+        
+        $kode_jurusan = Jurusan::where('nama_jurusan', $jurusan)->first()->kode_jurusan;
+        $kode_angkatan = substr($angkatan, -2);
+        $kode_anggota = str_pad($alumni ? $alumni->count+1 : 1, 3, '0', STR_PAD_LEFT);
 
-        if (isset($alumniCounts[$key])) {
-            $alumniCounts[$key]->total += 1;
-        } else {
-            $alumniCounts[$key] = (object)['total' => 1];
-        }
-
-        $no_anggota = $jurusan->where('nama_jurusan', $jurusanName)->first()->kode_jurusan 
-                        . substr($angkatan, -2)
-                        . str_pad($alumniCounts[$key]->total, 3, '0', STR_PAD_LEFT);
-
-        return $no_anggota;
+        return $kode_jurusan . $kode_angkatan . $kode_anggota;
     }
 
     public static function getNomorTelepon($text) {
@@ -31,5 +35,21 @@ class AlumniHelper {
         } else {
             return "Nomor telepon tidak ditemukan.";
         }
+    }
+
+    public static function getStrata($nim) {
+        $strata = [
+            '1' => 'S1',
+            '2' => 'S2',
+            '3' => 'S3'
+        ];
+
+        $str = substr($nim, 3, 1);
+        if($str < 4) {
+            return $strata[$str]; 
+        }
+        $profesi = substr($nim, 0, 3);
+        // return $profesi === 'D06' ? 'Program Profesi Arsitektur' : 'Program Profesi Insinyur';
+        return $profesi === 'D06' ? 'PPA' : 'PPI';
     }
 }

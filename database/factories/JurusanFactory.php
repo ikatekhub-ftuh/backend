@@ -24,6 +24,8 @@ class JurusanFactory extends Factory
         ['nama_jurusan' => 'TEKNIK PERTAMBANGAN',               'kode_jurusan' => 'D11'],
         ['nama_jurusan' => 'TEKNIK INFORMATIKA',                'kode_jurusan' => 'D12'],
         ['nama_jurusan' => 'TEKNIK LINGKUNGAN',                 'kode_jurusan' => 'D13'],
+        ['nama_jurusan' => 'PPI',                               'kode_jurusan' => 'D064'],
+        ['nama_jurusan' => 'PPA',                               'kode_jurusan' => 'D064'],
     ];
 
     /**

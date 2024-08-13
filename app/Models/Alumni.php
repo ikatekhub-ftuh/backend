@@ -20,6 +20,7 @@ class Alumni extends Model
         'id_user',
         'nama',
         'nim',
+        'no_anggota',
         'tgl_lahir',
         'no_telp',
         'jurusan',
@@ -33,11 +34,18 @@ class Alumni extends Model
     // hide name
     
     protected $hidden = [
+        'tgl_lahir',
+        'no_telp',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
+    public function jenjang_pendidikan()
+    {
+        return $this->hasMany(JenjangPendidikan::class, 'id_alumni', 'id_alumni');
     }
 }
 

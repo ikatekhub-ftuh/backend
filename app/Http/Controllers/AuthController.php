@@ -117,20 +117,31 @@ class AuthController extends Controller
     public function handleGoogleLogin(Request $request)
     {
         try {
+            $v = Validator::make($request->all(), [
+                'access_token_client' => 'required',
+            ]);            
+            if ($v->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $v->errors(),
+                ], 400);
+            }
+
             $access_token_client = $request->access_token_client;
 
             $client = new Google_Client(['client_id' => env('GOOGLE_CLIENT_ID')]);
             $client->setAccessToken($access_token_client);
-            $oauth2 = new Oauth2($client);
-            $userInfo = $oauth2->userinfo->get();
+
+            $oauth2     = new Oauth2($client);
+            $userInfo   = $oauth2->userinfo->get();
 
             if ($userInfo) {
                 $user = User::where('email', $userInfo->email)->first();
 
                 if (!$user) {
                     $user = User::create([
-                        'email' => $userInfo->email,
-                        'avatar' => $userInfo->picture,
+                        'email'     => $userInfo->email,
+                        'avatar'    => $userInfo->picture,
                     ]);
                 }
 
@@ -142,13 +153,16 @@ class AuthController extends Controller
                     'token'     => $token,
                 ], 201);
             } else {
-                return response()->json(['error' => ""], 401);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Bad request'
+                ], 400);
             }
         } catch (Exception $err) {
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred while processing your request.',
-                'error' => $err->getMessage()
+                'error'   => $err->getMessage()
             ], 500);
         }
     }

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id('id_jenjang_pendidikan');
 
             $table->unsignedTinyInteger('id_alumni');
-            $table->foreign('id_alumni')->references('id_alumni')->on('alumni')->onDelete('set null');
+            $table->foreign('id_alumni')->references('id_alumni')->on('alumni')->onDelete('cascade');
 
-            $table->string('jenjang'); //s1, s2
+            $table->string('jenjang'); //s1, s2, ppi, ppa
             $table->string('nim'); // D14 19 024 
 
             $table->timestamps();
