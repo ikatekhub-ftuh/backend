@@ -13,7 +13,7 @@ class AlumniHelper {
                         ->where('angkatan', $angkatan)
                         ->where('validated', true)
                         ->whereNotNull('id_user')
-                        ->lockForUpdate()
+                        // ->lockForUpdate()
                         ->groupBy('angkatan', 'jurusan')
                         ->first();
         

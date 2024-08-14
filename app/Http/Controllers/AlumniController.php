@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AlumniController extends Controller
 {
@@ -234,11 +235,19 @@ class AlumniController extends Controller
         //     return response()->json([
         //         'success'   => false,
         //         'message'   => 'Beberapa data tidak valid',
+        //         'data'    => $dataFile,
         //         'errors'    => $errors,
         //     ], 400);
         // }
         
-        Alumni::insert($dataFile);
+        // Alumni::insert($dataFile);
+        $batchSize = 1000; // Atur sesuai kebutuhan
+        $batches = array_chunk($dataFile, $batchSize);
+        DB::transaction(function() use ($batches) {
+            foreach ($batches as $batch) {
+                Alumni::insert($batch);
+            }
+        });
 
         return response()->json([
             'success'   => true,
@@ -281,7 +290,7 @@ class AlumniController extends Controller
             ], 400);
         }
         
-        if ( !Alumni::find($user->id_user) ) {
+        if ( Alumni::where('id_user', $user->id_user)->first() ) {
             return response()->json(
             [
                 'success' => false,

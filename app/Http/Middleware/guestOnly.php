@@ -15,7 +15,7 @@ class guestOnly
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user()->is_admin || $request->user()->alumni) {
+        if ($request->user()->alumni) {
             return response()->json([
                 'message' => 'error',
                 'errors' => 'Only guest allowed',
