@@ -20,7 +20,7 @@ public function up(): void
             $table->string('nama', 100);
             $table->date('tgl_lahir')->nullable();
             $table->tinyText('jurusan');
-            $table->string('no_telp', 20)->nullable()->unique();
+            $table->string('no_telp', 20)->nullable();
             $table->string('angkatan', 4);
             $table->enum('kelamin', ['l', 'p']);
             $table->enum('agama', [

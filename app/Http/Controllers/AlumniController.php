@@ -157,69 +157,56 @@ class AlumniController extends Controller
             'data' => $alumni
         ], 201);
     }
-    
-    public function uploadData(Request $request) {
-        $file           = $request->file('file_alumni');
-        $fileContents   = file($file->getPathname());
-        
-        array_shift($fileContents);
-        $timeNow = Carbon::now();
-        
-        $dataFile = [];
-        foreach ($fileContents as $line) {
-            $data = str_getcsv($line, ";");
 
+    public function uploadData(Request $request) {
+        $file = $request->file('file_alumni');
+        $fileHandle = fopen($file->getPathname(), 'r');
+        $timeNow = Carbon::now();
+
+        // Skip header row
+        fgetcsv($fileHandle, 0, ";");
+
+        $dataFile = [];
+        while (($data = fgetcsv($fileHandle, 0, ";")) !== false) {
             $dataFile[] = [
                 'nim'           => $data[0],
                 'nama'          => $data[1],
                 'kelamin'       => strtolower($data[2]),
                 'tgl_lahir'     => Date("d-m-Y", strtotime($data[3])),
                 'agama'         => $data[4],
-                'no_telp'       => AlumniHelper::getNomorTelepon($data[5]),
+                'no_telp'       => $data[5],
                 'angkatan'      => $data[6],
-                'jurusan'       => $request->jurusan ?? 'TEKNIK INFORMATIKA',
+                'jurusan'       => $data[7],
                 'validated'     => true,
                 'created_at'    => $timeNow,
                 'updated_at'    => $timeNow,
             ];
         }
-        $validator = Validator::make($dataFile, [
-            '*.nama'            => 'required|string',
-            '*.nim'             => 'required|string|unique:alumni,nim|unique:App\Models\Alumni,nim',
-            '*.tgl_lahir'       => 'required|date',
-            '*.jurusan'         => 'required|string',
-            '*.angkatan'        => 'required|string|max:4',
-            '*.kelamin'         => 'required|string|in:l,p',
-            '*.agama'           => 'required|string|in:Islam,Kristen Protestan,Kristen Katolik,Hindu,Buddha,Konghucu',
-            '*.golongan_darah'  => 'nullable|string|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
-            '*.no_telp'         => 'nullable|string|max:20',
-        ]);
+        fclose($fileHandle);
+
+        // Validasi batch
+        // $validator = Validator::make($dataFile, [
+        //     '*.nama'            => 'required|string',
+        //     '*.nim'             => 'required|string|unique:alumni,nim',
+        //     '*.tgl_lahir'       => 'required|date',
+        //     '*.jurusan'         => 'required|string',
+        //     '*.angkatan'        => 'required|string|max:4',
+        //     '*.kelamin'         => 'required|string|in:l,p',
+        //     '*.agama'           => 'required|string|in:Islam,Kristen Protestan,Kristen Katolik,Hindu,Buddha,Konghucu',
+        //     '*.golongan_darah'  => 'nullable|string|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+        //     '*.no_telp'         => 'nullable|string|max:20',
+        // ]);
         
-        if ($validator->fails()) {
-            $errors = $validator->errors()->toArray();
-            
-            $invalidData = [];
-            foreach ($dataFile as $index => $data) {
-                $invalidData[] = [
-                    'coba' => $data,
-                ];
-                if (isset($errors[$index])) {
-                    $invalidData[] = [
-                        'data' => $data,
-                        'errors' => $errors[$index],
-                    ];
-                }
-            }
+        // if ($validator->fails()) {
+        //     $errors = $validator->errors()->toArray();
+        //     return response()->json([
+        //         'success'   => false,
+        //         'message'   => 'Beberapa data tidak valid',
+        //         'errors'    => $errors,
+        //     ], 400);
+        // }
 
-            return response()->json([
-                'success'       => false,
-                'message'       => 'Beberapa data tidak valid',
-                'errors'        => $errors,
-                'invalid_data'  => $invalidData,
-            ], 400);
-        }
-
-
+        // Insert batch data
         Alumni::insert($dataFile);
 
         return response()->json([
