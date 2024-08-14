@@ -54,6 +54,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::post('event/unregister', [EventController::class, 'unregister']); //done
 
     Route::post('alumni', [AlumniController::class, 'post']);
+    Route::get('alumni/data', [AlumniController::class, 'getDataByNamaAndTanggalLahir']);
 
     Route::middleware(['guestOnly'])->group(function () {
         Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId']);

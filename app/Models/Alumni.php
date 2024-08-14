@@ -34,7 +34,6 @@ class Alumni extends Model
     // hide name
     
     protected $hidden = [
-        'tgl_lahir',
         'no_telp',
     ];
 

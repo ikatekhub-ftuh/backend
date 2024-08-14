@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AlumniHelper;
 use App\Models\Alumni;
-use App\Models\Jurusan;
 use App\Models\StatistikPendidikan;
 use App\Models\User;
 use Carbon\Carbon;
@@ -104,6 +103,39 @@ class AlumniController extends Controller
         ], 200);
     }
 
+    public function getDataByNamaAndTanggalLahir(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'tgl_lahir'   => 'required', 
+            'nim'   => 'nullable',
+        ]);
+        
+        if ( $validator->fails() ) {
+            return response()->json(
+            [
+                'success' => false,
+                'message' => implode('\n',$validator->errors()->all()),
+            ], 400);
+        }
+
+        $query = Alumni::query();
+
+        $query->where('nama', $request->nama)
+                ->where('tgl_lahir', $request->tgl_lahir);
+
+        if($request->has('nim') && $request->nim) {
+            $query->where('nim', $request->nim);
+        }
+
+        $result = $query->get();
+        return response()->json([
+            'message' => 'success',
+            'request' => $request->all(),
+            'data' => $result
+        ], 200);
+    }
+
     public function post(Request $request) {
         $validator = Validator::make($request->all(), [
             'nama'              => 'required|string',
@@ -171,8 +203,8 @@ class AlumniController extends Controller
             $dataFile[] = [
                 'nim'           => $data[0],
                 'nama'          => $data[1],
-                'kelamin'       => strtolower($data[2]),
-                'tgl_lahir'     => Date("d-m-Y", strtotime($data[3])),
+                'kelamin'       => $data[2],
+                'tgl_lahir'     => $data[3],
                 'agama'         => $data[4],
                 'no_telp'       => $data[5],
                 'angkatan'      => $data[6],
@@ -205,8 +237,7 @@ class AlumniController extends Controller
         //         'errors'    => $errors,
         //     ], 400);
         // }
-
-        // Insert batch data
+        
         Alumni::insert($dataFile);
 
         return response()->json([
