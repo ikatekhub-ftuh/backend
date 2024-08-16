@@ -232,4 +232,37 @@ class BeritaController extends Controller
             'data' => $berita
         ], 200);
     }
+    public function listLikes(Request $request)
+    {
+        // Validasi input untuk memastikan id_berita ada dan merupakan integer
+        $request->validate([
+            'id_berita' => 'required|integer',
+        ]);
+
+        // Cari berita berdasarkan id_berita
+        $berita = Berita::with('likes.user')->find($request->id_berita);
+
+        if (!$berita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Berita tidak ditemukan',
+            ], 404);
+        }
+
+        // Mendapatkan semua user yang memberi like dengan data user
+        $likes = $berita->likes->map(function ($like) {
+            return [
+                'id_user' => $like->user->id_user,
+                'nama' => $like->user->alumni->nama ?? 'anonymous', // Menggunakan relasi ke tabel alumni untuk mengambil nama user
+                'waktu_like' => $like->created_at->format('Y-m-d H:i:s')
+            ];
+        });
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'data' => $likes
+        ], 200);
+    }
+
 }
