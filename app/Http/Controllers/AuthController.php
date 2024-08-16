@@ -76,7 +76,7 @@ class AuthController extends Controller
             if ($v->fails()) {
                 return response()->json([
                     'success' => false,
-                    'message' => $v->errors(),
+                    'message' => implode('\n', $v->errors()->all()),
                 ], 400);
             }
 
