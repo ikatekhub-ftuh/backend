@@ -18,37 +18,37 @@ class AlumniController extends Controller
     {
         $query = Alumni::query();
 
-        if($request->has('search')) {
-            $query->where('nama', 'ilike', '%'.$request->search.'%');
+        // if($request->has('search')) {
+        //     $query->where('nama', 'ilike', '%'.$request->search.'%');
             
-            if($request->has('angkatan') && $request->has('jurusan')) {
-                $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
-                $result = $query->get();
-                return response()->json([
-                    'message' => 'success',
-                    'request' => $request->all(),
-                    'data' => $result
-                ], 200);
-            }
+        //     if($request->has('angkatan') && $request->has('jurusan')) {
+        //         $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
+        //         $result = $query->get();
+        //         return response()->json([
+        //             'message' => 'success',
+        //             'request' => $request->all(),
+        //             'data' => $result
+        //         ], 200);
+        //     }
 
-            if($request->has('angkatan')) {
-                $result = $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan')->get();
-                return response()->json([
-                    'message' => 'success',
-                    'angkatan' => true,
-                    'request' => $request->all(),
-                    'data' => $result
-                ], 200);
-            }
-            $query->select('angkatan')->selectRaw('count(*) as total')->groupBy('angkatan');
-            $result = $query->get();
+        //     if($request->has('angkatan')) {
+        //         $result = $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan')->get();
+        //         return response()->json([
+        //             'message' => 'success',
+        //             'angkatan' => true,
+        //             'request' => $request->all(),
+        //             'data' => $result
+        //         ], 200);
+        //     }
+        //     $query->select('angkatan')->selectRaw('count(*) as total')->groupBy('angkatan');
+        //     $result = $query->get();
             
-            return response()->json([
-                'message' => 'success',
-                'request' => $request->all(),
-                'data' => $result
-            ], 200);
-        }
+        //     return response()->json([
+        //         'message' => 'success',
+        //         'request' => $request->all(),
+        //         'data' => $result
+        //     ], 200);
+        // }
 
         if ($request->has('id_alumni')){
             $query->where('id_alumni', $request->id_alumni);
@@ -70,6 +70,9 @@ class AlumniController extends Controller
         
         if ($request->has('angkatan') && $request->has('jurusan')){
             $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
+            if($request->has('search')) {
+                $query->where('nama', 'ilike', '%'.$request->search.'%');
+            }
             $result = $query->get();
             return response()->json([
                 'message' => 'success',
@@ -80,7 +83,13 @@ class AlumniController extends Controller
         
         if ($request->has('angkatan')){
             $query->where('angkatan', $request->angkatan);
-            $result = $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan')->get();
+            $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan');
+            
+            if($request->has('search')) {
+                $query->where('nama', 'ilike', '%'.$request->search.'%');
+            }
+
+            $result = $query->get();
             return response()->json([
                 'message' => 'success',
                 'request' => $request->all(),
@@ -88,7 +97,7 @@ class AlumniController extends Controller
             ], 200);
         }
         
-        $result = $query->get();
+        // $result = $query->get();
 
         $userId = Auth::id();
         $angkatan = User::with('alumni')->find($userId)->alumni->angkatan;
