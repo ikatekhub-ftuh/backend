@@ -68,6 +68,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::get('loker/id/{id}', [LokerController::class, 'getbyId']); //done
         Route::get('event/id/{id}', [EventController::class, 'getbyId']); //done
         Route::get('berita/id/{id}', [BeritaController::class, 'getById']); //done
+        Route::put('alumni', [AlumniController::class, 'update']);
     });
 
     Route::middleware(['isAdmin'])->group(function () {

@@ -18,70 +18,41 @@ class AlumniController extends Controller
     {
         $query = Alumni::query();
 
-        // if($request->has('search')) {
-        //     $query->where('nama', 'ilike', '%'.$request->search.'%');
-            
-        //     if($request->has('angkatan') && $request->has('jurusan')) {
-        //         $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
-        //         $result = $query->get();
-        //         return response()->json([
-        //             'message' => 'success',
-        //             'request' => $request->all(),
-        //             'data' => $result
-        //         ], 200);
-        //     }
-
-        //     if($request->has('angkatan')) {
-        //         $result = $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan')->get();
-        //         return response()->json([
-        //             'message' => 'success',
-        //             'angkatan' => true,
-        //             'request' => $request->all(),
-        //             'data' => $result
-        //         ], 200);
-        //     }
-        //     $query->select('angkatan')->selectRaw('count(*) as total')->groupBy('angkatan');
-        //     $result = $query->get();
-            
-        //     return response()->json([
-        //         'message' => 'success',
-        //         'request' => $request->all(),
-        //         'data' => $result
-        //     ], 200);
-        // }
-
-        if ($request->has('id_alumni')){
+        if ( $request->has('id_alumni') ) {
             $query->where('id_alumni', $request->id_alumni);
             $result = $query->first();
 
-            if (!$result) {
+            if ( !$result ) {
                 return response()->json([
-                    'message' => 'error',
-                    'errors' => 'Data not found'
+                    'message'   => 'error',
+                    'errors'    => 'Data not found'
                 ], 404);
             }
             
             return response()->json([
-                'message' => 'success',
-                'request' => $request->all(),
-                'data' => $result
+                'message'   => 'success',
+                'request'   => $request->all(),
+                'data'      => $result
             ], 200);
         }
         
-        if ($request->has('angkatan') && $request->has('jurusan')){
+        if ( $request->has('angkatan') && $request->has('jurusan') ) {
             $query->where('angkatan', $request->angkatan)->where('jurusan', $request->jurusan);
-            if($request->has('search')) {
+
+            if ( $request->has('search') ) {
                 $query->where('nama', 'ilike', '%'.$request->search.'%');
             }
+
             $result = $query->get();
             return response()->json([
-                'message' => 'success',
-                'request' => $request->all(),
-                'data' => $result
+                'message'   => 'success',
+                'request'   => $request->all(),
+                'data'      => $result
             ], 200);
         }
         
-        if ($request->has('angkatan')){
+        if ( $request->has('angkatan') ) {
+
             $query->where('angkatan', $request->angkatan);
             $query->select('jurusan')->selectRaw('count(*) as total')->groupBy('jurusan');
             
@@ -91,13 +62,13 @@ class AlumniController extends Controller
 
             $result = $query->get();
             return response()->json([
-                'message' => 'success',
-                'request' => $request->all(),
-                'data' => $result
+                'message'   => 'success',
+                'request'   => $request->all(),
+                'data'      => $result
             ], 200);
         }
         
-        // $result = $query->get();
+        $result = $query->get();
 
         $userId = Auth::id();
         $angkatan = User::with('alumni')->find($userId)->alumni->angkatan;
@@ -109,7 +80,6 @@ class AlumniController extends Controller
                 'angkatan' => $angkatan,
                 'count'    => $countAngkatan,
             ]
-            // 'alumni_user' => $user,
         ], 200);
     }
 
@@ -140,9 +110,9 @@ class AlumniController extends Controller
 
         $result = $query->get();
         return response()->json([
-            'message' => 'success',
-            'request' => $request->all(),
-            'data' => $result
+            'message'   => 'success',
+            'request'   => $request->all(),
+            'data'      => $result
         ], 200);
     }
 
@@ -150,13 +120,14 @@ class AlumniController extends Controller
         $validator = Validator::make($request->all(), [
             'nama'              => 'required|string',
             'tgl_lahir'         => 'required|date',
-            'jurusan'           => 'required',
-            'angkatan'          => 'required|min:4|max:4',
-            'kelamin'           => 'required|string|max:2',
+            'jurusan'           => 'required|string',
+            'angkatan'          => 'required|integer|digits:4',
+            'kelamin'           => 'required|string|in:l,p',
             'agama'             => 'nullable',
             'nim'               => 'required_without_all:jenjang',
             'jenjang'           => 'required_without_all:nim|enum:S1,S2,S3,PPI,PPA',
         ]);
+
         if ( $validator->fails() ) {
             return response()->json([
                 'success' => false,
@@ -198,6 +169,52 @@ class AlumniController extends Controller
             'message' => 'Berhasil menambahkan data alumni',
             'data' => $alumni
         ], 201);
+    }
+    
+    public function update(Request $request) {// Validasi field yang mungkin akan diupdate
+        $validator = Validator::make($request->all(), [
+            'nama'      => 'sometimes|required|string|max:100',
+            'nim'       => 'sometimes|required|string|max:20',
+            'tgl_lahir' => 'sometimes|required|date',
+            'jurusan'   => 'sometimes|required|string|max:100',
+            'angkatan'  => 'sometimes|required|integer|digits:4',
+            'no_telp'   => 'sometimes|required|max:20',
+            'agama'     => 'sometimes|nullable|string|max:50',
+            'kelamin'   => 'sometimes|string|in:l,p',
+            'golongan_darah' => 'sometimes|nullable|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = implode("\n", $validator->errors()->all());
+            
+            return response()->json([
+                'success' => false,
+                'message' => $errors,
+            ], 400);
+        }
+        
+        $alumni = Alumni::where('id_user', $request->user()->id_user)->firstOrFail();
+        
+        $alumni->fill($request->only([
+            'nama',
+            'nim',
+            'tgl_lahir',
+            'jurusan',
+            'angkatan',
+            'no_telp',
+            'agama',
+            'kelamin',
+            'golongan_darah',
+        ]));
+        
+        $alumni->save();
+
+        return response()->json([
+            'succes'    => true,
+            'message'   => 'Data user berhasil di update',
+            'request'   => $request->all(),
+            'data'      => $alumni,
+        ], 200);
     }
 
     public function uploadData(Request $request) {

@@ -15,7 +15,7 @@ public function up(): void
             $table->id('id_alumni');
             $table->unsignedBigInteger('id_user')->nullable()->unique();
             $table->foreign('id_user')->references('id_user')->on('users')->onDelete('set null');
-            $table->string('nim', 50)->unique()->nullable();
+            $table->string('nim', 20)->nullable();
             $table->string('no_anggota', 10)->unique()->nullable();
             $table->string('nama', 100);
             $table->date('tgl_lahir')->nullable();
@@ -30,7 +30,7 @@ public function up(): void
                 'Hindu', 
                 'Buddha', 
                 'Konghucu'
-            ]);
+            ])->nullable();
             $table->enum('golongan_darah', [
                 'A+', 
                 'A-', 
