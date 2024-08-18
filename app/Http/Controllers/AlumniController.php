@@ -129,9 +129,9 @@ class AlumniController extends Controller
         $query = Alumni::query();
 
         $query->select('id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
-                ->where('nama',             $request->nama)
-                ->where('tgl_lahir',        $request->tgl_lahir)
-                ->where(DB::raw('lower(jurusan)'),   strtolower($request->jurusan));
+                      ->whereRaw('LOWER(nama) = ?', [strtolower($request->nama)])
+                      ->where('tgl_lahir',          $request->tgl_lahir)
+                      ->whereRaw('LOWER(jurusan) = ?', [strtolower($request->jurusan)]);
 
         $result = $query->get();
         return response()->json([
