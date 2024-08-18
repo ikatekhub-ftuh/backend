@@ -130,7 +130,7 @@ class AlumniController extends Controller
 
         $query->select('id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
                       ->whereRaw('LOWER(nama) = ?', [strtolower($request->nama)])
-                      ->where('tgl_lahir', $request->tgl_lahir)
+                      ->where('tgl_lahir',          $request->tgl_lahir)
                       ->whereRaw('LOWER(jurusan) = ?', [strtolower($request->jurusan)]);
 
 

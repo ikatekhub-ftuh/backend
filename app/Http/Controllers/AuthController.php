@@ -141,7 +141,6 @@ class AuthController extends Controller
                 if (!$user) {
                     $user = User::create([
                         'email'     => $userInfo->email,
-                        'avatar'    => $userInfo->picture,
                     ]);
                 }
 
