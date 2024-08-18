@@ -40,8 +40,10 @@ class AlumniController extends Controller
         }
         
         if ( $request->has('angkatan') && $request->has('jurusan') ) {
-            $query->where('angkatan',   $request->angkatan)
-                  ->where('jurusan',    $request->jurusan);
+            if($request->angkatan !== 'all') {
+                $query->where('angkatan', $request->angkatan);
+            }
+            $query->where('jurusan',    $request->jurusan);
 
             if ( $request->has('search') ) {
                 $query->where('nama', 'ilike', '%'.$request->search.'%');
