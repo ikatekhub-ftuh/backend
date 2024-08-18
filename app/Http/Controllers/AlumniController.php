@@ -20,7 +20,8 @@ class AlumniController extends Controller
         $query->where('validated', true);
 
         if ( $request->has('id_alumni') ) {
-            $query->where('id_alumni', $request->id_alumni);
+            $query->select('id_alumni', 'id_user', 'nim', 'no_anggota', 'nama', 'jurusan', 'angkatan', 'kelamin', 'agama', 'golongan_darah', )
+                    ->where('id_alumni', $request->id_alumni);
             $alumni = $query->first();
 
             if ( !$alumni ) {
@@ -112,9 +113,9 @@ class AlumniController extends Controller
     public function getDataToClaim(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required',
-            'tgl_lahir'   => 'required|date', 
-            'jurusan'   => 'required',
+            'nama'      => 'required|string',
+            'tgl_lahir' => 'required|date', 
+            'jurusan'   => 'required|string',
         ]);
         
         if ( $validator->fails() ) {
@@ -128,9 +129,10 @@ class AlumniController extends Controller
         $query = Alumni::query();
 
         $query->select('id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
-                ->where('nama',         $request->nama)
-                ->where('tgl_lahir',    $request->tgl_lahir)
-                ->where('jurusan',      $request->jurusan);
+                      ->whereRaw('LOWER(nama) = ?', [strtolower($request->nama)])
+                      ->where('tgl_lahir', $request->tgl_lahir)
+                      ->whereRaw('LOWER(jurusan) = ?', [strtolower($request->jurusan)]);
+
 
         $result = $query->get();
         return response()->json([
