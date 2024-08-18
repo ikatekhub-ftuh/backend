@@ -109,12 +109,12 @@ class AlumniController extends Controller
         ], 200);
     }
 
-    public function getDataByNamaAndTanggalLahir(Request $request)
+    public function getDataToClaim(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'nama' => 'required',
-            'tgl_lahir'   => 'required', 
-            'nim'   => 'nullable',
+            'tgl_lahir'   => 'required|date', 
+            'jurusan'   => 'required',
         ]);
         
         if ( $validator->fails() ) {
@@ -127,12 +127,10 @@ class AlumniController extends Controller
 
         $query = Alumni::query();
 
-        $query->where('nama', $request->nama)
-                ->where('tgl_lahir', $request->tgl_lahir);
-
-        if($request->has('nim') && $request->nim) {
-            $query->where('nim', $request->nim);
-        }
+        $query->select('id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
+                ->where('nama',         $request->nama)
+                ->where('tgl_lahir',    $request->tgl_lahir)
+                ->where('jurusan',      $request->jurusan);
 
         $result = $query->get();
         return response()->json([
