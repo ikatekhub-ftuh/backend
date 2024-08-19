@@ -280,6 +280,8 @@ class EventController extends Controller
         }
 
         // Menambahkan status apakah user terdaftar atau tidak
+        $event->save();
+
         $event->is_registered = $isRegistered;
 
         return response()->json([

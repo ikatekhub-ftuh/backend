@@ -11,7 +11,7 @@ class peserta_event extends Model
 
     protected $table = 'peserta_event';
 
-    protected $primaryKey = 'id_peserta_event';
+    // protected $primaryKey = 'id_peserta_event';
 
     protected $fillable = [
         'id_event',
