@@ -12,15 +12,13 @@ class AlumniHelper {
         $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
                         ->where(DB::raw('lower(jurusan)'), strtolower($jurusan))
                         ->where('angkatan', $angkatan)
-                        ->where('validated', true)
-                        ->whereNotNull('id_user')
-                        // ->lockForUpdate()
+                        ->whereNotNull('no_anggota')
                         ->groupBy('angkatan', 'jurusan')
                         ->first();
         
         $kode_jurusan = Jurusan::where(DB::raw('lower(nama_jurusan)'), strtolower($jurusan))->first()->kode_jurusan;
         $kode_angkatan = substr($angkatan, -2);
-        $kode_anggota = str_pad($alumni ? $alumni->total+1 : 1, 3, '0', STR_PAD_LEFT);
+        $kode_anggota = str_pad($alumni !== null ? $alumni->total+1 : 1, 3, '0', STR_PAD_LEFT);
 
         return $kode_jurusan . $kode_angkatan . $kode_anggota;
     }

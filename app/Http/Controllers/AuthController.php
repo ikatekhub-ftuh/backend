@@ -96,6 +96,7 @@ class AuthController extends Controller
                     'message' => 'Invalid credentials. Please check your email and password.',
                 ], 401);
             }
+            $user->load('alumni');
 
             $token = $user->createToken('authToken')->plainTextToken;
             return response()->json([
@@ -137,12 +138,13 @@ class AuthController extends Controller
 
             if ($userInfo) {
                 $user = User::where('email', $userInfo->email)->first();
-
+                
                 if (!$user) {
                     $user = User::create([
                         'email'     => $userInfo->email,
                     ]);
                 }
+                $user->load('alumni');
 
                 $token = $user->createToken('authToken')->plainTextToken;
                 return response()->json([
