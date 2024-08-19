@@ -227,15 +227,15 @@ class EventController extends Controller
     public function toggleRegister(Request $request)
     {
         // Validasi input untuk memastikan id_event ada dan merupakan integer
-        $v = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'id_event' => 'required|exists:events,id_event',
         ]);
 
-        if ($v->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'error',
-                'errors' => $v->errors()
+                'errors' => $validator->errors()
             ], 422);
         }
 
@@ -252,6 +252,7 @@ class EventController extends Controller
         $user = $request->user();
         $pesertaEvent = $event->peserta_event()->where('id_user', $user->id_user)->first();
 
+        // Jika pesertaEvent ditemukan, lakukan un-register
         if ($pesertaEvent) {
             // Unregister
             if ($event->peserta > 0) {
@@ -261,7 +262,7 @@ class EventController extends Controller
             $pesertaEvent->delete();
             $isRegistered = false;
         } else {
-            // Register
+            // Jika pesertaEvent tidak ditemukan, lakukan register
             if ($event->kuota <= $event->peserta) {
                 return response()->json([
                     'success' => false,
@@ -269,19 +270,20 @@ class EventController extends Controller
                 ], 422);
             }
 
+            // Register pengguna
             $event->peserta += 1;
             $event->save();
 
+            // Gunakan create() tanpa mencoba mengembalikan kolom id
             $event->peserta_event()->create([
                 'id_user' => $user->id_user,
+                'created_at' => now(), // Pastikan timestamp diisi
+                'updated_at' => now(),
             ]);
-
             $isRegistered = true;
         }
 
         // Menambahkan status apakah user terdaftar atau tidak
-        $event->save();
-
         $event->is_registered = $isRegistered;
 
         return response()->json([
@@ -290,6 +292,7 @@ class EventController extends Controller
             'data' => $event,
         ], 200);
     }
+
 
     public function pesertaEvent(Request $request)
     {
