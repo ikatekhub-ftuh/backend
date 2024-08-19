@@ -262,12 +262,12 @@ class EventController extends Controller
             $isRegistered = false;
         } else {
             // Register
-            if ($event->kuota <= $event->peserta) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Kuota sudah terpenuhi',
-                ], 422);
-            }
+            // if ($event->kuota <= $event->peserta) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Kuota sudah terpenuhi',
+            //     ], 422);
+            // }
 
             $event->peserta += 1;
             $event->save();
