@@ -239,7 +239,10 @@ class EventController extends Controller
         }
 
         $user = $request->user();
-        $pesertaEvent = $event->peserta_event()->where('id_user', $user->id_user)->first();
+        $pesertaEvent = DB::table('peserta_event')
+            ->where('id_user', $user->id_user)
+            ->where('id_event', $event->id_event)
+            ->first();
 
         if ($pesertaEvent) {
             // Unregister
@@ -283,6 +286,8 @@ class EventController extends Controller
             'data' => $event,
         ], 200);
     }
+
+
 
     public function pesertaEvent(Request $request)
     {
