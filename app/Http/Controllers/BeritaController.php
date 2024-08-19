@@ -47,9 +47,8 @@ class BeritaController extends Controller
             $query->where('berita.id_kategori_berita', $request->id_kategori_berita);
         }
 
-        // Menambahkan pengurutan berdasarkan status "like"
-        $query->orderBy('berita.total_like', 'desc') 
-            ->orderBy('berita.created_at', 'desc'); // Urutkan berdasarkan tanggal terbaru
+        // Menambahkan pengurutan hanya berdasarkan created_at
+        $query->orderBy('berita.created_at', 'desc'); // Urutkan berdasarkan tanggal terbaru
 
         $limit = $request->input('limit', 10);
         $result = $query->paginate($limit);
@@ -60,6 +59,7 @@ class BeritaController extends Controller
             'data' => $result
         ], 200);
     }
+
     public function getById(Request $request, $id)
     {
         $berita = Berita::with("kategori")->find($id);
