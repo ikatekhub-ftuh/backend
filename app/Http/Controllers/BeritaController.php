@@ -214,12 +214,18 @@ class BeritaController extends Controller
 
         if ($like) {
             // Unlike
-            $like->delete();
+            DB::table('likes')->where('id_user', $user->id_user)->where('id_berita', $berita->id_berita)->delete();
             $berita->total_like--;
             $isLiked = false;
         } else {
             // Like
-            $berita->likes()->create(['id_user' => $user->id_user]);
+            // $berita->likes()->create(['id_user' => $user->id_user]);
+	    $berita->likes()->insert([
+		'id_user' => $user->id_user,
+		'id_berita' => $berita->id_berita,
+		'created_at' => now(),
+		'updated_at' => now()
+		]);
             $berita->total_like++;
             $isLiked = true;
         }

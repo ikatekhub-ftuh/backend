@@ -20,7 +20,7 @@ return new class extends Migration
 
             $table->unique(['id_berita', 'id_user']);
 
-            // $table->timestamps();
+            $table->timestamps();
         });
     }
 

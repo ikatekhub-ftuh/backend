@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,10 +12,14 @@ class Like extends Model
 
     protected $table = 'likes';
 
-    // protected $primaryKey = 'id_like';
-    // protected $keyType = 'int';
-    // public $incrementing = true;
+	// protected $primaryKey = 'id_like';
+	// protected $keyType = 'int';
+	// public $incrementing = true;
 
+	public $incrementing = false;
+	protected $keyType = 'int';
+	protected $primaryKey = null;
+	public $timestamps = true;
     protected $fillable = [
         'id_berita',
         'id_user'
