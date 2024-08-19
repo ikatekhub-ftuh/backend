@@ -279,7 +279,7 @@ class EventController extends Controller
             DB::table('peserta_event')->insert([
                 'id_user' => $user->id_user,
                 'id_event' => $event->id_event,
-                'created_at' => now(), // Pastikan timestamp diisi
+                'created_at' => now(),
                 'updated_at' => now(),
             ]);
             $isRegistered = true;
