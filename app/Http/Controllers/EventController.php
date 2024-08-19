@@ -230,49 +230,49 @@ class EventController extends Controller
     {
         $event = Event::find($request->id_event);
 
-        // if (!$event) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'error',
-        //         'errors' => 'Event not found'
-        //     ], 404);
-        // }
+        if (!$event) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => 'Event not found'
+            ], 404);
+        }
 
-        // $user = $request->user();
-        // $peserta = $event->peserta_event()->where('id_user', $user->id_user)->first();
+        $user = $request->user();
+        $peserta = $event->peserta_event()->where('id_user', $user->id_user)->first();
 
-        // if ($peserta) {
-        //     // Unregister
-        //     DB::table('peserta_event')
-        //         ->where('id_user', $user->id_user)
-        //         ->where('id_event', $event->id_event)
-        //         ->delete();
-        //     $event->peserta--;
-        //     $isRegistered = false;
-        // } else {
-        //     // Check kuota
-        //     if ($event->kuota <= $event->peserta) {
-        //         return response()->json([
-        //             'success' => false,
-        //             'message' => 'Kuota sudah terpenuhi',
-        //         ], 422);
-        //     }
+        if ($peserta) {
+            // Unregister
+            DB::table('peserta_event')
+                ->where('id_user', $user->id_user)
+                ->where('id_event', $event->id_event)
+                ->delete();
+            $event->peserta--;
+            $isRegistered = false;
+        } else {
+            // Check kuota
+            if ($event->kuota <= $event->peserta) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Kuota sudah terpenuhi',
+                ], 422);
+            }
 
-        //     // Register
-        //     DB::table('peserta_event')->insert([
-        //         'id_user' => $user->id_user,
-        //         'id_event' => $event->id_event,
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ]);
+            // Register
+            DB::table('peserta_event')->insert([
+                'id_user' => $user->id_user,
+                'id_event' => $event->id_event,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
-        //     $event->peserta++;
-        //     $isRegistered = true;
-        // }
+            $event->peserta++;
+            $isRegistered = true;
+        }
 
-        // $event->save();
+        $event->save();
 
-        // $event->is_registered = $isRegistered;
+        $event->is_registered = $isRegistered;
 
         return response()->json([
             'success' => true,
