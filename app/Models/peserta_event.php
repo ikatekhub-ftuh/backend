@@ -11,12 +11,9 @@ class peserta_event extends Model
     use HasFactory;
 
     protected $table = 'peserta_event';
-
-    // protected $primaryKey = 'id_peserta_event';
-    public $incrementing    = false;
-	protected $keyType      = 'int';
-	protected $primaryKey   = null;
-	public $timestamps      = true;
+    public $incrementing = false;
+    protected $primaryKey = null;
+    public $timestamps = true;
 
     protected $fillable = [
         'id_event',
