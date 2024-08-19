@@ -227,7 +227,6 @@ class EventController extends Controller
 
     public function toggleRegister(Request $request)
     {
-        // Cari event berdasarkan id_event
         $event = Event::find($request->id_event);
 
         if (!$event) {
@@ -239,21 +238,15 @@ class EventController extends Controller
         }
 
         $user = $request->user();
-        $pesertaEvent = DB::table('peserta_event')
-            ->where('id_user', $user->id_user)
-            ->where('id_event', $event->id_event)
-            ->first();
+        $peserta = $event->likes()->where('id_user', $user->id_user)->first();
 
-        if ($pesertaEvent) {
+        if ($peserta) {
             // Unregister
             DB::table('peserta_event')
                 ->where('id_user', $user->id_user)
                 ->where('id_event', $event->id_event)
                 ->delete();
-
-            if ($event->peserta > 0) {
-                $event->peserta--;
-            }
+            $event->peserta--;
             $isRegistered = false;
         } else {
             // Check kuota
@@ -265,7 +258,7 @@ class EventController extends Controller
             }
 
             // Register
-            DB::table('peserta_event')->insert([
+            $event->pesertaEvent()->insert([
                 'id_user' => $user->id_user,
                 'id_event' => $event->id_event,
                 'created_at' => now(),

@@ -233,10 +233,10 @@ class BeritaController extends Controller
             // Like
             // $berita->likes()->create(['id_user' => $user->id_user]);
 	    $berita->likes()->insert([
-		'id_user' => $user->id_user,
-		'id_berita' => $berita->id_berita,
-		'created_at' => now(),
-		'updated_at' => now()
+            'id_user' => $user->id_user,
+            'id_berita' => $berita->id_berita,
+            'created_at' => now(),
+            'updated_at' => now()
 		]);
             $berita->total_like++;
             $isLiked = true;
