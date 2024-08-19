@@ -215,7 +215,7 @@ class BeritaController extends Controller
         if ($like) {
             // Unlike
             $like->delete();
-            // $berita->total_like--;
+            $berita->total_like--;
             $isLiked = false;
         } else {
             // Like
@@ -223,6 +223,8 @@ class BeritaController extends Controller
             $berita->total_like++;
             $isLiked = true;
         }
+
+        $berita->save();
 
         $berita->is_liked = $isLiked;
 
@@ -232,6 +234,8 @@ class BeritaController extends Controller
             'data' => $berita
         ], 200);
     }
+    
+
     public function listLikes(Request $request)
     {
         // Validasi input untuk memastikan id_berita ada dan merupakan integer

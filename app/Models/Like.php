@@ -11,9 +11,9 @@ class Like extends Model
 
     protected $table = 'likes';
 
-    protected $primaryKey = 'id_like';
-    protected $keyType = 'int';
-    public $incrementing = true;
+    // protected $primaryKey = 'id_like';
+    // protected $keyType = 'int';
+    // public $incrementing = true;
 
     protected $fillable = [
         'id_berita',
