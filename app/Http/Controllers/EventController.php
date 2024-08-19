@@ -227,43 +227,33 @@ class EventController extends Controller
 
     public function toggleRegister(Request $request)
     {
-        // Validasi input untuk memastikan id_event ada dan merupakan integer
-        $validator = Validator::make($request->all(), [
-            'id_event' => 'required|exists:events,id_event',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
         // Cari event berdasarkan id_event
         $event = Event::find($request->id_event);
 
         if (!$event) {
             return response()->json([
                 'success' => false,
-                'message' => 'Event tidak ditemukan',
+                'message' => 'error',
+                'errors' => 'Event not found'
             ], 404);
         }
 
         $user = $request->user();
         $pesertaEvent = $event->peserta_event()->where('id_user', $user->id_user)->first();
 
-        // Jika pesertaEvent ditemukan, lakukan un-register
         if ($pesertaEvent) {
             // Unregister
+            DB::table('peserta_event')
+                ->where('id_user', $user->id_user)
+                ->where('id_event', $event->id_event)
+                ->delete();
+
             if ($event->peserta > 0) {
-                $event->peserta -= 1;
-                $event->save();
+                $event->peserta--;
             }
-            $pesertaEvent->delete();
             $isRegistered = false;
         } else {
-            // Jika pesertaEvent tidak ditemukan, lakukan register
+            // Check kuota
             if ($event->kuota <= $event->peserta) {
                 return response()->json([
                     'success' => false,
@@ -271,21 +261,20 @@ class EventController extends Controller
                 ], 422);
             }
 
-            // Register pengguna
-            $event->peserta += 1;
-            $event->save();
-
-            // Gunakan insert manual ke tabel peserta_event
+            // Register
             DB::table('peserta_event')->insert([
                 'id_user' => $user->id_user,
                 'id_event' => $event->id_event,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            $event->peserta++;
             $isRegistered = true;
         }
 
-        // Menambahkan status apakah user terdaftar atau tidak
+        $event->save();
+
         $event->is_registered = $isRegistered;
 
         return response()->json([
