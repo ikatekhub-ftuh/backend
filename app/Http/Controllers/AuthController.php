@@ -55,6 +55,8 @@ class AuthController extends Controller
             ], 500);
         }
 
+        $user->load('alumni');
+
         $token = $user->createToken('authToken')->plainTextToken;
         return response()->json([
             'success'   => true,
