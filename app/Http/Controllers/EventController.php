@@ -6,6 +6,7 @@ use App\Models\Event;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -274,9 +275,10 @@ class EventController extends Controller
             $event->peserta += 1;
             $event->save();
 
-            // Gunakan create() tanpa mencoba mengembalikan kolom id
-            $event->peserta_event()->create([
+            // Gunakan insert manual ke tabel peserta_event
+            DB::table('peserta_event')->insert([
                 'id_user' => $user->id_user,
+                'id_event' => $event->id_event,
                 'created_at' => now(), // Pastikan timestamp diisi
                 'updated_at' => now(),
             ]);
@@ -292,7 +294,6 @@ class EventController extends Controller
             'data' => $event,
         ], 200);
     }
-
 
     public function pesertaEvent(Request $request)
     {
