@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\peserta_event;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -258,12 +259,21 @@ class EventController extends Controller
             }
 
             // Register
-            $event->pesertaEvent()->insert([
-                'id_user' => $user->id_user,
-                'id_event' => $event->id_event,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // DB::table('peserta_event')->insert([
+            //     'id_user' => $user->id_user,
+            //     'id_event' => $event->id_event,
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]);
+
+            $pesertaEvent = new peserta_event();
+            $pesertaEvent->id_user = $user->id_user;
+            $pesertaEvent->id_event = $event->id_event;
+            $pesertaEvent->created_at = now();
+            $pesertaEvent->updated_at = now();
+            $pesertaEvent->save();
+
+
 
             $event->peserta++;
             $isRegistered = true;
