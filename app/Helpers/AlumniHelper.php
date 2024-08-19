@@ -4,12 +4,13 @@ namespace App\Helpers;
 
 use App\Models\Alumni;
 use App\Models\Jurusan;
+use Illuminate\Support\Facades\DB;
 
 class AlumniHelper {
     public static function generateNoAnggota($jurusan, $angkatan)
     {
         $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
-                        ->where('jurusan', $jurusan)
+                        ->where(DB::raw('lower(jurusan)'), strtolower($jurusan))
                         ->where('angkatan', $angkatan)
                         ->where('validated', true)
                         ->whereNotNull('id_user')
@@ -17,9 +18,9 @@ class AlumniHelper {
                         ->groupBy('angkatan', 'jurusan')
                         ->first();
         
-        $kode_jurusan = Jurusan::where('nama_jurusan', $jurusan)->first()->kode_jurusan;
+        $kode_jurusan = Jurusan::where(DB::raw('lower(nama_jurusan)'), strtolower($jurusan))->first()->kode_jurusan;
         $kode_angkatan = substr($angkatan, -2);
-        $kode_anggota = str_pad($alumni ? $alumni->count+1 : 1, 3, '0', STR_PAD_LEFT);
+        $kode_anggota = str_pad($alumni ? $alumni->total+1 : 1, 3, '0', STR_PAD_LEFT);
 
         return $kode_jurusan . $kode_angkatan . $kode_anggota;
     }
