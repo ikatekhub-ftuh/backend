@@ -13,8 +13,8 @@ class peserta_event extends Model
     protected $table = 'peserta_event';
 
 	public $incrementing = false;
-	protected $keyType = 'int';
 	protected $primaryKey = null;
+	protected $keyType = 'int';
 	public $timestamps = true;
 
     protected $fillable = [

@@ -239,7 +239,7 @@ class EventController extends Controller
         }
 
         $user = $request->user();
-        $peserta = $event->likes()->where('id_user', $user->id_user)->first();
+        $peserta = $event->peserta_event()->where('id_user', $user->id_user)->first();
 
         if ($peserta) {
             // Unregister
@@ -259,21 +259,12 @@ class EventController extends Controller
             }
 
             // Register
-            // DB::table('peserta_event')->insert([
-            //     'id_user' => $user->id_user,
-            //     'id_event' => $event->id_event,
-            //     'created_at' => now(),
-            //     'updated_at' => now(),
-            // ]);
-
-            $pesertaEvent = new peserta_event();
-            $pesertaEvent->id_user = $user->id_user;
-            $pesertaEvent->id_event = $event->id_event;
-            $pesertaEvent->created_at = now();
-            $pesertaEvent->updated_at = now();
-            $pesertaEvent->save();
-
-
+            DB::table('peserta_event')->insert([
+                'id_user' => $user->id_user,
+                'id_event' => $event->id_event,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
 
             $event->peserta++;
             $isRegistered = true;
@@ -289,8 +280,6 @@ class EventController extends Controller
             'data' => $event,
         ], 200);
     }
-
-
 
     public function pesertaEvent(Request $request)
     {
