@@ -30,19 +30,28 @@ class BeritaController extends Controller
     {
         $userId = $request->user()->id_user;
 
-        $query = Berita::with('kategori')->select('berita.*')
-            ->selectRaw('EXISTS(SELECT 1 FROM likes WHERE likes.id_berita = berita.id_berita AND likes.id_user = ?) AS is_liked', [$userId]);
+        $query = Berita::with('kategori')
+            ->select('berita.id_berita', 'berita.judul', 'berita.isi', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
+            // Menambahkan join untuk mendapatkan status is_liked
+            ->leftJoin('likes', function($join) use ($userId) {
+                $join->on('likes.id_berita', '=', 'berita.id_berita')
+                    ->where('likes.id_user', '=', $userId);
+            })
+            ->addSelect(DB::raw('CASE WHEN likes.id_berita IS NOT NULL THEN true ELSE false END AS is_liked'));
 
         if ($request->has('search')) {
-            $query->where('judul', 'ilike', '%' . $request->search . '%');
+            $query->where('berita.judul', 'ilike', '%' . $request->search . '%');
         }
 
         if ($request->has('id_kategori_berita')) {
-            $query->where('id_kategori_berita', $request->id_kategori_berita);
+            $query->where('berita.id_kategori_berita', $request->id_kategori_berita);
         }
 
-        $limit = $request->input('limit', 10);
+        // Menambahkan pengurutan berdasarkan status "like"
+        $query->orderBy('berita.total_like', 'desc') 
+            ->orderBy('berita.created_at', 'desc'); // Urutkan berdasarkan tanggal terbaru
 
+        $limit = $request->input('limit', 10);
         $result = $query->paginate($limit);
 
         return response()->json([
@@ -51,7 +60,6 @@ class BeritaController extends Controller
             'data' => $result
         ], 200);
     }
-
     public function getById(Request $request, $id)
     {
         $berita = Berita::with("kategori")->find($id);

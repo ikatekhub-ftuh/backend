@@ -20,6 +20,7 @@ class Like extends Model
 	protected $keyType = 'int';
 	protected $primaryKey = null;
 	public $timestamps = true;
+
     protected $fillable = [
         'id_berita',
         'id_user'
