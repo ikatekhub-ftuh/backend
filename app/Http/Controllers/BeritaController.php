@@ -48,6 +48,7 @@ class BeritaController extends Controller
         }
 
         // Menambahkan pengurutan hanya berdasarkan created_at
+        $query->orderBy('berita.created_at', 'desc'); // Urutkan berdasarkan tanggal terbaru
         $query->orderBy('berita.total_like', 'desc'); // Urutkan berdasarkan tanggal terbaru
 
         $limit = $request->input('limit', 10);
