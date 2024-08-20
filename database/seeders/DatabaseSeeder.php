@@ -25,18 +25,18 @@ class DatabaseSeeder extends Seeder
     {
         ini_set('memory_limit', '1G');
 
-        // User::factory()->create([
-        //     'email' => "user@gmail.com",
-        //     'password' => "12345678",
-        //     'avatar' => "/gambar/dummy/images/test.png",
-        //     'is_banned' => 0,
-        // ]);
-        // User::factory()->create([
-        //     'email' => "admin@gmail.com",
-        //     'password' => "admin123",
-        //     'avatar' => "/gambar/dummy/images/test.png",
-        //     'is_banned' => 0,
-        // ]);
+        User::factory()->create([
+            'email' => "user@gmail.com",
+            'password' => "12345678",
+            'avatar' => "/gambar/dummy/images/test.png",
+            'is_banned' => 0,
+        ]);
+        User::factory()->create([
+            'email' => "admin@gmail.com",
+            'password' => "admin123",
+            'avatar' => "/gambar/dummy/images/test.png",
+            'is_banned' => 0,
+        ]);
 
         // User::factory(100)->create();
         // JenjangPendidikan::factory(200)->create();

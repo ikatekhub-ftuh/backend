@@ -36,7 +36,7 @@ class EventController extends Controller
         if (!$result) {
             return response()->json([
                 'success' => false,
-                'message' => 'event tidak ditemukan',
+                'message' => 'Data tidak ditemukan',
             ], 404);
         }
 
@@ -58,7 +58,7 @@ class EventController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'error',
-                'errors' => 'Data not found'
+                'errors' => 'Data tidak ditemukan'
             ], 404);
         }
 

@@ -31,16 +31,16 @@ class BeritaController extends Controller
         $userId = $request->user()->id_user;
 
         $query = Berita::with('kategori')
-            ->select('berita.id_berita', 'berita.judul', 'berita.konten', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
+            ->select('berita.id_berita', 'judul', 'penulis', 'gambar', 'berita.slug', 'konten', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
             // Menambahkan join untuk mendapatkan status is_liked
             ->leftJoin('likes', function($join) use ($userId) {
-                $join->on('likes.id_berita', '=', 'berita.id_berita')
+                $join->on('berita.id_berita', '=', 'likes.id_berita')
                     ->where('likes.id_user', '=', $userId);
             })
             ->addSelect(DB::raw('CASE WHEN likes.id_berita IS NOT NULL THEN true ELSE false END AS is_liked'));
 
         if ($request->has('search')) {
-            $query->where('berita.judul', 'ilike', '%' . $request->search . '%');
+            $query->where('judul', 'ilike', '%' . $request->search . '%');
         }
 
         if ($request->has('id_kategori_berita')) {
