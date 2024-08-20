@@ -31,7 +31,7 @@ class BeritaController extends Controller
         $userId = $request->user()->id_user;
 
         $query = Berita::with('kategori')
-            ->select('berita.id_berita', 'judul', 'penulis', 'gambar', 'berita.slug', 'konten', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
+            ->select('berita.id_berita', 'judul', 'penulis', 'gambar', 'berita.slug', 'total_like', 'konten', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
             // Menambahkan join untuk mendapatkan status is_liked
             ->leftJoin('likes', function($join) use ($userId) {
                 $join->on('berita.id_berita', '=', 'likes.id_berita')
