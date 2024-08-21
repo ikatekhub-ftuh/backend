@@ -37,6 +37,7 @@ Route::post('auth/login', [AuthController::class, 'login']); //done
 Route::get('alumni/data', [AlumniController::class, 'getDataToClaim']);
         Route::post('berita', [BeritaController::class, 'post']);
 
+Route::post('user/delete', [UserController::class, 'delete']); //done
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('search/{search}', [searchController::class, 'search']); //done
     Route::get('jurusan', [AlumniController::class, 'getJurusan']); //done

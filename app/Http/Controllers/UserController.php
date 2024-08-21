@@ -51,6 +51,20 @@ class UserController extends Controller
     //     ]);
     // }
 
+    public function delete(Request $request)
+    {
+        $user = $request->user();
+
+        Alumni::where('id_user', $user->id_user)->update(['id_user' => null]);
+
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User berhasil dihapus',
+        ], 200);
+    }
+
     public function update(Request $request)
     {
 
