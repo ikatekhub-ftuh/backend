@@ -55,8 +55,19 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        Alumni::where('id_user', $user->id_user)->update(['id_user' => null]);
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User tidak ditemukan atau tidak terautentikasi.',
+            ], 404);
+        }
 
+        // Cek apakah ada alumni dengan id_user terkait
+        Alumni::where('id_user', $user->id_user)->exists() 
+            ? Alumni::where('id_user', $user->id_user)->update(['id_user' => null]) 
+            : null;
+
+        // Hapus user
         $user->delete();
 
         return response()->json([

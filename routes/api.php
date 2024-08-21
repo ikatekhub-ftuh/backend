@@ -35,20 +35,20 @@ Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']); //done
 Route::get('alumni/data', [AlumniController::class, 'getDataToClaim']);
-        Route::post('berita', [BeritaController::class, 'post']);
+Route::post('berita', [BeritaController::class, 'post']);
 
-Route::post('user/delete', [UserController::class, 'delete']); //done
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('search/{search}', [searchController::class, 'search']); //done
     Route::get('jurusan', [AlumniController::class, 'getJurusan']); //done
-
+    
     Route::get('berita', [BeritaController::class, 'get']); //done
     Route::get('berita/kategori', [BeritaController::class, 'category_get']); //done
     Route::post('berita/like', [BeritaController::class, 'togglelike']); //done
     Route::get('berita/list-like', [BeritaController::class, 'listLikes']); //done
-
+    
     Route::get('user', [UserController::class, 'get']); //done
     Route::post('user/update', [UserController::class, 'update']); //done
+    Route::post('user/delete', [UserController::class, 'delete']);
 
     Route::post('auth/logout', [AuthController::class, 'logout']); //done
 
