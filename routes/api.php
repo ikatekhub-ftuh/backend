@@ -39,6 +39,7 @@ Route::get('alumni/data', [AlumniController::class, 'getDataToClaim']);
 
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('search/{search}', [searchController::class, 'search']); //done
+    Route::get('jurusan', [AlumniController::class, 'getJurusan']); //done
 
     Route::get('berita', [BeritaController::class, 'get']); //done
     Route::get('berita/kategori', [BeritaController::class, 'category_get']); //done

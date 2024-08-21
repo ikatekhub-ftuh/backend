@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AlumniHelper;
 use App\Models\Alumni;
+use App\Models\Jurusan;
 use App\Models\StatistikPendidikan;
 use App\Models\User;
 use Carbon\Carbon;
@@ -405,5 +406,17 @@ class AlumniController extends Controller
             'message'   => 'Data alumni berhasil divalidasi.',
             'data'      => $alumni,
         ], 200);        
+    }
+
+    public function getJurusan()
+    {
+        $query = Jurusan::query();
+        $result = $query->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $result
+        ], 200);
     }
 }
