@@ -11,21 +11,23 @@ class JurusanFactory extends Factory
     
     // Array data jurusan yang berurutan
     protected static $jurusanData = [
-        ['nama_jurusan' => 'TEKNIK SIPIL',                      'kode_jurusan' => 'D01'],
-        ['nama_jurusan' => 'TEKNIK MESIN',                      'kode_jurusan' => 'D02'],
-        ['nama_jurusan' => 'TEKNIK PERKAPALAN',                 'kode_jurusan' => 'D03'],
-        ['nama_jurusan' => 'TEKNIK ELEKTRO',                    'kode_jurusan' => 'D04'],
-        ['nama_jurusan' => 'TEKNIK ARSITEKTUR',                 'kode_jurusan' => 'D05'],
-        ['nama_jurusan' => 'TEKNIK GEOLOGI',                    'kode_jurusan' => 'D06'],
-        ['nama_jurusan' => 'TEKNIK INDUSTRI',                   'kode_jurusan' => 'D07'],
-        ['nama_jurusan' => 'TEKNIK KELAUTAN',                   'kode_jurusan' => 'D08'],
-        ['nama_jurusan' => 'TEKNIK SISTEM PERKAPALAN',          'kode_jurusan' => 'D09'],
-        ['nama_jurusan' => 'TEKNIK PERENCANAAN WILAYAH KOTA',   'kode_jurusan' => 'D10'],
-        ['nama_jurusan' => 'TEKNIK PERTAMBANGAN',               'kode_jurusan' => 'D11'],
-        ['nama_jurusan' => 'TEKNIK INFORMATIKA',                'kode_jurusan' => 'D12'],
-        ['nama_jurusan' => 'TEKNIK LINGKUNGAN',                 'kode_jurusan' => 'D13'],
-        ['nama_jurusan' => 'PPI',                               'kode_jurusan' => 'D064'],
-        ['nama_jurusan' => 'PPA',                               'kode_jurusan' => 'D064'],
+        ['nama_jurusan' => 'TEKNIK SIPIL',                      'kode_jurusan' => '01'],
+        ['nama_jurusan' => 'TEKNIK MESIN',                      'kode_jurusan' => '02'],
+        ['nama_jurusan' => 'TEKNIK PERKAPALAN',                 'kode_jurusan' => '03'],
+        ['nama_jurusan' => 'TEKNIK ELEKTRO',                    'kode_jurusan' => '04'],
+        ['nama_jurusan' => 'TEKNIK ARSITEKTUR',                 'kode_jurusan' => '05'],
+        ['nama_jurusan' => 'TEKNIK GEOLOGI',                    'kode_jurusan' => '06'],
+        ['nama_jurusan' => 'TEKNIK INDUSTRI',                   'kode_jurusan' => '07'],
+        ['nama_jurusan' => 'TEKNIK KELAUTAN',                   'kode_jurusan' => '08'],
+        ['nama_jurusan' => 'TEKNIK SISTEM PERKAPALAN',          'kode_jurusan' => '09'],
+        ['nama_jurusan' => 'TEKNIK PERENCANAAN WILAYAH KOTA',   'kode_jurusan' => '10'],
+        ['nama_jurusan' => 'TEKNIK PERTAMBANGAN',               'kode_jurusan' => '11'],
+        ['nama_jurusan' => 'TEKNIK INFORMATIKA',                'kode_jurusan' => '12'],
+        ['nama_jurusan' => 'TEKNIK LINGKUNGAN',                 'kode_jurusan' => '13'],
+        ['nama_jurusan' => 'TEKNIK LINGKUNGAN',                 'kode_jurusan' => '13'],
+        ['nama_jurusan' => 'TEKNIK METALURGI',                  'kode_jurusan' => '14'],
+        ['nama_jurusan' => 'PPI',                               'kode_jurusan' => '15'],
+        ['nama_jurusan' => 'PPA',                               'kode_jurusan' => '16'],
     ];
 
     /**
