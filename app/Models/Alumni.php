@@ -33,9 +33,8 @@ class Alumni extends Model
     
     // hide name
     
-    protected $hidden = [
-        'no_telp',
-    ];
+    // protected $hidden = [
+    // ];
 
     public function user()
     {

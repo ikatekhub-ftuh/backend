@@ -148,6 +148,7 @@ class AlumniController extends Controller
             'tgl_lahir'         => 'required|date',
             'jurusan'           => 'required|string',
             'angkatan'          => 'required|integer|digits:4',
+            'no_telp'              => 'required|string',
             'kelamin'           => 'required|string|in:l,p',
             'agama'             => 'nullable',
             'nim'               => 'required_without_all:jenjang',
@@ -199,15 +200,15 @@ class AlumniController extends Controller
     
     public function update(Request $request) {// Validasi field yang mungkin akan diupdate
         $validator = Validator::make($request->all(), [
-            'nama'      => 'sometimes|required|string|max:100',
-            'nim'       => 'sometimes|required|string|max:20',
-            'tgl_lahir' => 'sometimes|required|date',
-            'jurusan'   => 'sometimes|required|string|max:100',
-            'angkatan'  => 'sometimes|required|integer|digits:4',
-            'no_telp'   => 'sometimes|required|max:20',
-            'agama'     => 'sometimes|nullable|string|max:50',
-            'kelamin'   => 'sometimes|string|in:l,p',
-            'golongan_darah' => 'sometimes|nullable|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
+            'nama'              => 'sometimes|required|string|max:100',
+            'nim'               => 'sometimes|required|string|max:20',
+            'tgl_lahir'         => 'sometimes|required|date',
+            'jurusan'           => 'sometimes|required|string|max:100',
+            'angkatan'          => 'sometimes|required|integer|digits:4',
+            'no_telp'           => 'sometimes|required|max:20',
+            'agama'             => 'sometimes|nullable|string|max:50',
+            'kelamin'           => 'sometimes|string|in:l,p',
+            'golongan_darah'    => 'sometimes|nullable|string|in:A+,A-,B+,B-,AB+,AB-,O+,O-',
         ]);
 
         if ($validator->fails()) {
