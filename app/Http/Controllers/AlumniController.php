@@ -148,11 +148,11 @@ class AlumniController extends Controller
             'tgl_lahir'         => 'required|date',
             'jurusan'           => 'required|string',
             'angkatan'          => 'required|integer|digits:4',
-            'no_telp'              => 'required|string',
+            'no_telp'           => 'nullable',
             'kelamin'           => 'required|string|in:l,p',
-            'agama'             => 'nullable',
-            'nim'               => 'required_without_all:jenjang',
-            'jenjang'           => 'required_without_all:nim|enum:S1,S2,S3,PPI,PPA',
+            'agama'             => 'required',
+            'nim'               => 'nullable',
+            // 'jenjang'           => 'required_without_all:nim|enum:S1,S2,S3,PPI,PPA',
         ]);
 
         if ( $validator->fails() ) {
@@ -180,16 +180,16 @@ class AlumniController extends Controller
             $validatedData['no_anggota'] = AlumniHelper::generateNoAnggota($request->jurusan, $request->angkatan);
         }
 
-        $jenjang = $request->has('jenjang') 
-                    ? $request->jenjang 
-                    : AlumniHelper::getStrata($request->nim);
+        // $jenjang = $request->has('jenjang') 
+        //             ? $request->jenjang 
+        //             : AlumniHelper::getStrata($request->nim);
 
-        $statistik = StatistikPendidikan::where('jenjang', $jenjang)
-                        ->first();
-        $statistik->jumlah += 1;
+        // $statistik = StatistikPendidikan::where('jenjang', $jenjang)
+        //                 ->first();
+        // $statistik->jumlah += 1;
         
         $alumni = Alumni::create($validatedData);
-        $statistik->save();
+        // $statistik->save();
 
         return response()->json([
             'success' => true,
