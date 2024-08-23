@@ -21,7 +21,7 @@ class AlumniController extends Controller
         $query->where('validated', true);
 
         if ( $request->has('id_alumni') ) {
-            $query->select('id_alumni', 'id_user', 'nim', 'no_anggota', 'nama', 'jurusan', 'angkatan', 'kelamin', 'agama', 'golongan_darah', )
+            $query->select('id_alumni', 'id_user', 'nim', 'no_anggota', 'nama', 'no_telp', 'jurusan', 'angkatan', 'kelamin', 'agama', 'golongan_darah', )
                     ->where('id_alumni', $request->id_alumni);
             $alumni = $query->first();
 
