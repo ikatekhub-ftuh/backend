@@ -50,13 +50,10 @@
         }
     </style>
 </head>
-<body>
-    <!-- Bagian untuk logo -->
-    <div class="logo">
-    </div>
-    
+<body>    
     <!-- Bagian untuk teks tengah -->
     <div class="content logo">
+        <img src="/storage/logo-ikatek.PNG" alt="">
         <h1>ANTEK HUB</h1>
         <p>Adaptive Collaborative</p>
     </div>
