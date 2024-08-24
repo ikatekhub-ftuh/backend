@@ -21,7 +21,7 @@
             [
                 'judul' => 'Launching ANTEK HUB',
                 'slug' => 'launching-antek-hub',
-                'gambar' => 'launching-antek-hub.png',
+                'gambar' => 'gambar/event/launching-antek-hub.png',
                 'konten' => 'Pada tanggal 31 Agustus 2024, Fakultas Teknik Universitas Hasanuddin akan menggelar acara spesial dalam rangka Dies Natalis yang ke-64. Salah satu highlight dari perayaan ini adalah launching aplikasi "ANTEK HUB," sebuah platform inovatif yang dirancang untuk memfasilitasi komunikasi dan kolaborasi antara mahasiswa, dosen, dan alumni Fakultas Teknik UNHAS.',
                 'penyelenggara' => 'Fakultas Teknik UNHAS',
                 'tgl_event' => '2024-08-31',
@@ -34,7 +34,7 @@
             [
                 'judul' => 'Kompetisi Inovasi Teknologi Mahasiswa Teknik UNHAS 2024',
                 'slug' => 'kompetisi-inovasi-teknologi-mahasiswa-teknik-unhas-2024',
-                'gambar' => 'kompetisi-inovasi-teknologi.png',
+                'gambar' => 'gambar/event/kompetisi-inovasi-teknologi.png',
                 'konten' => 'Fakultas Teknik Universitas Hasanuddin akan menggelar "Kompetisi Inovasi Teknologi Mahasiswa 2024" pada bulan November mendatang. Kompetisi ini merupakan ajang bagi mahasiswa untuk menampilkan inovasi teknologi yang telah mereka kembangkan selama kuliah.',
                 'penyelenggara' => 'Fakultas Teknik UNHAS',
                 'tgl_event' => '2024-10-30',
@@ -47,7 +47,7 @@
             [
                 'judul' => 'Kuliah Umum Teknik Sipil dengan Pembicara Nasional',
                 'slug' => 'kuliah-umum-teknik-sipil-dengan-pembicara-nasional',
-                'gambar' => 'kuliah-umum-teknik-sipil.png',
+                'gambar' => 'gambar/event/kuliah-umum-teknik-sipil.png',
                 'konten' => 'Fakultas Teknik Universitas Hasanuddin akan mengadakan kuliah umum dengan tema "Inovasi dan Tantangan dalam Proyek Infrastruktur di Indonesia" pada tanggal 10 September 2024. Kuliah umum ini akan menghadirkan pembicara nasional yang merupakan ahli dalam bidang teknik sipil dan infrastruktur.',
                 'penyelenggara' => 'Fakultas Teknik UNHAS',
                 'tgl_event' => '2024-11-08',
