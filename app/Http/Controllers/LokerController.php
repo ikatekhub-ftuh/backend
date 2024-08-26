@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageCompress;
 use App\Models\Loker;
 use App\Models\Perusahaan;
 use Illuminate\Support\Str;
@@ -131,7 +132,12 @@ class LokerController extends Controller
 
         $validatedData = $v->validated();
 
-        $gambarUrl = $request->file('logo')->store('logo/perusahaan', 'public');
+        $imageFile  = $request->file('logo');
+        
+        $tempPath   = $imageFile->getPathname();
+        ImageCompress::compressImage($tempPath, 75);
+
+        $gambarUrl = $imageFile->store('logo/perusahaan', 'public');
 
         $validatedData['logo'] = $gambarUrl;
 
