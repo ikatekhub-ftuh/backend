@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageCompress as HelpersImageCompress;
 use App\Models\Berita;
 use App\Models\KategoriBerita;
 use Illuminate\Http\Request;
@@ -140,7 +141,12 @@ class BeritaController extends Controller
 
         $validatedData = $v->validated();
 
-        $gambarUrl = $request->file('gambar')->store('gambar/berita', 'public');
+        $imageFile  = $request->file('gambar');
+        
+        $tempPath   = $imageFile->getPathname();
+        HelpersImageCompress::compressImage($tempPath, 75);
+
+        $gambarUrl = $imageFile->store('gambar/berita', 'public');
         $validatedData['gambar'] = $gambarUrl;
 
         $slug = strtolower(Str::slug($request->judul));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageCompress;
 use App\Models\Event;
 use App\Models\peserta_event;
 use Illuminate\Support\Str;
@@ -93,7 +94,12 @@ class EventController extends Controller
 
         $validatedData = $v->validated();
 
-        $gambarUrl = $request->file('gambar')->store('gambar/event', 'public');
+        $imageFile  = $request->file('gambar');
+        
+        $tempPath   = $imageFile->getPathname();
+        ImageCompress::compressImage($tempPath, 75);
+
+        $gambarUrl = $imageFile->store('gambar/event', 'public');
         $validatedData['gambar'] = $gambarUrl;
 
         $slug = strtolower(Str::slug($request->judul));
