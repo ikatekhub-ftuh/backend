@@ -24,10 +24,9 @@ class JurusanFactory extends Factory
         ['nama_jurusan' => 'TEKNIK PERTAMBANGAN',               'kode_jurusan' => '11'],
         ['nama_jurusan' => 'TEKNIK INFORMATIKA',                'kode_jurusan' => '12'],
         ['nama_jurusan' => 'TEKNIK LINGKUNGAN',                 'kode_jurusan' => '13'],
-        ['nama_jurusan' => 'TEKNIK LINGKUNGAN',                 'kode_jurusan' => '13'],
         ['nama_jurusan' => 'TEKNIK METALURGI',                  'kode_jurusan' => '14'],
-        ['nama_jurusan' => 'PPI',                               'kode_jurusan' => '15'],
-        ['nama_jurusan' => 'PPA',                               'kode_jurusan' => '16'],
+        ['nama_jurusan' => 'PROGRAM PROFESI INSINYUR',          'kode_jurusan' => '15'],
+        ['nama_jurusan' => 'PROGRAM PROFESI ARSITEKTUR',        'kode_jurusan' => '16'],
     ];
 
     /**

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('slug', 255);
             $table->string('gambar', 100);
             $table->mediumText('konten');
+            $table->string('deskripsi');
             $table->integer('total_like')->default(0);
             $table->timestamps();
         });
