@@ -27,8 +27,9 @@ class BeritaFactory extends Factory
             'slug'                  => $slug,
             'penulis'               => fake()->name(),
             // 'gambar'                => 'berita/img.jpg',
-            'gambar' => "/gambar/dummy/images/test.png",
+            'gambar'                => 'gambar/berita/' . fake()->randomElement(["99LwWXVv1TlDUssCyMepP0AmFTMKppLIcZbCqOfs.webp", "T3D4vMqUX5xTGjeMU0yavtVYtY5K5WoJ2zBPKiVB.webp", "vF7rDFdbij4bEMsantvxVKpzgmWy99SOIe5sqvuC.webp", "VWf1W2bGzYGUvqQAt2xdK5vWwg3ddZ1Ykcrv8P4a.webp"]),
             'konten'                => fake()->paragraphs(3, true), 
+            'deskripsi'             => fake()->sentences(3, true), 
             'total_like'            => fake()->numberBetween(0, 1000)
         ];
     }

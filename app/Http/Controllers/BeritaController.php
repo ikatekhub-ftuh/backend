@@ -32,7 +32,7 @@ class BeritaController extends Controller
         $userId = $request->user()->id_user;
 
         $query = Berita::with('kategori')
-            ->select('berita.id_berita', 'judul', 'penulis', 'gambar', 'berita.slug', 'total_like', 'konten', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
+            ->select('berita.id_berita', 'judul', 'penulis', 'gambar', 'berita.slug', 'total_like', 'konten', 'deskripsi', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
             // Menambahkan join untuk mendapatkan status is_liked
             ->leftJoin('likes', function($join) use ($userId) {
                 $join->on('berita.id_berita', '=', 'likes.id_berita')
@@ -124,11 +124,12 @@ class BeritaController extends Controller
     {
 
         $v = Validator::make($request->all(), [
-            'id_kategori_berita' => 'required',
-            'judul' => 'required',
-            'gambar' => 'required',
-            'konten' => 'required',
-            'penulis' => 'required',
+            'id_kategori_berita'    => 'required',
+            'judul'                 => 'required',
+            'gambar'                => 'required',
+            'konten'                => 'required',
+            'deskripsi'             => 'required',
+            'penulis'               => 'required',
         ]);
 
         if ($v->fails()) {

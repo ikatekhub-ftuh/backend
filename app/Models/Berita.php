@@ -22,6 +22,7 @@ class Berita extends Model
         'slug',
         'gambar',
         'konten',
+        'deskripsi',
         'total_like',
     ];
 
