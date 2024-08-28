@@ -17,10 +17,19 @@ class UserController extends Controller
         $user->load('alumni');
         $user->load('alumni.jenjang_pendidikan');
 
-        return response()->json([
+        // saya ubah biar di BE Interface bisa cek admin atau engga
+
+        $isAdmin = $user->is_admin;
+
+        $response = [
             'message' => 'success',
-            'data' => $user
-        ], 200);
+            'data' => [
+                'user' => $user,
+                'isAdmin' => $isAdmin
+            ]
+        ];
+
+        return response()->json($response, 200);
     }
 
     // public function updateAvatar(Request $request)
@@ -63,8 +72,8 @@ class UserController extends Controller
         }
 
         // Cek apakah ada alumni dengan id_user terkait
-        Alumni::where('id_user', $user->id_user)->exists() 
-            ? Alumni::where('id_user', $user->id_user)->update(['id_user' => null]) 
+        Alumni::where('id_user', $user->id_user)->exists()
+            ? Alumni::where('id_user', $user->id_user)->update(['id_user' => null])
             : null;
 
         // Hapus user
@@ -151,12 +160,11 @@ class UserController extends Controller
         }
 
         $user = User::find($request->id_user);
-        if($user->is_admin) {
+        if ($user->is_admin) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tidak bisa banned admin',
             ], 422);
-
         }
         $user->is_banned = true;
         $user->ban_reason = $request->banned_reason;

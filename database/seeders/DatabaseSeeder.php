@@ -28,20 +28,20 @@ class DatabaseSeeder extends Seeder
         // User::factory()->create([
         //     'email' => "user@gmail.com",
         //     'password' => "12345678",
-        //     'avatar' => "/gambar/dummy/images/test.png",
+        //     'avatar' => "gambar/dummy/images/test.png",
         //     'is_banned' => 0,
         // ]);
-        // User::factory()->create([
-        //     'email' => "admin@gmail.com",
-        //     'password' => "admin123",
-        //     'avatar' => "/gambar/dummy/images/test.png",
-        //     'is_banned' => 0,
-        // ]);
+
+        User::factory()->create([
+            'email' => "admin@gmail.com",
+            'password' => "admin123",
+            'avatar' => "gambar/dummy/images/test.png",
+        ]);
 
         // User::factory(100)->create();
         // JenjangPendidikan::factory(200)->create();
         // KategoriBerita::factory(12)->create();
-        Berita::factory(100)->create();
+        // Berita::factory(100)->create();
         // Perusahaan::factory(20)->create();
         // Loker::factory(30)->create();
         // Event::factory(3)->create();

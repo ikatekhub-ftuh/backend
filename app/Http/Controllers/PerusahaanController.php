@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PerusahaanController extends Controller
 {
-    public function get(Request $request){
+    public function get(Request $request)
+    {
         $query = Perusahaan::query();
 
         if ($request->has('id')) {
@@ -21,7 +22,7 @@ class PerusahaanController extends Controller
                     'errors' => 'Data not found'
                 ], 404);
             }
-            
+
             return response()->json([
                 'message' => 'success',
                 'request' => $request->all(),

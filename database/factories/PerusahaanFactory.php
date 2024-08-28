@@ -23,7 +23,7 @@ class PerusahaanFactory extends Factory
         return [
             'nama_perusahaan'   => $nama,
             // 'logo'              => $nama .'.jpg',
-            'logo' => "/gambar/dummy/images/test.png",
+            'logo' => "gambar/dummy/images/test.png",
         ];
     }
 }

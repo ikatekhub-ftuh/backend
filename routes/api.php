@@ -35,17 +35,16 @@ Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
 Route::post('auth/login', [AuthController::class, 'login']); //done
 Route::get('alumni/data', [AlumniController::class, 'getDataToClaim']);
-Route::post('berita', [BeritaController::class, 'post']);
 
 Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::get('search/{search}', [searchController::class, 'search']); //done
     Route::get('jurusan', [AlumniController::class, 'getJurusan']); //done
-    
+
     Route::get('berita', [BeritaController::class, 'get']); //done
     Route::get('berita/kategori', [BeritaController::class, 'category_get']); //done
     Route::post('berita/like', [BeritaController::class, 'togglelike']); //done
     Route::get('berita/list-like', [BeritaController::class, 'listLikes']); //done
-    
+
     Route::get('user', [UserController::class, 'get']); //done
     Route::post('user/update', [UserController::class, 'update']); //done
     Route::post('user/delete', [UserController::class, 'delete']);
@@ -57,8 +56,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::post('event/register', [EventController::class, 'toggleRegister']);
     //Route::post('event/register', [EventController::class, 'register']); //done
     //Route::post('event/unregister', [EventController::class, 'unregister']); //done
-    
-    
+
+
     Route::post('alumni', [AlumniController::class, 'post']);
 
     Route::middleware(['guestOnly'])->group(function () {
@@ -78,11 +77,12 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::get('loker/perusahaan', [LokerController::class, 'get_perusahaan']); //done
         Route::post('user/banned', [UserController::class, 'banUser']); //done
         Route::post('user/unbanned', [UserController::class, 'unBanUser']); //done
+        Route::post('berita', [BeritaController::class, 'post']);
 
         // kebutuhan admin nanti
         // Route::post('loker', [LokerController::class, 'post']);
         // Route::delete('loker', [LokerController::class, 'delete']);
-        // Route::post('loker/perusahaan', [LokerController::class, 'post_perusahaan']);
+        Route::post('loker/perusahaan', [LokerController::class, 'post_perusahaan']);
         // Route::delete('loker/perusahaan', [LokerController::class, 'delete_perusahaan']);
         // Route::post('event', [EventController::class, 'post']);
         // Route::delete('event', [EventController::class, 'delete']);
