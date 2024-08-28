@@ -95,7 +95,7 @@ class EventController extends Controller
         $validatedData = $v->validated();
 
         $imageFile  = $request->file('gambar');
-        
+
         $tempPath   = $imageFile->getPathname();
         ImageCompress::compressImage($tempPath, 75);
 
@@ -215,7 +215,7 @@ class EventController extends Controller
     //         ], 404);
     //     }
 
-        
+
     //     // Mendapatkan semua peserta dengan data user
     //     $peserta = $event->peserta_event->map(function ($pesertaEvent) {
     //         return [
@@ -319,6 +319,4 @@ class EventController extends Controller
             'data' => $peserta
         ], 200);
     }
-
-
 }

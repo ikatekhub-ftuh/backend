@@ -52,10 +52,10 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']); //done
 
     Route::get('event', [EventController::class, 'get']); //done
-    // Route::get('event/list-peserta', [EventController::class, 'pesertaEvent']); //done
+    // Route::get('event/list-peserta', [EventController::class, 'pesertaEvent']);
     Route::post('event/register', [EventController::class, 'toggleRegister']);
-    //Route::post('event/register', [EventController::class, 'register']); //done
-    //Route::post('event/unregister', [EventController::class, 'unregister']); //done
+    //Route::post('event/register', [EventController::class, 'register']);
+    //Route::post('event/unregister', [EventController::class, 'unregister']);
 
 
     Route::post('alumni', [AlumniController::class, 'post']);
@@ -84,7 +84,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         // Route::delete('loker', [LokerController::class, 'delete']);
         Route::post('loker/perusahaan', [LokerController::class, 'post_perusahaan']);
         // Route::delete('loker/perusahaan', [LokerController::class, 'delete_perusahaan']);
-        // Route::post('event', [EventController::class, 'post']);
+        Route::post('event', [EventController::class, 'post']);
         // Route::delete('event', [EventController::class, 'delete']);
         // Route::post('berita', [BeritaController::class, 'post']);
         // Route::delete('berita', [BeritaController::class, 'delete']);
