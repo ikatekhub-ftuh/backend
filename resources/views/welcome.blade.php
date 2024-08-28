@@ -103,7 +103,7 @@
             <h1>ANTEK HUB</h1>
             <h5>Adaptive Collaborative</h5>
             <button class="button">
-                <a href="https://www.example.com">Home</a>
+                <a href="https://www.example.com">App</a>
             </button>
         </div>
 
