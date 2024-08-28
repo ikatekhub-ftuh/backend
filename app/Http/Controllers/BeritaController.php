@@ -54,7 +54,7 @@ class BeritaController extends Controller
 
         $limit = $request->input('limit', 10);
 
-        if ($request->has('all')) {
+        if ($request->has('all') && $request->user()->is_admin) {
             $result = $query->paginate(Berita::count());
         } else {
             $result = $query->paginate($limit);
