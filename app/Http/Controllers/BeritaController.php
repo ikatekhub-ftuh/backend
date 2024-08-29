@@ -34,7 +34,7 @@ class BeritaController extends Controller
         $query = Berita::with('kategori')
             ->select('berita.id_berita', 'judul', 'penulis', 'gambar', 'berita.slug', 'total_like', 'konten', 'deskripsi', 'berita.id_kategori_berita', 'berita.created_at', 'berita.updated_at')
             // Menambahkan join untuk mendapatkan status is_liked
-            ->leftJoin('likes', function($join) use ($userId) {
+            ->leftJoin('likes', function ($join) use ($userId) {
                 $join->on('berita.id_berita', '=', 'likes.id_berita')
                     ->where('likes.id_user', '=', $userId);
             })
@@ -53,7 +53,12 @@ class BeritaController extends Controller
         $query->orderBy('berita.total_like', 'desc'); // Urutkan berdasarkan tanggal terbaru
 
         $limit = $request->input('limit', 10);
-        $result = $query->paginate($limit);
+
+        if ($request->has('all') && $request->user()->is_admin) {
+            $result = $query->paginate(Berita::count());
+        } else {
+            $result = $query->paginate($limit);
+        }
 
         return response()->json([
             'success' => true,
@@ -143,7 +148,7 @@ class BeritaController extends Controller
         $validatedData = $v->validated();
 
         $imageFile  = $request->file('gambar');
-        
+
         $tempPath   = $imageFile->getPathname();
         HelpersImageCompress::compressImage($tempPath, 75);
 
@@ -240,12 +245,12 @@ class BeritaController extends Controller
         } else {
             // Like
             // $berita->likes()->create(['id_user' => $user->id_user]);
-	    $berita->likes()->insert([
-            'id_user' => $user->id_user,
-            'id_berita' => $berita->id_berita,
-            'created_at' => now(),
-            'updated_at' => now()
-		]);
+            $berita->likes()->insert([
+                'id_user' => $user->id_user,
+                'id_berita' => $berita->id_berita,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
             $berita->total_like++;
             $isLiked = true;
         }
@@ -260,7 +265,7 @@ class BeritaController extends Controller
             'data' => $berita
         ], 200);
     }
-    
+
 
     public function listLikes(Request $request)
     {
@@ -294,5 +299,4 @@ class BeritaController extends Controller
             'data' => $likes
         ], 200);
     }
-
 }
