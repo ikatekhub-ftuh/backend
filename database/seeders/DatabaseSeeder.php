@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        ini_set('memory_limit', '1G');
+        // ini_set('memory_limit', '1G');
 
         // User::factory()->create([
         //     'email' => "user@gmail.com",
@@ -32,11 +32,11 @@ class DatabaseSeeder extends Seeder
         //     'is_banned' => 0,
         // ]);
 
-        User::factory()->create([
-            'email' => "admin@gmail.com",
-            'password' => "admin123",
-            'avatar' => "gambar/dummy/images/test.png",
-        ]);
+        // User::factory()->create([
+        //     'email' => "admin@gmail.com",
+        //     'password' => "admin123",
+        //     'avatar' => "gambar/dummy/images/test.png",
+        // ]);
 
         // User::factory(100)->create();
         // JenjangPendidikan::factory(200)->create();
@@ -46,13 +46,13 @@ class DatabaseSeeder extends Seeder
         // Loker::factory(30)->create();
         // Event::factory(3)->create();
         // peserta_event::factory(20)->create();
-        // jurusan::factory(15)->create();
+        // jurusan::factory(16)->create();
         // StatistikPendidikan::factory(5)->create();
 
         // sometimes error, paksami saja
         // Like::factory(400)->create();
 
         // kalau mau run banyak data, uncomment ini, comment yang lain
-        // Alumni::factory(100)->create();
+        // Alumni::factory(20)->create();
     }
 }
