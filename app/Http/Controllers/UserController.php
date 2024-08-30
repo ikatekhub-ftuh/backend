@@ -18,7 +18,7 @@ class UserController extends Controller
         $user->load('alumni.jenjang_pendidikan');
 
         // this will NOT affect regular request, only for admin
-        if ($request->adminCheck) {
+        if ($request->admincheck) {
             $user->makeVisible('is_admin');
         }
 
