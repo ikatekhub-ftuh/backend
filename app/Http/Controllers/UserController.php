@@ -17,14 +17,14 @@ class UserController extends Controller
         $user->load('alumni');
         $user->load('alumni.jenjang_pendidikan');
 
-        // saya ubah biar di BE Interface bisa cek admin atau engga
-
-        $isAdmin = $user->is_admin;
+        // this will NOT affect regular request, only for admin
+        if ($request->adminCheck) {
+            $user->makeVisible('is_admin');
+        }
 
         $response = [
             'message' => 'success',
             'data' => $user,
-            'isAdmin' => $isAdmin
         ];
 
         return response()->json($response, 200);
