@@ -80,8 +80,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::post('berita', [BeritaController::class, 'post']);
 
         // kebutuhan admin nanti
-        // Route::post('loker', [LokerController::class, 'post']);
-        // Route::delete('loker', [LokerController::class, 'delete']);
+        Route::post('loker', [LokerController::class, 'post']);
+        Route::delete('loker', [LokerController::class, 'delete']);
         Route::post('loker/perusahaan', [LokerController::class, 'post_perusahaan']);
         // Route::delete('loker/perusahaan', [LokerController::class, 'delete_perusahaan']);
         Route::post('event', [EventController::class, 'post']);

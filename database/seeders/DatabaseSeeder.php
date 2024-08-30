@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
         // JenjangPendidikan::factory(200)->create();
         // KategoriBerita::factory(12)->create();
         // Berita::factory(100)->create();
-        // Perusahaan::factory(20)->create();
+        Perusahaan::factory(1)->create();
         // Loker::factory(30)->create();
         // Event::factory(3)->create();
         // peserta_event::factory(20)->create();
