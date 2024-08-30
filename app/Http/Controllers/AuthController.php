@@ -84,10 +84,6 @@ class AuthController extends Controller
 
             $user = User::where('email', $request->email)->first();
 
-            if ($request->adminCheck) {
-                $user->makeVisible('is_admin');
-            }
-
             if ($user->is_banned) {
                 return response()->json([
                     'success' => false,
@@ -95,8 +91,8 @@ class AuthController extends Controller
                     'reason' => $user->ban_reason,
                 ], 403);
             }
-
-            if (!$user || ! Hash::check($request->password, $user->password)) {
+    
+            if ( !$user || ! Hash::check($request->password, $user->password) ) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Invalid credentials. Please check your email and password.',
@@ -126,7 +122,7 @@ class AuthController extends Controller
         try {
             $v = Validator::make($request->all(), [
                 'access_token_client' => 'required',
-            ]);
+            ]);            
             if ($v->fails()) {
                 return response()->json([
                     'success' => false,
@@ -144,7 +140,7 @@ class AuthController extends Controller
 
             if ($userInfo) {
                 $user = User::where('email', $userInfo->email)->first();
-
+                
                 if (!$user) {
                     $user = User::create([
                         'email'     => $userInfo->email,
