@@ -23,10 +23,7 @@ class UserController extends Controller
 
         $response = [
             'message' => 'success',
-            'data' => [
-                'user' => $user,
-                'isAdmin' => $isAdmin
-            ]
+            'data' => $user,
         ];
 
         return response()->json($response, 200);
