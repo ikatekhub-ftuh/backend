@@ -7,7 +7,7 @@ use App\Models\Jurusan;
 use Illuminate\Support\Facades\DB;
 
 class AlumniHelper {
-    public static function generateNoAnggota($jurusan, $angkatan)
+    public static function generateNoAnggota($jurusan, $angkatan, $kelamin)
     {
         $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
                         ->where(DB::raw('lower(jurusan)'), strtolower($jurusan))
@@ -16,11 +16,12 @@ class AlumniHelper {
                         ->groupBy('angkatan', 'jurusan')
                         ->first();
         
-        $kode_jurusan = Jurusan::where(DB::raw('lower(nama_jurusan)'), strtolower($jurusan))->first()->kode_jurusan;
-        $kode_angkatan = substr($angkatan, -2);
-        $kode_anggota = str_pad($alumni !== null ? $alumni->total+1 : 1, 3, '0', STR_PAD_LEFT);
+        $kode_jurusan   = Jurusan::where(DB::raw('lower(nama_jurusan)'), strtolower($jurusan))->first()->kode_jurusan;
+        $kode_angkatan  = substr($angkatan, -2);
+        $kode_kelamin   = $kelamin === "l" ? "01" : "02";
+        $kode_anggota   = str_pad($alumni !== null ? $alumni->total+1 : 1, 3, '0', STR_PAD_LEFT);
 
-        return $kode_jurusan . $kode_angkatan . $kode_anggota;
+        return $kode_jurusan . $kode_angkatan. $kode_kelamin . $kode_anggota;
     }
 
     public static function getNomorTelepon($text) {

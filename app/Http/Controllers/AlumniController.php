@@ -177,7 +177,7 @@ class AlumniController extends Controller
                 ], 400);
             }
             $validatedData['id_user'] = $user->id_user;
-            $validatedData['no_anggota'] = AlumniHelper::generateNoAnggota($request->jurusan, $request->angkatan);
+            $validatedData['no_anggota'] = AlumniHelper::generateNoAnggota($request->jurusan, $request->angkatan, $request->kelamin);
         }
 
         // $jenjang = $request->has('jenjang') 
@@ -368,9 +368,11 @@ class AlumniController extends Controller
             ], 401);
         }
 
+        $noAnggota = $alumni->no_anggota ?? AlumniHelper::generateNoAnggota($alumni->jurusan, $alumni->angkatan, $alumni->kelamin);
+
         $alumni->update([
             'id_user'       => $user->is_admin ? $request->id_user : $user->id_user,
-            'no_anggota'    => AlumniHelper::generateNoAnggota($alumni->jurusan, $alumni->angkatan),
+            'no_anggota'    => $noAnggota,
         ]);
 
         return response()->json([
