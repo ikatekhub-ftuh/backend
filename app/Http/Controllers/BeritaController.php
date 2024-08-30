@@ -72,7 +72,6 @@ class BeritaController extends Controller
         $berita = Berita::with("kategori")->find($id);
         $berita->is_liked = $berita->likes()->where('id_user', $request->user()->id_user)->exists();
 
-
         if (!$berita) {
             return response()->json([
                 'success' => false,
