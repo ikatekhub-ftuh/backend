@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('slug');
             $table->mediumText('konten');
             $table->string('deskripsi');
-            $table->date('tgl_selesai'); // tanggal loker tampil 
+            $table->date('tgl_selesai'); // tanggal loker tampil
             $table->string('lokasi'); // kota
             $table->tinyText('pengalaman_kerja');
             $table->string('role');

@@ -29,7 +29,6 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             // 'avatar' => 'avatar/'.fake()->sentence(2).'.jpg',
             'avatar' => "gambar/dummy/images/test.png",
-            'is_banned' => 0,
         ];
     }
 }
