@@ -166,6 +166,47 @@ class BeritaController extends Controller
         ], 200);
     }
 
+    public function update(Request $request)
+    {
+
+        if ($request->hasFile('gambar')) {
+            $imageFile  = $request->file('gambar');
+            $tempPath   = $imageFile->getPathname();
+            HelpersImageCompress::compressImage($tempPath, 75);
+            $gambarUrl = $imageFile->store('gambar/berita', 'public');
+            $request['gambar'] = $gambarUrl;
+        }
+
+        $berita = Berita::find($request->id_berita);
+
+        if (!$berita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => 'Data not found'
+            ], 404);
+        }
+
+        $updateData = array_filter($request->only([
+            'id_kategori_berita',
+            'judul',
+            'konten',
+            'deskripsi',
+            'penulis',
+            'gambar'
+        ]), function ($value) {
+            return !is_null($value);
+        });
+
+        $berita->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $berita
+        ], 200);
+    }
+
     public function category_get(Request $request)
     {
         $query = KategoriBerita::query();
