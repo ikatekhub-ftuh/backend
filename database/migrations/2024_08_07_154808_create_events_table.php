@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('slug', 255)->unique();
             $table->string('gambar', 255)->nullable();
             $table->mediumText('konten');
-
+            $table->string('deskripsi');
             $table->string('penyelenggara');
             $table->date('tgl_event');
             $table->string('lokasi_event', 255);
