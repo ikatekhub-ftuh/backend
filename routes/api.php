@@ -87,11 +87,12 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::post('event', [EventController::class, 'post']);
         // Route::delete('event', [EventController::class, 'delete']);
         // Route::post('berita', [BeritaController::class, 'post']);
-        // Route::delete('berita', [BeritaController::class, 'delete']);
+        Route::delete('berita', [BeritaController::class, 'delete']);
         // Route::post('berita/kategori', [BeritaController::class, 'category_post']);
         // Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
         // Route::delete('alumni/id/{id_alumni}', [AlumniController::class, 'delete']);
         // Route::post('alumni', [AlumniController::class, 'post']);
+        Route::post('berita/edit', [BeritaController::class, 'update']);
         Route::post('alumni/upload', [AlumniController::class, 'uploadData']); //done
     });
 });
