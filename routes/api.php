@@ -88,6 +88,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         // Route::delete('event', [EventController::class, 'delete']);
         // Route::post('berita', [BeritaController::class, 'post']);
         Route::delete('berita', [BeritaController::class, 'delete']);
+        Route::delete('berita/multiple', [BeritaController::class, 'deleteMultiple']);
         // Route::post('berita/kategori', [BeritaController::class, 'category_post']);
         // Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
         // Route::delete('alumni/id/{id_alumni}', [AlumniController::class, 'delete']);

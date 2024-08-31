@@ -86,29 +86,24 @@ class BeritaController extends Controller
         ], 200);
     }
 
-    // public function getBySlug(Request $request)
-    // {
-    //     $berita = Berita::where('slug', $request->slug)->first();
-
-    //     if (!$berita) {
-    //         return response()->json([
-    //             'success' => false,
-    //             'message' => 'error',
-    //         ], 404);
-    //     }
-
-    //     return response()->json([
-    //         'success' => true,
-    //         'message' => 'success',
-    //         'data' => $berita
-    //     ], 200);
-    // }
-
     public function delete(Request $request)
     {
-        $berita = Berita::where('id_berita', $request->id_berita)->first();
+        $v = Validator::make($request->all(), [
+            'id_berita' => 'required|array',
+            'id_berita.*' => 'required|integer'
+        ]);
 
-        if (!$berita) {
+        if ($v->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+
+        $berita = Berita::whereIn('id_berita', $request->id_berita)->get();
+
+        if ($berita->isEmpty()) {
             return response()->json([
                 'success' => false,
                 'message' => 'error',
@@ -116,13 +111,14 @@ class BeritaController extends Controller
             ], 404);
         }
 
-        $berita->delete();
+        $berita->each->delete();
+
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'data' => $berita
         ], 200);
     }
+
 
     public function post(Request $request)
     {

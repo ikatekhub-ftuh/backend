@@ -25,13 +25,13 @@ class mainUserFactory extends Factory
         User::factory()->create([
             'email' => "user@gmail.com",
             'password' => "12345678",
-            'avatar' => "gambar/dummy/gambar/test.png",
+            'avatar' => "gambar/dummy/images/test.png",
         ]);
 
         User::factory()->create([
             'email' => "admin@gmail.com",
             'password' => "admin123",
-            'avatar' => "gambar/dummy/gambar/test.png",
+            'avatar' => "gambar/dummy/images/test.png",
             'is_admin' => 1,
         ]);
     }
