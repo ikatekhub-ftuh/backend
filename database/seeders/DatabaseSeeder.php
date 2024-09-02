@@ -14,7 +14,11 @@ use App\Models\peserta_event;
 use App\Models\JenjangPendidikan;
 use App\Models\Jurusan;
 use App\Models\StatistikPendidikan;
+use Database\Factories\mainBeritaFactory;
+use Database\Factories\mainLokerFactory;
+use Database\Factories\mainUserFactory;
 use Illuminate\Database\Seeder;
+use Throwable;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,34 +29,24 @@ class DatabaseSeeder extends Seeder
     {
         // ini_set('memory_limit', '1G');
 
-        // User::factory()->create([
-        //     'email' => "user@gmail.com",
-        //     'password' => "12345678",
-        //     'avatar' => "gambar/dummy/images/test.png",
-        //     'is_banned' => 0,
-        // ]);
-
-        // User::factory()->create([
-        //     'email' => "admin@gmail.com",
-        //     'password' => "admin123",
-        //     'avatar' => "gambar/dummy/images/test.png",
-        // ]);
-
-        // User::factory(100)->create();
-        // JenjangPendidikan::factory(200)->create();
-        // KategoriBerita::factory(12)->create();
-        // Berita::factory(100)->create();
-        // Perusahaan::factory(20)->create();
-        // Loker::factory(30)->create();
-        // Event::factory(3)->create();
-        // peserta_event::factory(20)->create();
-        // jurusan::factory(16)->create();
-        // StatistikPendidikan::factory(5)->create();
-
-        // sometimes error, paksami saja
-        // Like::factory(400)->create();
-
-        // kalau mau run banyak data, uncomment ini, comment yang lain
-        // Alumni::factory(20)->create();
+        User::factory(200)->create();
+        (new mainUserFactory())->run();
+        Perusahaan::factory(10)->create();
+        (new mainLokerFactory())->run();
+        KategoriBerita::factory(12)->create();
+        (new mainBeritaFactory())->run();
+        Berita::factory(100)->create();
+        Alumni::factory(200)->create();
+        JenjangPendidikan::factory(200)->create();
+        try {
+            Like::factory(100)->create();
+        } catch (\Exception $e) {
+            // do nothing, error because of unique constraint is expected
+        }
+        Loker::factory(30)->create();
+        Event::factory(3)->create(); //kenapa nda pakai run() saja?
+        peserta_event::factory(20)->create();
+        jurusan::factory(16)->create();
+        StatistikPendidikan::factory(5)->create();
     }
 }

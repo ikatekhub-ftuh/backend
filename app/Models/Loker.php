@@ -19,6 +19,7 @@ class Loker extends Model
         'judul',
         'slug',
         'konten',
+        'deskripsi',
         'id_perusahaan',
         'tgl_selesai',
         'lokasi',

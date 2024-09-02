@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('likes', function (Blueprint $table) {
             // $table->id('id_like');
             $table->unsignedBigInteger('id_berita');
-            $table->foreign('id_berita')->references('id_berita')->on('berita')->onDelete('restrict');
+            $table->foreign('id_berita')->references('id_berita')->on('berita')->onDelete('cascade');
             $table->unsignedBigInteger('id_user');
-            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('restrict');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
             $table->unique(['id_berita', 'id_user']);
             $table->timestamps();
         });

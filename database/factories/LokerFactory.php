@@ -27,11 +27,12 @@ class LokerFactory extends Factory
 
         return [
             // 'id_loker'          => fake()->numberBetween(1, 10),
-            'id_perusahaan'     => fake()->numberBetween(1, Perusahaan::count()),
+            'id_perusahaan'     => 1,
             'judul'             => $judul,
             'slug'              => $slug, 
             // 'gambar'            => $slug.'.jpg',
-            'konten'            => fake()->paragraphs(3, true),
+            'konten'            => '<p>' . fake()->paragraphs(3, true) . '</p>',
+            'deskripsi'         => fake()->sentences(3, true),
             'tgl_selesai'       => fake()->date(),
             'lokasi'            => fake()->city(),
             'pengalaman_kerja'  => fake()->numberBetween(1, 99),

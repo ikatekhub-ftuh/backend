@@ -79,6 +79,7 @@ class EventController extends Controller
             'gambar'        => 'required',
             'penyelenggara' => 'required',
             'konten'        => 'required',
+            'deskripsi'     => 'required',
             'tgl_event'     => 'required',
             'lokasi_event'  => 'required',
             'kuota'         => 'required',
@@ -308,7 +309,7 @@ class EventController extends Controller
         $peserta = $event->peserta_event->map(function ($pesertaEvent) {
             return [
                 'id_user' => $pesertaEvent->user->id_user,
-                'nama' => $pesertaEvent->user->alumni->nama ?? 'peserta', // Menggunakan relasi ke tabel alumni untuk mengambil nama user
+                'nama' => $pesertaEvent->user->alumni->nama ?? 'peserta',
                 'waktu_daftar' => $pesertaEvent->created_at->format('Y-m-d H:i:s')
             ];
         });

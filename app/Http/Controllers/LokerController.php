@@ -73,13 +73,14 @@ class LokerController extends Controller
     public function post(Request $request)
     {
         $v = Validator::make($request->all(), [
-            'judul' => 'required',
-            'konten' => 'required',
-            'lokasi' => 'required',
-            'id_perusahaan' => 'required',
-            'tgl_selesai' => 'required',
-            'role' => 'required',
-            'pengalaman_kerja' => 'required',
+            'judul'             => 'required',
+            'konten'            => 'required',
+            'deskripsi'         => 'required',
+            'lokasi'            => 'required',
+            'id_perusahaan'     => 'required',
+            'tgl_selesai'       => 'required',
+            'role'              => 'required',
+            'pengalaman_kerja'  => 'required',
         ]);
 
         if ($v->fails()) {

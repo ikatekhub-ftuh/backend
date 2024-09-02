@@ -17,14 +17,14 @@ class UserController extends Controller
         $user->load('alumni');
         $user->load('alumni.jenjang_pendidikan');
 
-        // saya ubah biar di BE Interface bisa cek admin atau engga
-
-        $isAdmin = $user->is_admin;
+        // this will NOT affect regular request, only for admin
+        if ($request->admincheck) {
+            $user->makeVisible('is_admin');
+        }
 
         $response = [
-            'message'   => 'success',
-            'data'      => $user,
-            'isAdmin'   => $isAdmin
+            'message' => 'success',
+            'data' => $user,
         ];
 
         return response()->json($response, 200);
@@ -88,7 +88,7 @@ class UserController extends Controller
 
         $v = Validator::make($request->all(), [
             'avatar' => 'max:2048|mimes:jpeg,jpg,png',
-            'email' => 'email|unique:users,email',
+            'email' => 'email',
             // old_password wajib diisi jika password diisi
             'old_password' => 'required_with:password',
             // password perlu password_confirmation jika diisi
@@ -131,7 +131,18 @@ class UserController extends Controller
             ]);
         }
 
-        $request->email ? $user->email = $request->email : null;
+        // $request->email ? $user->email = $request->email : null;
+
+        if ($request->email) {
+            $emailExist = User::where('email', $request->email)->where('id_user', '!=', $user->id_user)->exists();
+            if ($emailExist) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Email sudah digunakan',
+                ], 422);
+            }
+            $user->email = $request->email;
+        }
 
         $user->save();
 

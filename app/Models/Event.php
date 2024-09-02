@@ -20,6 +20,7 @@ class Event extends Model
         'slug',
         'gambar',
         'konten',
+        'deskripsi',
         'penyelenggara',
         'tgl_event',
         'lokasi_event',

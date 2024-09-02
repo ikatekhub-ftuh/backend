@@ -17,7 +17,8 @@ return new class extends Migration
             $table->foreignId('id_perusahaan')->references('id_perusahaan')->on('perusahaan')->onDelete('cascade');
             $table->string('slug');
             $table->mediumText('konten');
-            $table->date('tgl_selesai'); // tanggal loker tampil 
+            $table->string('deskripsi');
+            $table->date('tgl_selesai'); // tanggal loker tampil
             $table->string('lokasi'); // kota
             $table->tinyText('pengalaman_kerja');
             $table->string('role');
