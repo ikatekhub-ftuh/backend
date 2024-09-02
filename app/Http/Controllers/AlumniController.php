@@ -51,6 +51,8 @@ class AlumniController extends Controller
                 $query->where('nama', 'ilike', '%'.$request->search.'%');
             }
 
+            $query->orderBy('nama', 'asc');
+            $query->orderBy('no_anggota', 'asc');
             $result = $query->get();
             return response()->json([
                 'message'   => 'success',
@@ -72,6 +74,7 @@ class AlumniController extends Controller
                 $query->where('nama', 'ilike', '%'.$request->search.'%');
             }
 
+            $query->orderBy('jurusan', 'asc');
             $result = $query->get();
             return response()->json([
                 'message'   => 'success',
@@ -102,6 +105,7 @@ class AlumniController extends Controller
             $query->where('nama', 'ilike', '%'.$request->search.'%');
         }
 
+        $query->orderBy('angkatan', 'desc');
         $result = $query->get();
         
         return response()->json([
