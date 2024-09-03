@@ -305,6 +305,55 @@ class EventController extends Controller
         ], 200);
     }
 
+    public function update(Request $request){
+        $v = Validator::make($request->all(), [
+            'id_event'      => 'required|exists:events,id_event',
+        ]);
+
+        if ($v->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => $v->errors()
+            ], 422);
+        }
+
+        $event = Event::find($request->id_event);
+
+
+        $updateData = array_filter($request->only(
+            'judul',
+            'gambar',
+            'penyelenggara',
+            'konten',
+            'deskripsi',
+            'tgl_event',
+            'lokasi_event',
+            'kuota'
+        ));
+
+        if ($request->hasFile('gambar')) {
+
+            // delete old image
+            Storage::disk('public')->delete($event->gambar);
+
+            $imageFile  = $request->file('gambar');
+            $tempPath   = $imageFile->getPathname();
+            ImageCompress::compressImage($tempPath, 75);
+            $gambarUrl = $imageFile->store('gambar/event', 'public');
+            $updateData['gambar'] = $gambarUrl;
+        }
+
+
+        $event->update($updateData);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $event,
+        ], 200);
+    }
+
     public function pesertaEvent(Request $request)
     {
         // Validasi input untuk memastikan id_event ada dan merupakan integer

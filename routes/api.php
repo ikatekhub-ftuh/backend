@@ -85,8 +85,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::post('loker/perusahaan', [LokerController::class, 'post_perusahaan']);
         // Route::delete('loker/perusahaan', [LokerController::class, 'delete_perusahaan']);
         Route::post('event', [EventController::class, 'post']);
+        Route::post('event/edit', [EventController::class, 'update']);
         Route::delete('event', [EventController::class, 'delete']);
-        // Route::post('berita', [BeritaController::class, 'post']);
         Route::delete('berita', [BeritaController::class, 'delete']);
         Route::delete('berita/multiple', [BeritaController::class, 'deleteMultiple']);
         // Route::post('berita/kategori', [BeritaController::class, 'category_post']);

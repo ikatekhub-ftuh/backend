@@ -165,16 +165,19 @@ class BeritaController extends Controller
 
     public function update(Request $request)
     {
+        $v = Validator::make($request->all(), [
+            'id_berita' => 'required|exists:berita,id_berita',
+        ]);
 
-        $berita = Berita::find($request->id_berita);
-
-        if (!$berita) {
+        if ($v->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'error',
-                'errors' => 'Data not found'
-            ], 404);
+                'errors' => $v->errors()
+            ], 422);
         }
+
+        $berita = Berita::find($request->id_berita);
 
         $updateData = array_filter($request->only([
             'id_kategori_berita',
