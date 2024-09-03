@@ -96,7 +96,6 @@
 </head>
 
 <body>
-    <!-- Bagian untuk teks tengah -->
     <div class="page">
         <div class="content logo">
             <img class="ikatek" src="/storage/logo-ikatek.PNG" alt="logo ikatek">

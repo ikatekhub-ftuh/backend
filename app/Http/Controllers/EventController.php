@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ImageCompress;
+use App\Models\Berita;
 use App\Models\Event;
 use App\Models\peserta_event;
 use Illuminate\Support\Str;
@@ -19,7 +20,11 @@ class EventController extends Controller
 
         $limit = $request->input('limit', 10);
 
-        $result = $query->paginate($limit);
+        if ($request->has('all') && $request->user()->is_admin) {
+            $result = $query->paginate(Berita::count());
+        } else {
+            $result = $query->paginate($limit);
+        }
 
         return response()->json([
             'success' => true,

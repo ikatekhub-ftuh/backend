@@ -17,8 +17,7 @@ class loggermiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Log general access information to the default log
-        Log::info('accessed category' . ' | ' . $request->method() . ' | ' . $request->ip() . ' | ' . $request->url() . ' | ' . $request->header('user-agent'));
+        Log::info($request->method() . ' | ' . $request->ip() . ' | ' . $request->url() . ' | ' . $request->header('user-agent'));
         return $next($request);
-
     }
 }
