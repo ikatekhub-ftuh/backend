@@ -52,7 +52,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']); //done
 
     Route::get('event', [EventController::class, 'get']); //done
-    // Route::get('event/list-peserta', [EventController::class, 'pesertaEvent']);
+    Route::get('event/list-peserta', [EventController::class, 'pesertaEvent']);
     Route::post('event/register', [EventController::class, 'toggleRegister']);
     //Route::post('event/register', [EventController::class, 'register']);
     //Route::post('event/unregister', [EventController::class, 'unregister']);
