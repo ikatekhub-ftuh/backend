@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaController extends Controller
 {
@@ -164,12 +165,6 @@ class BeritaController extends Controller
 
     public function update(Request $request)
     {
-        if ($request->hasFile('gambar')) {
-            $imageFile  = $request->file('gambar');
-            $tempPath   = $imageFile->getPathname();
-            HelpersImageCompress::compressImage($tempPath, 75);
-            $gambarUrl = $imageFile->store('gambar/berita', 'public');
-        }
 
         $berita = Berita::find($request->id_berita);
 
@@ -191,12 +186,20 @@ class BeritaController extends Controller
             return !is_null($value);
         });
 
-        $berita->update($updateData);
-
         if ($request->hasFile('gambar')) {
-            $berita->gambar = $gambarUrl;
-            $berita->save();
+            // delete old image
+            if ($berita->gambar) {
+                Storage::disk('public')->delete($berita->gambar);
+            }
+
+            $imageFile  = $request->file('gambar');
+            $tempPath   = $imageFile->getPathname();
+            HelpersImageCompress::compressImage($tempPath, 75);
+            $gambarUrl = $imageFile->store('gambar/berita', 'public');
+            $updateData['gambar'] = $gambarUrl;
         }
+
+        $berita->update($updateData);
 
         return response()->json([
             'success' => true,
