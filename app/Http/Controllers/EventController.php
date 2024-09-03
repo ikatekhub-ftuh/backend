@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -58,21 +59,31 @@ class EventController extends Controller
 
     public function delete(Request $request)
     {
-        $event = Event::find($request->id_event);
+        $v = Validator::make($request->all(), [
+            'id_event' => 'required',
+            'id_event.*' => 'required|exists:events,id_event|integer',
+        ]);
 
-        if (!$event) {
+        if ($v->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'error',
-                'errors' => 'Data tidak ditemukan'
-            ], 404);
+                'errors' => $v->errors()
+            ], 422);
         }
 
-        $event->delete();
+        // $event = Event::find($request->id_event);
+        $event = Event::whereIn('id_event', $request->id_event)->get();
+
+        // event each delete but also delete the image
+        foreach ($event as $e) {
+            Storage::disk('public')->delete($e->gambar);
+            $e->delete();
+        }
+
         return response()->json([
             'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $event
         ], 200);
     }
@@ -261,6 +272,7 @@ class EventController extends Controller
                 ->delete();
             $event->peserta--;
             $isRegistered = false;
+
         } else {
             // Check kuota
             if ($event->kuota <= $event->peserta) {
@@ -325,4 +337,6 @@ class EventController extends Controller
             'data' => $peserta
         ], 200);
     }
+
+
 }

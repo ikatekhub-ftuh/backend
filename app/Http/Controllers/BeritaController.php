@@ -164,13 +164,11 @@ class BeritaController extends Controller
 
     public function update(Request $request)
     {
-
         if ($request->hasFile('gambar')) {
             $imageFile  = $request->file('gambar');
             $tempPath   = $imageFile->getPathname();
             HelpersImageCompress::compressImage($tempPath, 75);
             $gambarUrl = $imageFile->store('gambar/berita', 'public');
-            $request['gambar'] = $gambarUrl;
         }
 
         $berita = Berita::find($request->id_berita);
@@ -189,12 +187,16 @@ class BeritaController extends Controller
             'konten',
             'deskripsi',
             'penulis',
-            'gambar'
         ]), function ($value) {
             return !is_null($value);
         });
 
         $berita->update($updateData);
+
+        if ($request->hasFile('gambar')) {
+            $berita->gambar = $gambarUrl;
+            $berita->save();
+        }
 
         return response()->json([
             'success' => true,
