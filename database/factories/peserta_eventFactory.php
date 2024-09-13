@@ -19,8 +19,8 @@ class peserta_eventFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_event' => $this->faker->numberBetween(1, Event::count()),
-            'id_user' => $this->faker->unique()->numberBetween(1, User::count()),
+            'id_event' => Event::inRandomOrder()->first()->id_event,
+            'id_user' => User::inRandomOrder()->first()->id_user,
         ];
     }
 }

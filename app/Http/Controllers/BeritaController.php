@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class BeritaController extends Controller
 {
@@ -164,24 +165,19 @@ class BeritaController extends Controller
 
     public function update(Request $request)
     {
+        $v = Validator::make($request->all(), [
+            'id_berita' => 'required|exists:berita,id_berita',
+        ]);
 
-        if ($request->hasFile('gambar')) {
-            $imageFile  = $request->file('gambar');
-            $tempPath   = $imageFile->getPathname();
-            HelpersImageCompress::compressImage($tempPath, 75);
-            $gambarUrl = $imageFile->store('gambar/berita', 'public');
-            $request['gambar'] = $gambarUrl;
-        }
-
-        $berita = Berita::find($request->id_berita);
-
-        if (!$berita) {
+        if ($v->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'error',
-                'errors' => 'Data not found'
-            ], 404);
+                'errors' => $v->errors()
+            ], 422);
         }
+
+        $berita = Berita::find($request->id_berita);
 
         $updateData = array_filter($request->only([
             'id_kategori_berita',
@@ -189,10 +185,22 @@ class BeritaController extends Controller
             'konten',
             'deskripsi',
             'penulis',
-            'gambar'
         ]), function ($value) {
             return !is_null($value);
         });
+
+        if ($request->hasFile('gambar')) {
+            // delete old image
+            if ($berita->gambar) {
+                Storage::disk('public')->delete($berita->gambar);
+            }
+
+            $imageFile  = $request->file('gambar');
+            $tempPath   = $imageFile->getPathname();
+            HelpersImageCompress::compressImage($tempPath, 75);
+            $gambarUrl = $imageFile->store('gambar/berita', 'public');
+            $updateData['gambar'] = $gambarUrl;
+        }
 
         $berita->update($updateData);
 
