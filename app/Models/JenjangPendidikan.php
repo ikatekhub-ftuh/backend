@@ -19,7 +19,10 @@ class JenjangPendidikan extends Model
 
     protected $fillable = [
         'id_alumni',
-        'jenjang'
+        'jenjang',
+        'jurusan',
+        'angkatan',
+        'nim',
     ];
 
     public function alumni()

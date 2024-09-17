@@ -15,24 +15,24 @@ class Alumni extends Model
     protected $keyType = 'int';
     public $incrementing = true;
 
-    
+
     protected $fillable = [
         'id_user',
         'nama',
-        'nim',
+        // 'nim',
         'no_anggota',
         'tgl_lahir',
         'no_telp',
-        'jurusan',
-        'angkatan',
+        // 'jurusan',
+        // 'angkatan',
         'kelamin',
         'golongan_darah',
         'agama',
         'validated'
     ];
-    
+
     // hide name
-    
+
     // protected $hidden = [
     // ];
 
@@ -46,5 +46,3 @@ class Alumni extends Model
         return $this->hasMany(JenjangPendidikan::class, 'id_alumni', 'id_alumni');
     }
 }
-
-

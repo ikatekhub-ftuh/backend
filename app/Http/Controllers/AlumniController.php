@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AlumniHelper;
 use App\Models\Alumni;
+use App\Models\JenjangPendidikan;
 use App\Models\Jurusan;
 use App\Models\StatistikPendidikan;
 use App\Models\User;
@@ -17,12 +18,14 @@ class AlumniController extends Controller
 {
     public function get(Request $request)
     {
-        $query = Alumni::query();
+        $query = Alumni::join('jenjang_pendidikan', 'alumni.id_alumni', 'jenjang_pendidikan.id_alumni');
         $query->where('validated', true);
 
+        // Jika parameter id_alumni ada maka kembalikan data detail alumni
         if ( $request->has('id_alumni') ) {
-            $query->select('id_alumni', 'id_user', 'nim', 'no_anggota', 'nama', 'no_telp', 'jurusan', 'angkatan', 'kelamin', 'agama', 'golongan_darah', )
-                    ->where('id_alumni', $request->id_alumni);
+            // $query->select('id_alumni', 'id_user', 'nim', 'no_anggota', 'nama', 'no_telp', 'jurusan', 'angkatan', 'kelamin', 'agama', 'golongan_darah', )
+            $query->select('alumni.id_alumni as id_alumni', 'id_user', 'no_anggota', 'nama', 'no_telp', 'kelamin', 'agama', 'golongan_darah', )
+                    ->where('alumni.id_alumni', $request->id_alumni);
             $alumni = $query->first();
 
             if ( !$alumni ) {
@@ -32,7 +35,7 @@ class AlumniController extends Controller
                 ], 404);
             }
             
-            $alumni->load('user');
+            $alumni->load('user', 'jenjang_pendidikan');
 
             return response()->json([
                 'message'   => 'success',
@@ -41,11 +44,12 @@ class AlumniController extends Controller
             ], 200);
         }
         
+        // Jika parameter angkatan ada dan jurusan ada, kembalikan list data alumni
         if ( $request->has('angkatan') && $request->has('jurusan') ) {
             if($request->angkatan !== 'all') {
-                $query->where('angkatan', $request->angkatan);
+                $query->where('jenjang_pendidikan.angkatan', $request->angkatan);
             }
-            $query->where('jurusan',    $request->jurusan);
+            $query->where('jenjang_pendidikan.jurusan',    $request->jurusan);
 
             if ( $request->has('search') ) {
                 $query->where('nama', 'ilike', '%'.$request->search.'%');
@@ -61,20 +65,21 @@ class AlumniController extends Controller
             ], 200);
         }
         
+        // Jika parameter angkatan ada, kembalikan list jurusan dan data total alumninya
         if ( $request->has('angkatan') && !$request->has('all') ) {
             if($request->angkatan !== 'all') {
-                $query->where('angkatan', $request->angkatan);
+                $query->where('jenjang_pendidikan.angkatan', $request->angkatan);
             }
                   
-            $query->select('jurusan')
+            $query->select('jenjang_pendidikan.jurusan')
                   ->selectRaw('count(*) as total')
-                  ->groupBy('jurusan');
+                  ->groupBy('jenjang_pendidikan.jurusan');
             
             if($request->has('search')) {
                 $query->where('nama', 'ilike', '%'.$request->search.'%');
             }
 
-            $query->orderBy('jurusan', 'asc');
+            $query->orderBy('jenjang_pendidikan.jurusan', 'asc');
             $result = $query->get();
             return response()->json([
                 'message'   => 'success',
@@ -83,10 +88,12 @@ class AlumniController extends Controller
             ], 200);
         }
 
+        // kembalikan data angkatan dan total alumninya
         $query->select('angkatan')
               ->selectRaw('count(*) as total')
               ->groupBy('angkatan');
         
+        // jika parameter all bernilai false, kembalikan data alumni berdasarkan angkatan
         if( $request->has('all') && $request->all === 'false') {
             if($request->has('angkatan')) {
                 $query->where('angkatan', $request->angkatan);
@@ -96,8 +103,11 @@ class AlumniController extends Controller
             }
         }
 
+        // jika tidak ada parameter all, maka kembalikan data angkatan dari user
         if( !$request->has('all') ) {
-            $angkatan = User::with('alumni')->find(Auth::id())->alumni->angkatan;
+            $angkatan = User::find(Auth::id())->alumni->jenjang_pendidikan->first->angkatan->angkatan;
+            // ->where('id_user', Auth::id())
+            // ->alumni->jenjang_pendidikan->first->angkatan;
             $query->where('angkatan', $angkatan);
         }
 
@@ -131,9 +141,9 @@ class AlumniController extends Controller
             ], 400);
         }
 
-        $query = Alumni::query();
+        $query = Alumni::join('jenjang_pendidikan', 'jenjang_pendidikan.id_alumni', '=', 'alumni.id_alumni');
 
-        $query->select('id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
+        $query->select('jenjang_pendidikan.id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
                       ->whereRaw('LOWER(nama) = ?',     [strtolower($request->nama)])
                       ->where('tgl_lahir',              $request->tgl_lahir)
                       ->whereRaw('LOWER(jurusan) = ?',  [strtolower($request->jurusan)]);
@@ -248,7 +258,74 @@ class AlumniController extends Controller
         ], 200);
     }
 
-    public function uploadData(Request $request) {
+    // public function uploadData(Request $request) {
+    //     $file = $request->file('file_alumni');
+    //     $fileHandle = fopen($file->getPathname(), 'r');
+    //     $timeNow = Carbon::now();
+
+    //     // Skip header row
+    //     fgetcsv($fileHandle, 0, ";");
+
+    //     $dataFile = [];
+    //     while (($data = fgetcsv($fileHandle, 0, ";")) !== false) {
+    //         $dataFile[] = [
+    //             'nim'           => $data[0],
+    //             'nama'          => $data[1],
+    //             'kelamin'       => $data[2],
+    //             'tgl_lahir'     => $data[3],
+    //             'agama'         => $data[4],
+    //             'no_telp'       => $data[5],
+    //             'angkatan'      => $data[6],
+    //             'jurusan'       => $data[7],
+    //             'jenjang'       => $data[8],
+    //             'validated'     => true,
+    //             'created_at'    => $timeNow,
+    //             'updated_at'    => $timeNow,
+    //         ];
+    //     }
+    //     fclose($fileHandle);
+
+    //     // Validasi batch
+    //     // $validator = Validator::make($dataFile, [
+    //     //     '*.nama'            => 'required|string',
+    //     //     '*.nim'             => 'required|string|unique:alumni,nim',
+    //     //     '*.tgl_lahir'       => 'required|date',
+    //     //     '*.jurusan'         => 'required|string',
+    //     //     '*.angkatan'        => 'required|string|max:4',
+    //     //     '*.kelamin'         => 'required|string|in:l,p',
+    //     //     '*.agama'           => 'required|string|in:Islam,Kristen Protestan,Kristen Katolik,Hindu,Buddha,Konghucu',
+    //     //     '*.golongan_darah'  => 'nullable|string|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
+    //     //     '*.no_telp'         => 'nullable|string|max:20',
+    //     // ]);
+        
+    //     // if ($validator->fails()) {
+    //     //     $errors = $validator->errors()->toArray();
+    //     //     return response()->json([
+    //     //         'success'   => false,
+    //     //         'message'   => 'Beberapa data tidak valid',
+    //     //         'data'    => $dataFile,
+    //     //         'errors'    => $errors,
+    //     //     ], 400);
+    //     // }
+        
+    //     // Alumni::insert($dataFile);
+    //     $batchSize = 1000; // Atur sesuai kebutuhan
+    //     $batches = array_chunk($dataFile, $batchSize);
+    //     DB::transaction(function() use ($batches) {
+    //         foreach ($batches as $batch) {
+    //             Alumni::insert($batch);
+    //         }
+    //     });
+
+    //     return response()->json([
+    //         'success'   => true,
+    //         'message'   => 'Berhasil menambahkan data alumni',
+    //         'data'      => $dataFile,
+    //     ], 201);
+    // }
+
+    public function uploadData(Request $request)
+    {
         $file = $request->file('file_alumni');
         $fileHandle = fopen($file->getPathname(), 'r');
         $timeNow = Carbon::now();
@@ -256,62 +333,49 @@ class AlumniController extends Controller
         // Skip header row
         fgetcsv($fileHandle, 0, ";");
 
-        $dataFile = [];
-        while (($data = fgetcsv($fileHandle, 0, ";")) !== false) {
-            $dataFile[] = [
-                'nim'           => $data[0],
-                'nama'          => $data[1],
-                'kelamin'       => $data[2],
-                'tgl_lahir'     => $data[3],
-                'agama'         => $data[4],
-                'no_telp'       => $data[5],
-                'angkatan'      => $data[6],
-                'jurusan'       => $data[7],
-                'validated'     => true,
-                'created_at'    => $timeNow,
-                'updated_at'    => $timeNow,
-            ];
-        }
-        fclose($fileHandle);
+        $jenjangData = [];
 
-        // Validasi batch
-        // $validator = Validator::make($dataFile, [
-        //     '*.nama'            => 'required|string',
-        //     '*.nim'             => 'required|string|unique:alumni,nim',
-        //     '*.tgl_lahir'       => 'required|date',
-        //     '*.jurusan'         => 'required|string',
-        //     '*.angkatan'        => 'required|string|max:4',
-        //     '*.kelamin'         => 'required|string|in:l,p',
-        //     '*.agama'           => 'required|string|in:Islam,Kristen Protestan,Kristen Katolik,Hindu,Buddha,Konghucu',
-        //     '*.golongan_darah'  => 'nullable|string|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
-        //     '*.no_telp'         => 'nullable|string|max:20',
-        // ]);
-        
-        // if ($validator->fails()) {
-        //     $errors = $validator->errors()->toArray();
-        //     return response()->json([
-        //         'success'   => false,
-        //         'message'   => 'Beberapa data tidak valid',
-        //         'data'    => $dataFile,
-        //         'errors'    => $errors,
-        //     ], 400);
-        // }
-        
-        // Alumni::insert($dataFile);
-        $batchSize = 1000; // Atur sesuai kebutuhan
-        $batches = array_chunk($dataFile, $batchSize);
-        DB::transaction(function() use ($batches) {
-            foreach ($batches as $batch) {
-                Alumni::insert($batch);
+        DB::transaction(function() use ($fileHandle, $timeNow, &$jenjangData) {
+            while (($data = fgetcsv($fileHandle, 0, ";")) !== false) {
+                // Insert alumni data and get the id
+                $idAlumni = Alumni::insertGetId([
+                    'nama'          => $data[1],
+                    'kelamin'       => $data[2],
+                    'tgl_lahir'     => $data[3],
+                    'agama'         => $data[4],
+                    'no_telp'       => $data[5],
+                    'validated'     => true,
+                    'created_at'    => $timeNow,
+                    'updated_at'    => $timeNow,
+                ], 'id_alumni');
+
+                // Prepare jenjang data with the corresponding id_alumni
+                $jenjangData[] = [
+                    'nim'           => $data[0],
+                    'angkatan'      => $data[6],
+                    'jurusan'       => $data[7],
+                    'jenjang'       => $data[8],
+                    'id_alumni'     => $idAlumni, // Set the related alumni id
+                    'created_at'    => $timeNow,
+                    'updated_at'    => $timeNow,
+                ];
+            }
+
+            // Batch insert jenjang pendidikan
+            if (!empty($jenjangData)) {
+                JenjangPendidikan::insert($jenjangData);
             }
         });
 
+        fclose($fileHandle);
+
         return response()->json([
             'success'   => true,
-            'message'   => 'Berhasil menambahkan data alumni',
-            'data'      => $dataFile,
+            'message'   => 'Berhasil menambahkan data alumni dan jenjang',
+            'data'      => $jenjangData,
         ], 201);
     }
+
 
     public function delete($id_alumni)
     {
@@ -372,7 +436,9 @@ class AlumniController extends Controller
             ], 401);
         }
 
-        $noAnggota = $alumni->no_anggota ?? AlumniHelper::generateNoAnggota($alumni->jurusan, $alumni->angkatan, $alumni->kelamin);
+        $alumni->load('jenjang_pendidikan');
+
+        $noAnggota = $alumni->no_anggota ?? AlumniHelper::generateNoAnggota($alumni->jenjang_pendidikan->first->jurusan->jurusan, $alumni->jenjang_pendidikan->first->angkatan->angkatan, $alumni->kelamin);
 
         $alumni->update([
             'id_user'       => $user->is_admin ? $request->id_user : $user->id_user,

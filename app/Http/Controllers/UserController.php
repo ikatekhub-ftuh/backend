@@ -15,7 +15,17 @@ class UserController extends Controller
     {
         $user = $request->user();
         $user->load('alumni');
-        $user->load('alumni.jenjang_pendidikan');
+        // $user->load('alumni.jenjang_pendidikan');
+        $user->load(['alumni.jenjang_pendidikan' => function($query) {
+            $query->orderBy('created_at', 'asc'); // Mengambil jenjang pendidikan paling awal
+        }]);
+
+        $alumni = $user->alumni;
+        if ($alumni && $alumni->jenjang_pendidikan->isNotEmpty()) {
+            // Ambil angkatan dari jenjang pendidikan pertama
+            $alumni->angkatan = $alumni->jenjang_pendidikan->first()->angkatan;
+            $alumni->jurusan = $alumni->jenjang_pendidikan->first()->jurusan;
+        }
 
         // this will NOT affect regular request, only for admin
         if ($request->admincheck) {

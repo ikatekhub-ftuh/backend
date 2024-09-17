@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\DB;
 class AlumniHelper {
     public static function generateNoAnggota($jurusan, $angkatan, $kelamin)
     {
-        $alumni = Alumni::select('angkatan', 'jurusan', Alumni::raw('count(*) as total'))
-                        ->where(DB::raw('lower(jurusan)'), strtolower($jurusan))
-                        ->where('angkatan', $angkatan)
+        $alumni = Alumni::join('jenjang_pendidikan', 'alumni.id_alumni', 'jenjang_pendidikan.id_alumni')
+                        ->select('jenjang_pendidikan.angkatan', 'jenjang_pendidikan.jurusan', Alumni::raw('count(*) as total'))
+                        ->where(DB::raw('lower(jenjang_pendidikan.jurusan)'), strtolower($jurusan))
+                        ->where('jenjang_pendidikan.angkatan', $angkatan)
                         ->whereNotNull('no_anggota')
-                        ->groupBy('angkatan', 'jurusan')
+                        ->groupBy('jenjang_pendidikan.angkatan', 'jenjang_pendidikan.jurusan')
                         ->first();
         
         $kode_jurusan   = Jurusan::where(DB::raw('lower(nama_jurusan)'), strtolower($jurusan))->first()->kode_jurusan;

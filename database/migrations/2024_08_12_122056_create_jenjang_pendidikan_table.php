@@ -18,7 +18,9 @@ return new class extends Migration
             $table->foreign('id_alumni')->references('id_alumni')->on('alumni')->onDelete('cascade');
 
             $table->string('jenjang'); //s1, s2, ppi, ppa
-            $table->string('nim'); // D14 19 024 
+            $table->string('nim')->nullable(); // D14 19 024
+            $table->string('jurusan');
+            $table->string('angkatan', 4);
 
             $table->timestamps();
         });
