@@ -343,4 +343,34 @@ class BeritaController extends Controller
             'data' => $likes
         ], 200);
     }
+    // ? Public for websites
+    public function getPublic(Request $request)
+    {
+        $query = Berita::with('kategori');
+
+        if ($request->has('search')) {
+            $query->where('judul', 'ilike', '%' . $request->search . '%');
+        }
+
+        if ($request->has('id_kategori_berita')) {
+            $query->where('berita.id_kategori_berita', $request->id_kategori_berita);
+        }
+
+        $query->orderBy('berita.created_at', 'desc');
+        $query->orderBy('berita.total_like', 'desc');
+
+        $limit = $request->input('limit', 10);
+
+        if ($request->has('all') && $request->user()->is_admin) {
+            $result = $query->paginate(Berita::count());
+        } else {
+            $result = $query->paginate($limit);
+        }
+
+        return response()->json([
+                'success' => true,
+                'message' => 'success',
+                'data' => $result
+            ], 200);
+    }
 }

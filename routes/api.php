@@ -28,8 +28,13 @@ use Illuminate\Support\Facades\Route;
  * Endpoint : /auth/google (POST)
  * Request  : idtoken (body), ket: token_id dari google auth
  * Response : token
- *
+ * 
  */
+
+Route::prefix('public')->group(function () {
+    Route::get('berita', [BeritaController::class, 'getPublic']);
+    Route::get('loker', [LokerController::class, 'get']);
+});
 
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
 Route::post('auth/register', [AuthController::class, 'register']);
