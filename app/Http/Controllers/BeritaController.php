@@ -373,4 +373,22 @@ class BeritaController extends Controller
                 'data' => $result
             ], 200);
     }
+    public function getBySlug($slug)
+    {
+        // Cari berdasarkan slug, bukan id_berita
+        $berita = Berita::with("kategori")->where('slug', $slug)->first();
+
+        if (!$berita) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'data' => $berita
+        ], 200);
+    }
 }
