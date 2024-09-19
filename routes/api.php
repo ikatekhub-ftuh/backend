@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('public')->group(function () {
     Route::get('berita', [BeritaController::class, 'getPublic']);
     Route::get('berita/{slug}', [BeritaController::class, 'getBySlug']);
-    // Route::get('berita/{id}', [BeritaController::class, 'getById']);
+    Route::get('kategori', [BeritaController::class, 'getKategori']);
     Route::get('loker', [LokerController::class, 'get']);
 });
 

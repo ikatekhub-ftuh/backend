@@ -391,4 +391,22 @@ class BeritaController extends Controller
             'data' => $berita
         ], 200);
     }
+    public function getKategori()
+    {
+        $query  = KategoriBerita::query();
+        $result = $query->get();
+
+        if ($result->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'success',
+            'data' => $result
+        ], 200);
+    }
 }
