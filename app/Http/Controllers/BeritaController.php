@@ -373,9 +373,9 @@ class BeritaController extends Controller
                 'data' => $result
             ], 200);
     }
+
     public function getBySlug($slug)
     {
-        // Cari berdasarkan slug, bukan id_berita
         $berita = Berita::with("kategori")->where('slug', $slug)->first();
 
         if (!$berita) {
@@ -391,6 +391,7 @@ class BeritaController extends Controller
             'data' => $berita
         ], 200);
     }
+
     public function getKategori()
     {
         $query  = KategoriBerita::query();

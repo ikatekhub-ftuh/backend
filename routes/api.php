@@ -36,6 +36,7 @@ Route::prefix('public')->group(function () {
     Route::get('berita/{slug}', [BeritaController::class, 'getBySlug']);
     Route::get('kategori', [BeritaController::class, 'getKategori']);
     Route::get('loker', [LokerController::class, 'get']);
+    Route::get('loker/{slug}', [LokerController::class, 'getBySlug']);
 });
 
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);

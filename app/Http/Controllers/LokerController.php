@@ -170,4 +170,23 @@ class LokerController extends Controller
             'data' => $perusahaan
         ], 200);
     }
+
+    // Get Public
+    public function getBySlug($slug)
+    {
+        $loker = Loker::with('perusahaan')->where('slug', $slug)->first();
+
+        if (!$loker) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Success',
+            'data' => $loker
+        ], 200);
+    }
 }
