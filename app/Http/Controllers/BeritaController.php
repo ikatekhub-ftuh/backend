@@ -352,8 +352,10 @@ class BeritaController extends Controller
             $query->where('judul', 'ilike', '%' . $request->search . '%');
         }
 
-        if ($request->has('id_kategori_berita')) {
-            $query->where('berita.id_kategori_berita', $request->id_kategori_berita);
+        if ($request->has('kategori')) {
+            $query->whereHas('kategori', function ($query) use ($request) {
+                $query->where('slug', $request->kategori); // Assuming 'slug' matches the incoming parameter
+            });
         }
 
         $query->orderBy('berita.created_at', 'desc');
