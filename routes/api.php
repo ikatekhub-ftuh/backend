@@ -41,6 +41,7 @@ Route::prefix('public')->group(function () {
     Route::get('loker/{slug}', [LokerController::class, 'getBySlug']);
     // ? EVENT
     Route::get('event', [EventController::class, 'get']);
+    Route::get('event/{slug}', [EventController::class, 'getBySlug']);
 });
 
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
