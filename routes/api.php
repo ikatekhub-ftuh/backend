@@ -32,11 +32,15 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::prefix('public')->group(function () {
+    // ? BERITA
     Route::get('berita', [BeritaController::class, 'getPublic']);
     Route::get('berita/{slug}', [BeritaController::class, 'getBySlug']);
     Route::get('kategori', [BeritaController::class, 'getKategori']);
+    // ? LOKER
     Route::get('loker', [LokerController::class, 'get']);
     Route::get('loker/{slug}', [LokerController::class, 'getBySlug']);
+    // ? EVENT
+    Route::get('event', [EventController::class, 'get']);
 });
 
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
