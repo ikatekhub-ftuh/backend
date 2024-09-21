@@ -265,7 +265,7 @@ class EventController extends Controller
         ], 200);
     }
 
-    // Public
+    // Get Public
     public function getBySlug($slug)
     {
         $event = Event::with('peserta_event')->where('slug', $slug)->first();
