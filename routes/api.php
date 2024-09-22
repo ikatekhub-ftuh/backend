@@ -42,6 +42,8 @@ Route::prefix('public')->group(function () {
     // ? EVENT
     Route::get('event', [EventController::class, 'get']);
     Route::get('event/{slug}', [EventController::class, 'getBySlug']);
+    // ? SEARCH
+    Route::get('search/{search}', [searchController::class, 'search']);
 });
 
 Route::post('auth/google', [AuthController::class, 'handleGoogleLogin']);
