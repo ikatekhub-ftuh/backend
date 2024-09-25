@@ -31,12 +31,9 @@ class AlumniFactory extends Factory
         }
 
         return [
-            'nim'           => $this->faker->regexify('[A-Z]{5}[0-8]{5}'), // NIM/Stambuk
             'nama'          => $nama, // Names from User 1 to User 20
             'tgl_lahir'     => '1990-01-01', // Same date of birth for all
-            'jurusan'       => 'PROGRAM PROFESI INSINYUR', // Same Jurusan for all
             'no_telp'       => $this->faker->numerify('62##########'),
-            'angkatan'      => $this->faker->numberBetween(1970, 2023),
             'kelamin'       => $this->faker->randomElement(['l', 'p']),
             'agama'         => $this->faker->randomElement([
                 'Islam', 
