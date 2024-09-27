@@ -22,19 +22,19 @@ class AlumniController extends Controller
         $query->where('validated', true);
 
         // Jika parameter id_alumni ada maka kembalikan data detail alumni
-        if ( $request->has('id_alumni') ) {
+        if ($request->has('id_alumni')) {
             // $query->select('id_alumni', 'id_user', 'nim', 'no_anggota', 'nama', 'no_telp', 'jurusan', 'angkatan', 'kelamin', 'agama', 'golongan_darah', )
-            $query->select('alumni.id_alumni as id_alumni', 'id_user', 'no_anggota', 'nama', 'no_telp', 'kelamin', 'agama', 'golongan_darah', )
-                    ->where('alumni.id_alumni', $request->id_alumni);
+            $query->select('alumni.id_alumni as id_alumni', 'id_user', 'no_anggota', 'nama', 'no_telp', 'kelamin', 'agama', 'golongan_darah',)
+                ->where('alumni.id_alumni', $request->id_alumni);
             $alumni = $query->first();
 
-            if ( !$alumni ) {
+            if (!$alumni) {
                 return response()->json([
                     'message'   => 'error',
                     'errors'    => 'Data not found'
                 ], 404);
             }
-            
+
             $alumni->load('user', 'jenjang_pendidikan');
 
             return response()->json([
@@ -43,16 +43,16 @@ class AlumniController extends Controller
                 'data'      => $alumni
             ], 200);
         }
-        
+
         // Jika parameter angkatan ada dan jurusan ada, kembalikan list data alumni
-        if ( $request->has('angkatan') && $request->has('jurusan') ) {
-            if($request->angkatan !== 'all') {
+        if ($request->has('angkatan') && $request->has('jurusan')) {
+            if ($request->angkatan !== 'all') {
                 $query->where('jenjang_pendidikan.angkatan', $request->angkatan);
             }
             $query->where('jenjang_pendidikan.jurusan',    $request->jurusan);
 
-            if ( $request->has('search') ) {
-                $query->where('nama', 'ilike', '%'.$request->search.'%');
+            if ($request->has('search')) {
+                $query->where('nama', 'ilike', '%' . $request->search . '%');
             }
 
             $query->orderBy('nama', 'asc');
@@ -64,19 +64,19 @@ class AlumniController extends Controller
                 'data'      => $result
             ], 200);
         }
-        
+
         // Jika parameter angkatan ada, kembalikan list jurusan dan data total alumninya
-        if ( $request->has('angkatan') && !$request->has('all') ) {
-            if($request->angkatan !== 'all') {
+        if ($request->has('angkatan') && !$request->has('all')) {
+            if ($request->angkatan !== 'all') {
                 $query->where('jenjang_pendidikan.angkatan', $request->angkatan);
             }
-                  
+
             $query->select('jenjang_pendidikan.jurusan')
-                  ->selectRaw('count(*) as total')
-                  ->groupBy('jenjang_pendidikan.jurusan');
-            
-            if($request->has('search')) {
-                $query->where('nama', 'ilike', '%'.$request->search.'%');
+                ->selectRaw('count(*) as total')
+                ->groupBy('jenjang_pendidikan.jurusan');
+
+            if ($request->has('search')) {
+                $query->where('nama', 'ilike', '%' . $request->search . '%');
             }
 
             $query->orderBy('jenjang_pendidikan.jurusan', 'asc');
@@ -90,12 +90,12 @@ class AlumniController extends Controller
 
         // kembalikan data angkatan dan total alumninya
         $query->select('angkatan')
-              ->selectRaw('count(*) as total')
-              ->groupBy('angkatan');
-        
+            ->selectRaw('count(*) as total')
+            ->groupBy('angkatan');
+
         // jika parameter all bernilai false, kembalikan data alumni berdasarkan angkatan
-        if( $request->has('all') && $request->all === 'false') {
-            if($request->has('angkatan')) {
+        if ($request->has('all') && $request->all === 'false') {
+            if ($request->has('angkatan')) {
                 $query->where('angkatan', $request->angkatan);
             } else {
                 $angkatan = User::with('alumni')->find(Auth::id())->alumni->angkatan;
@@ -104,20 +104,20 @@ class AlumniController extends Controller
         }
 
         // jika tidak ada parameter all, maka kembalikan data angkatan dari user
-        if( !$request->has('all') ) {
+        if (!$request->has('all')) {
             $angkatan = User::find(Auth::id())->alumni->jenjang_pendidikan->first->angkatan->angkatan;
             // ->where('id_user', Auth::id())
             // ->alumni->jenjang_pendidikan->first->angkatan;
             $query->where('angkatan', $angkatan);
         }
 
-        if($request->has('search')) {
-            $query->where('nama', 'ilike', '%'.$request->search.'%');
+        if ($request->has('search')) {
+            $query->where('nama', 'ilike', '%' . $request->search . '%');
         }
 
         $query->orderBy('angkatan', 'desc');
         $result = $query->get();
-        
+
         return response()->json([
             'message' => 'success',
             'request' => $request->all(),
@@ -129,24 +129,26 @@ class AlumniController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama'      => 'required|string',
-            'tgl_lahir' => 'required|date', 
+            'tgl_lahir' => 'required|date',
             'jurusan'   => 'required|string',
         ]);
-        
-        if ( $validator->fails() ) {
+
+        if ($validator->fails()) {
             return response()->json(
-            [
-                'success' => false,
-                'message' => implode('\n',$validator->errors()->all()),
-            ], 400);
+                [
+                    'success' => false,
+                    'message' => implode('\n', $validator->errors()->all()),
+                ],
+                400
+            );
         }
 
         $query = Alumni::join('jenjang_pendidikan', 'jenjang_pendidikan.id_alumni', '=', 'alumni.id_alumni');
 
-        $query->select('jenjang_pendidikan.id_alumni' ,'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
-                      ->whereRaw('LOWER(nama) = ?',     [strtolower($request->nama)])
-                      ->where('tgl_lahir',              $request->tgl_lahir)
-                      ->whereRaw('LOWER(jurusan) = ?',  [strtolower($request->jurusan)]);
+        $query->select('jenjang_pendidikan.id_alumni', 'nama', 'jurusan', 'angkatan', 'tgl_lahir', Db::raw('CASE WHEN id_user is NULL THEN false ELSE true END as is_claim'))
+            ->whereRaw('LOWER(nama) = ?',     [strtolower($request->nama)])
+            ->where('tgl_lahir',              $request->tgl_lahir)
+            ->whereRaw('LOWER(jurusan) = ?',  [strtolower($request->jurusan)]);
 
         $result = $query->get();
         return response()->json([
@@ -156,7 +158,8 @@ class AlumniController extends Controller
         ], 200);
     }
 
-    public function post(Request $request) {
+    public function post(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'nama'              => 'required|string',
             'tgl_lahir'         => 'required|date',
@@ -169,7 +172,7 @@ class AlumniController extends Controller
             // 'jenjang'           => 'required_without_all:nim|enum:S1,S2,S3,PPI,PPA',
         ]);
 
-        if ( $validator->fails() ) {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => implode('\n', $validator->errors()->all()),
@@ -177,14 +180,14 @@ class AlumniController extends Controller
         }
 
         $user = Auth::user();
-        
+
         $validatedData = $validator->validated();
 
         $validatedData['validated'] = false;
-        if( $user->is_admin ) {
+        if ($user->is_admin) {
             $validatedData['validated'] = true;
         } else {
-            if( Alumni::where('id_user', $user->id_user)->first() ) {
+            if (Alumni::where('id_user', $user->id_user)->first()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'User sudah memiliki data alumni',
@@ -194,14 +197,14 @@ class AlumniController extends Controller
             $validatedData['no_anggota'] = AlumniHelper::generateNoAnggota($request->jurusan, $request->angkatan, $request->kelamin);
         }
 
-        // $jenjang = $request->has('jenjang') 
-        //             ? $request->jenjang 
+        // $jenjang = $request->has('jenjang')
+        //             ? $request->jenjang
         //             : AlumniHelper::getStrata($request->nim);
 
         // $statistik = StatistikPendidikan::where('jenjang', $jenjang)
         //                 ->first();
         // $statistik->jumlah += 1;
-        
+
         $alumni = Alumni::create($validatedData);
         // $statistik->save();
 
@@ -211,8 +214,9 @@ class AlumniController extends Controller
             'data' => $alumni
         ], 201);
     }
-    
-    public function update(Request $request) {// Validasi field yang mungkin akan diupdate
+
+    public function update(Request $request)
+    { // Validasi field yang mungkin akan diupdate
         $validator = Validator::make($request->all(), [
             'nama'              => 'sometimes|required|string|max:100',
             'nim'               => 'sometimes|required|string|max:20',
@@ -227,15 +231,15 @@ class AlumniController extends Controller
 
         if ($validator->fails()) {
             $errors = implode("\n", $validator->errors()->all());
-            
+
             return response()->json([
                 'success' => false,
                 'message' => $errors,
             ], 400);
         }
-        
+
         $alumni = Alumni::where('id_user', $request->user()->id_user)->firstOrFail();
-        
+
         $alumni->fill($request->only([
             'nama',
             'nim',
@@ -247,7 +251,7 @@ class AlumniController extends Controller
             'kelamin',
             'golongan_darah',
         ]));
-        
+
         $alumni->save();
 
         return response()->json([
@@ -297,7 +301,7 @@ class AlumniController extends Controller
     //     //     '*.golongan_darah'  => 'nullable|string|in:A+,A-,B+,B-,O+,O-,AB+,AB-',
     //     //     '*.no_telp'         => 'nullable|string|max:20',
     //     // ]);
-        
+
     //     // if ($validator->fails()) {
     //     //     $errors = $validator->errors()->toArray();
     //     //     return response()->json([
@@ -307,7 +311,7 @@ class AlumniController extends Controller
     //     //         'errors'    => $errors,
     //     //     ], 400);
     //     // }
-        
+
     //     // Alumni::insert($dataFile);
     //     $batchSize = 1000; // Atur sesuai kebutuhan
     //     $batches = array_chunk($dataFile, $batchSize);
@@ -335,7 +339,7 @@ class AlumniController extends Controller
 
         $jenjangData = [];
 
-        DB::transaction(function() use ($fileHandle, $timeNow, &$jenjangData) {
+        DB::transaction(function () use ($fileHandle, $timeNow, &$jenjangData) {
             while (($data = fgetcsv($fileHandle, 0, ";")) !== false) {
                 // Insert alumni data and get the id
                 $idAlumni = Alumni::insertGetId([
@@ -381,7 +385,7 @@ class AlumniController extends Controller
     {
         $alumni = Alumni::find($id_alumni);
 
-        if ( !$alumni ) {
+        if (!$alumni) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data alumni tidak ditemukan.'
@@ -395,45 +399,54 @@ class AlumniController extends Controller
         ], 200);
     }
 
-    public function claimDataALumniByUserId(Request $request) {
+    public function claimDataALumniByUserId(Request $request)
+    {
         $user = Auth::user();
 
         $validator = Validator::make($request->all(), [
             'id_alumni' => 'required',
-            'id_user'   => $user->is_admin ? 'required' : '', 
+            'id_user'   => $user->is_admin ? 'required' : '',
         ]);
-        
-        if ( $validator->fails() ) {
+
+        if ($validator->fails()) {
             return response()->json(
-            [
-                'success' => false,
-                'message' => implode('\n',$validator->errors()->all()),
-            ], 400);
+                [
+                    'success' => false,
+                    'message' => implode('\n', $validator->errors()->all()),
+                ],
+                400
+            );
         }
-        
-        if ( Alumni::where('id_user', $user->id_user)->first() ) {
+
+        if (Alumni::where('id_user', $user->id_user)->first()) {
             return response()->json(
-            [
-                'success' => false,
-                'message' => 'User sudah memiliki data alumni',
-            ], 400);
+                [
+                    'success' => false,
+                    'message' => 'User sudah memiliki data alumni',
+                ],
+                400
+            );
         }
 
         $alumni = Alumni::find($request->id_alumni);
-        if( !$alumni ) {
+        if (!$alumni) {
             return response()->json(
-            [
-                'success' => false,
-                'message' => 'Data alumni tidak ditemukan',
-            ], 400);
+                [
+                    'success' => false,
+                    'message' => 'Data alumni tidak ditemukan',
+                ],
+                400
+            );
         }
-        
-        if ( $alumni->id_user != null && !$user->is_admin ) {
+
+        if ($alumni->id_user != null && !$user->is_admin) {
             return response()->json(
-            [
-                'success' => false,
-                'message' => 'Data alumni sudah diklaim pengguna lain',
-            ], 401);
+                [
+                    'success' => false,
+                    'message' => 'Data alumni sudah diklaim pengguna lain',
+                ],
+                401
+            );
         }
 
         $alumni->load('jenjang_pendidikan');
@@ -452,11 +465,12 @@ class AlumniController extends Controller
         ], 200);
     }
 
-    public function validateDataAlumni(Request $request) {
+    public function validateDataAlumni(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'id_alumni' => 'required|numeric',
         ]);
-        if ( $validator->fails() ) {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => implode("\n", $validator->errors()->all()),
@@ -464,21 +478,21 @@ class AlumniController extends Controller
         }
 
         $alumni = Alumni::find($request->id_alumni);
-        if( !$alumni ) {
+        if (!$alumni) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data alumni tidak ditemukan',
             ], 400);
         }
         $alumni->update([
-            'validated'=> true,
+            'validated' => true,
         ]);
 
         return response()->json([
             'success'   => true,
             'message'   => 'Data alumni berhasil divalidasi.',
             'data'      => $alumni,
-        ], 200);        
+        ], 200);
     }
 
     public function getJurusan()

@@ -53,7 +53,7 @@ class BeritaController extends Controller
         $query->orderBy('berita.created_at', 'desc'); // Urutkan berdasarkan tanggal terbaru
         $query->orderBy('berita.total_like', 'desc'); // Urutkan berdasarkan tanggal terbaru
 
-        $limit = $request->input('limit', 10);
+        $limit = $request->input('limit', 5);
 
         if ($request->has('all') && $request->user()->is_admin) {
             $result = $query->paginate(Berita::count());
@@ -370,10 +370,10 @@ class BeritaController extends Controller
         }
 
         return response()->json([
-                'success' => true,
-                'message' => 'success',
-                'data' => $result
-            ], 200);
+            'success' => true,
+            'message' => 'success',
+            'data' => $result
+        ], 200);
     }
 
     public function getBySlug($slug)

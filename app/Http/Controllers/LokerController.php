@@ -50,22 +50,56 @@ class LokerController extends Controller
         ], 200);
     }
 
+    // public function delete(Request $request)
+    // {
+    //     $loker = Loker::where('id_loker', $request->id_loker)->first();
+
+    //     if (!$loker) {
+    //         return response()->json([
+    //             'message' => 'error',
+    //             'errors' => 'Data not found'
+    //         ], 404);
+    //     }
+
+    //     $loker->delete();
+
+    //     return response()->json([
+    //         'message' => 'success',
+    //         'request' => $request->all(),
+    //         'data' => $loker
+    //     ], 200);
+    // }
+
     public function delete(Request $request)
     {
-        $loker = Loker::where('id_loker', $request->id_loker)->first();
+        $v = Validator::make($request->all(), [
+            'id_loker' => 'required',
+            'id_loker.*' => 'required|exists:loker,id_loker|integer',
+        ]);
 
-        if (!$loker) {
+        if ($v->fails()) {
             return response()->json([
+                'success' => false,
                 'message' => 'error',
-                'errors' => 'Data not found'
-            ], 404);
+                'errors' => $v->errors()
+            ], 422);
         }
 
-        $loker->delete();
+        $loker = Loker::whereIn('id_loker', $request->id_loker)->get();
+
+        try {
+            $loker->each->delete();
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
 
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $loker
         ], 200);
     }
@@ -134,7 +168,7 @@ class LokerController extends Controller
         $validatedData = $v->validated();
 
         $imageFile  = $request->file('logo');
-        
+
         $tempPath   = $imageFile->getPathname();
         ImageCompress::compressImage($tempPath, 75);
 
@@ -153,20 +187,34 @@ class LokerController extends Controller
 
     public function delete_perusahaan(Request $request)
     {
-        $perusahaan = Perusahaan::where('id_perusahaan', $request->id_perusahaan)->first();
+        $v = Validator::make($request->all(), [
+            'id_perusahaan' => 'required',
+            'id_perusahaan.*' => 'required|exists:perusahaan,id_perusahaan|integer',
+        ]);
 
-        if (!$perusahaan) {
+        if ($v->fails()) {
             return response()->json([
+                'success' => false,
                 'message' => 'error',
-                'errors' => 'Data not found'
-            ], 404);
+                'errors' => $v->errors()
+            ], 422);
         }
 
-        $perusahaan->delete();
+        $perusahaan = Perusahaan::whereIn('id_perusahaan', $request->id_perusahaan)->get();
+
+        try {
+            $perusahaan->each->delete();
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'error',
+                'errors' => $e->getMessage()
+            ], 500);
+        }
 
         return response()->json([
+            'success' => true,
             'message' => 'success',
-            'request' => $request->all(),
             'data' => $perusahaan
         ], 200);
     }

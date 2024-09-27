@@ -28,8 +28,9 @@ use Illuminate\Support\Facades\Route;
  * Endpoint : /auth/google (POST)
  * Request  : idtoken (body), ket: token_id dari google auth
  * Response : token
- * 
+ *
  */
+
 
 Route::prefix('public')->group(function () {
     // ? BERITA
@@ -98,7 +99,7 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::post('loker', [LokerController::class, 'post']);
         Route::delete('loker', [LokerController::class, 'delete']);
         Route::post('loker/perusahaan', [LokerController::class, 'post_perusahaan']);
-        // Route::delete('loker/perusahaan', [LokerController::class, 'delete_perusahaan']);
+        Route::delete('loker/perusahaan', [LokerController::class, 'delete_perusahaan']);
         Route::post('event', [EventController::class, 'post']);
         Route::post('event/edit', [EventController::class, 'update']);
         Route::delete('event', [EventController::class, 'delete']);
