@@ -107,7 +107,7 @@
         </div>
 
         <div class="copyright">
-            <p>Copyright © <?= date("Y"); ?> Antek Hub.</p>
+            <p>Copyright © <?= date("Y"); ?> Antek Hub. A platform for Graduates Engineering in UNHAS.</p>
         </div>
     </div>
 </body>
