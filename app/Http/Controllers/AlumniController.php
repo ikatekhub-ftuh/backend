@@ -18,6 +18,28 @@ class AlumniController extends Controller
 {
     public function get(Request $request)
     {
+        // for admin
+        if ($request->has('admin') && $request->admin === 'true' && Auth::user()->is_admin) {
+            $query = Alumni::leftJoin('jenjang_pendidikan', 'alumni.id_alumni', 'jenjang_pendidikan.id_alumni');
+            $query->where('validated', true);
+
+            if ($request->has('search')) {
+                $query->where('nama', 'ilike', '%' . $request->search . '%')
+                    ->orWhere('tgl_lahir', 'ilike', '%' . $request->search . '%')
+                    ->orWhere('no_telp', 'ilike', '%' . $request->search . '%')
+                    ->orWhere('nim', 'ilike', '%' . $request->search . '%');
+            }
+
+            $result = $query->paginate($request->limit ?? 10);
+
+
+            return response()->json([
+                'message' => 'success',
+                'data' => $result
+            ], 200);
+        }
+
+        // unchanged- tapi ketemu ka error: attempt to read jenjang pendidikan on null
         $query = Alumni::join('jenjang_pendidikan', 'alumni.id_alumni', 'jenjang_pendidikan.id_alumni');
         $query->where('validated', true);
 
@@ -106,8 +128,6 @@ class AlumniController extends Controller
         // jika tidak ada parameter all, maka kembalikan data angkatan dari user
         if (!$request->has('all')) {
             $angkatan = User::find(Auth::id())->alumni->jenjang_pendidikan->first->angkatan->angkatan;
-            // ->where('id_user', Auth::id())
-            // ->alumni->jenjang_pendidikan->first->angkatan;
             $query->where('angkatan', $angkatan);
         }
 
@@ -116,6 +136,8 @@ class AlumniController extends Controller
         }
 
         $query->orderBy('angkatan', 'desc');
+
+
         $result = $query->get();
 
         return response()->json([
