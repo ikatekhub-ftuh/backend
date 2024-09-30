@@ -136,7 +136,7 @@ class AlumniController extends Controller
         }
 
         $query->orderBy('angkatan', 'desc');
-        $result = $request->user()->is_admin ? $query->get() : $query->first();
+        $result = $query->get();
         
         return response()->json([
             'message' => 'success',
