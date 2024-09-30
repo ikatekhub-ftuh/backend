@@ -38,8 +38,8 @@ class EventController extends Controller
     {
         $query = Event::query();
         $query->find($id);
-        $result = $query->first();        
-        
+        $result = $query->first();
+
         if (!$result) {
             return response()->json([
                 'success' => false,
@@ -153,7 +153,6 @@ class EventController extends Controller
                 ->delete();
             $event->peserta--;
             $isRegistered = false;
-
         } else {
             // Check kuota
             if ($event->kuota <= $event->peserta) {
@@ -186,7 +185,8 @@ class EventController extends Controller
         ], 200);
     }
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $v = Validator::make($request->all(), [
             'id_event'      => 'required|exists:events,id_event',
         ]);
@@ -270,7 +270,7 @@ class EventController extends Controller
     {
         $event = Event::with('peserta_event')->where('slug', $slug)->first();
 
-        if(!$event) {
+        if (!$event) {
             return response()->json([
                 'success' => false,
                 'message' => 'Data not found',

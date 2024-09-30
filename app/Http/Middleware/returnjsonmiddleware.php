@@ -17,7 +17,7 @@ class returnjsonmiddleware
     {
         // force the request to return json on error
         $request->headers->set('Accept', 'application/json');
-        
+
         return $next($request);
     }
 }
