@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Models\Alumni;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class UserController extends Controller
         $user = $request->user();
         $user->load('alumni');
         // $user->load('alumni.jenjang_pendidikan');
-        $user->load(['alumni.jenjang_pendidikan' => function($query) {
+        $user->load(['alumni.jenjang_pendidikan' => function ($query) {
             $query->orderBy('created_at', 'asc'); // Mengambil jenjang pendidikan paling awal
         }]);
 
@@ -34,7 +35,7 @@ class UserController extends Controller
 
         $response = [
             'message' => 'success',
-            'data' => $user,
+            'data' => new UserResource($user),
         ];
 
         return response()->json($response, 200);
