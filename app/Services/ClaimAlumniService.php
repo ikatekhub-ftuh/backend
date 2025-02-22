@@ -18,7 +18,7 @@ class ClaimAlumniService
             ->get();
     }
 
-    public function claimAlumni(array $data): array
+    public function claimAlumni(array $data)
     {
         $user = Auth::user();
 
