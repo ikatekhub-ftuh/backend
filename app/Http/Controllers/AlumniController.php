@@ -160,7 +160,11 @@ class AlumniController extends Controller
         ]);
 
         $data = $claimAlumniService->getAlumniData($request);
-        return AlumniResource::collection($data);
+        return response()->json([
+            'success'   => true,
+            'message'   => 'success',
+            'data'      => new AlumniResource($data)
+        ], 200);
     }
 
     public function post(StoreAlumniRequest $request)
