@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
         // Loker::factory(30)->create();
         // Event::factory(3)->create(); //kenapa nda pakai run() saja?
         // peserta_event::factory(20)->create();
-        // jurusan::factory(16)->create();
+        jurusan::factory(16)->create();
         // StatistikPendidikan::factory(5)->create();
     }
 }

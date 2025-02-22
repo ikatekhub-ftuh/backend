@@ -73,11 +73,8 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
     //Route::post('event/register', [EventController::class, 'register']);
     //Route::post('event/unregister', [EventController::class, 'unregister']);
 
-
-    Route::post('alumni', [AlumniController::class, 'post']);
-
     Route::middleware(['guestOnly'])->group(function () {
-        Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumniByUserId']);
+        Route::post('alumni/claim-data', [AlumniController::class, 'claimDataALumni']);
     });
 
     Route::middleware(['noGuest'])->group(function () {
@@ -107,9 +104,10 @@ Route::middleware(['auth:sanctum', 'isNotBanned'])->group(function () {
         Route::delete('berita/multiple', [BeritaController::class, 'deleteMultiple']);
         // Route::post('berita/kategori', [BeritaController::class, 'category_post']);
         // Route::delete('berita/kategori', [BeritaController::class, 'category_delete']);
-        // Route::delete('alumni/id/{id_alumni}', [AlumniController::class, 'delete']);
-        // Route::post('alumni', [AlumniController::class, 'post']);
+        Route::post('alumni', [AlumniController::class, 'post']);
+        Route::post('alumni/upload', [AlumniController::class, 'upload']); //done
+        Route::put('alumni/{alumni}/validasi', [AlumniController::class, 'validateData']);
+        Route::delete('alumni/{alumni}', [AlumniController::class, 'delete']);
         Route::post('berita/edit', [BeritaController::class, 'update']);
-        Route::post('alumni/upload', [AlumniController::class, 'uploadData']); //done
     });
 });

@@ -28,6 +28,7 @@ class AlumniResource extends JsonResource
             'angkatan'  => $this->jenjang_pendidikan->first()->angkatan ?? '',
             'jurusan'   => $this->jenjang_pendidikan->first()->jurusan ?? '',
             'nim'       => $this->jenjang_pendidikan->first()->nim ?? '',
+            'is_claim'  => $this->user ? true : false,
         ];
     }
 }
