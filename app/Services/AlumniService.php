@@ -14,14 +14,6 @@ class AlumniService
 {
     public function getAlumni($request)
     {
-        if ($request->has('all') && $request->all == "true") {
-            return $this->getAngkatan($request);
-        }
-
-        if ($request->has('all') && $request->all == "false") {
-            return $this->getAngkatan($request);
-        }
-
         if ($request->has('angkatan') && $request->has('jurusan')) {
             return $this->getDataAlumni($request);
         }
@@ -37,7 +29,8 @@ class AlumniService
     {
         $query = Alumni::query()
             ->whereHas('jenjang_pendidikan', function ($query) use ($request) {
-                $query->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)])
+                $query
+                    ->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)])
                     ->whereRaw('LOWER(jurusan) = ?', [strtolower($request->jurusan)]);
             });
 
@@ -59,13 +52,26 @@ class AlumniService
             ->groupBy('angkatan')
             ->orderBy('angkatan', 'desc');
 
-        if ($request->has('all') && $request->all == "true") {
-            $data = $query->get();
-        } else if ($request->has('angkatan')) {
-            $data = $query->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)])->get();
-        } else {
-            $data = $query->whereRaw('LOWER(angkatan) = ?', [strtolower(Auth::user()->alumni->jenjang_pendidikan->first()->angkatan)])->get();
+        if (!$request->has('all')) {
+            $query->whereRaw(
+                'LOWER(angkatan) = ?',
+                [
+                    strtolower(Auth::user()->alumni->jenjang_pendidikan->first()->angkatan)
+                ]
+            );
         }
+
+        if ($request->has('all') && $request->all == "false") {
+            $query->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)]);
+        }
+
+        if ($request->has('search')) {
+            $query->whereHas('alumni', function ($query) use ($request) {
+                $query->whereRaw('LOWER(nama) like ?', ['%' . strtolower($request->search) . '%']);
+            });
+        }
+
+        $data = $query->get();
 
         return AngkatanAlumniResource::collection($data);
     }
@@ -73,18 +79,19 @@ class AlumniService
     public function getJurusan($request)
     {
         $query = JenjangPendidikan::query();
-        $query->select('jenjang_pendidikan.jurusan')
+        $query->select('jurusan')
             ->selectRaw('count(*) as total')
-            ->join('alumni', 'jenjang_pendidikan.id_alumni', '=', 'alumni.id_alumni')
-            ->groupBy('jenjang_pendidikan.jurusan')
-            ->orderBy('jenjang_pendidikan.jurusan', 'asc');
+            ->groupBy('jurusan')
+            ->orderBy('jurusan', 'asc');
 
-        if ($request->has('angkatan')) {
-            $query->whereRaw('LOWER(jenjang_pendidikan.angkatan) = ?', [strtolower($request->angkatan)]);
+        if ($request->has('angkatan') && $request->angkatan != "all") {
+            $query->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)]);
         }
 
         if ($request->has('search')) {
-            $query->whereRaw('LOWER(alumni.nama) like ?', ['%' . strtolower($request->search) . '%']);
+            $query->whereHas('alumni', function ($query) use ($request) {
+                $query->whereRaw('LOWER(nama) like ?', ['%' . strtolower($request->search) . '%']);
+            });
         }
 
         $data = $query->get();
