@@ -18,7 +18,7 @@ class AlumniService
             return $this->getDataAlumni($request);
         }
 
-        if ($request->has('angkatan')) {
+        if ($request->has('angkatan') && $request->all == "false") {
             return $this->getJurusan($request);
         }
 
@@ -52,17 +52,19 @@ class AlumniService
             ->groupBy('angkatan')
             ->orderBy('angkatan', 'desc');
 
-        if (!$request->has('all')) {
+        // Jika all === false, dan ada angkatan
+        if ($request->has('all') && $request->all == "false" && $request->has('angkatan')) {
+            $query->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)]);
+        }
+
+        // Jika tidak all atau all nya tidak sama dengan true
+        if (!$request->has('all') || $request->all != "true") {
             $query->whereRaw(
                 'LOWER(angkatan) = ?',
                 [
                     strtolower(Auth::user()->alumni->jenjang_pendidikan->first()->angkatan)
                 ]
             );
-        }
-
-        if ($request->has('all') && $request->all == "false") {
-            $query->whereRaw('LOWER(angkatan) = ?', [strtolower($request->angkatan)]);
         }
 
         if ($request->has('search')) {
