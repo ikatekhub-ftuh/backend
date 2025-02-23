@@ -58,7 +58,7 @@ class AlumniService
         }
 
         // Jika tidak all atau all nya tidak sama dengan true
-        if (!$request->has('all') || $request->all != "true") {
+        if (!$request->has('all') || ($request->all == "false" && !$request->has('angkatan'))) {
             $query->whereRaw(
                 'LOWER(angkatan) = ?',
                 [
