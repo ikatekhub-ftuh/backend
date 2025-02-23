@@ -18,7 +18,7 @@ class AlumniService
             return $this->getDataAlumni($request);
         }
 
-        if ($request->has('angkatan') && $request->all == "false") {
+        if ($request->has('angkatan') && !$request->has('all')) {
             return $this->getJurusan($request);
         }
 
